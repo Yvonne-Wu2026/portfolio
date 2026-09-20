@@ -1,23 +1,161 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Yvonne Wu — UX Designer',
+	description = 'Yvonne Wu is a UX designer based in Boston.',
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+
+	:root {
+		/* Colors — Figma variables from "Portfolio Design System" */
+		--color-bg: #f7f5f0; /* Primary Background */
+		--color-text: #252a2e; /* Secondary */
+		--color-accent-1: #a5bcd6; /* Accent 1 */
+		--color-accent-2: #4a2e27; /* Accent 2 */
+		--color-accent-light: #ded9d0; /* Accent light */
+		--color-card-hover-bg: #311b14;
+		--color-card-hover-text: #ede6db;
+		--color-link: #0013be;
+		--color-placeholder: #d9d9d9;
+
+		/* Rules */
+		--rule-strong: 1.5px solid rgba(37, 42, 46, 0.85);
+		--rule-faint: 1px solid rgba(37, 42, 46, 0.28);
+
+		--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+		--font-serif: 'Instrument Serif', Georgia, serif;
+
+		/* Layout — Figma frames are 1440 wide with 72px gutters (1296 content) */
+		--page-max: 1440px;
+		--rule-max: 1400px;
+		--gutter: clamp(20px, 5vw, 72px);
+
+		/* Type scale — Figma sizes as the upper bound, fluid below */
+		--fs-display: clamp(44px, 6.5vw, 86px); /* Section Header / hero */
+		--fs-h2: clamp(32px, 4.6vw, 64px); /* Header l2 */
+		--fs-h3: clamp(24px, 2.6vw, 36px);
+		--fs-lg: clamp(20px, 2.3vw, 32px);
+		--fs-body: clamp(17px, 1.35vw, 24px);
+		--fs-nav: clamp(18px, 1.7vw, 24px);
+		--fs-sm: 16px;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
 	html,
 	body {
-		margin: 0;
 		width: 100%;
-		height: 100%;
+		min-height: 100%;
+		font-family: var(--font-sans);
+		background-color: var(--color-bg);
+		color: var(--color-text);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	ul,
+	ol {
+		list-style: none;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-accent-2);
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+
+	/* Shared primitives ------------------------------------------------ */
+
+	.page {
+		width: 100%;
+		max-width: var(--page-max);
+		margin-inline: auto;
+		padding-inline: var(--gutter);
+	}
+
+	/* The "fainter line" separators sit 20px outside the content column. */
+	.rule {
+		width: 100%;
+		max-width: var(--rule-max);
+		margin-inline: auto;
+		border-top: var(--rule-faint);
+	}
+
+	.rule--strong {
+		border-top: var(--rule-strong);
+		max-width: none;
+	}
+
+	.section-heading {
+		font-size: var(--fs-display);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.02em;
+	}
+
+	.body-text {
+		font-size: var(--fs-body);
+		font-weight: 400;
+		line-height: 1.45;
 	}
 </style>

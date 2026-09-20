@@ -1,0 +1,150 @@
+---
+/* Figma: "line sep section" 60:653 plus the section header/body pattern.
+   variant="detail" is the "Solution details" block — a 32px bold heading
+   with no numbered rule. */
+interface Props {
+	number?: string;
+	title: string;
+	bodyHtml?: string;
+	variant?: 'section' | 'detail';
+	tightBottom?: boolean;
+	id?: string;
+}
+
+const { number, title, bodyHtml, variant = 'section', tightBottom = false, id } = Astro.props;
+---
+
+<section class:list={['sec', `sec--${variant}`, { 'sec--tight-bottom': tightBottom }]} id={id}>
+	{
+		number && (
+			<div class="sep">
+				<span class="number">{number}</span>
+				<span class="line" />
+			</div>
+		)
+	}
+	<div class="page content">
+		<h2 class:list={['heading', `heading--${variant}`]}>{title}</h2>
+		{bodyHtml && <div class="prose" set:html={bodyHtml} />}
+		<slot />
+	</div>
+</section>
+
+<style>
+	.sec {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(40px, 5.5vw, 75px);
+		/* Scales with the gap below the rule so both sides stay balanced. */
+		padding-block: clamp(28px, 3.5vw, 50px);
+	}
+
+	.sec--detail {
+		gap: 0;
+		padding-block: clamp(24px, 3vw, 50px);
+	}
+
+	.sec--tight-bottom {
+		padding-bottom: 10px;
+	}
+
+	.sep {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		width: 100%;
+		max-width: var(--rule-max);
+		margin-inline: auto;
+		/* No extra space above: the flanking section padding already supplies it. */
+		margin-block: 0 20px;
+		padding-inline: var(--gutter);
+	}
+
+	.number {
+		font-size: clamp(18px, 1.7vw, 24px);
+		color: var(--color-accent-2);
+		line-height: 1;
+	}
+
+	.line {
+		flex: 1 1 0;
+		min-width: 0;
+		border-top: var(--rule-faint);
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+	}
+
+	/* Sub-sections sit tighter: the heading belongs with its body. */
+	.sec--detail .content {
+		gap: 6px;
+	}
+
+	.heading {
+		font-weight: 700;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+	}
+
+	.heading--section {
+		font-size: var(--fs-h2);
+	}
+
+	.heading--detail {
+		font-size: clamp(22px, 2.3vw, 32px);
+		padding: 10px;
+	}
+</style>
+
+<style is:global>
+	/* Rich text transcribed from Figma (inline bold/italic, links, lists). */
+	.prose {
+		padding: 10px;
+		font-size: var(--fs-body);
+		line-height: 1.45;
+		max-width: 90ch;
+	}
+
+	.prose > * + * {
+		margin-top: 1em;
+	}
+
+	.prose strong {
+		font-weight: 700;
+	}
+
+	.prose em {
+		font-style: italic;
+	}
+
+	.prose ul {
+		list-style: disc;
+		padding-left: 36px;
+	}
+
+	.prose ul > li + li {
+		margin-top: 0.35em;
+	}
+
+	.prose a {
+		color: var(--color-link);
+		font-weight: 600;
+		text-decoration: underline;
+	}
+
+	.prose a:hover {
+		opacity: 0.75;
+	}
+
+	.prose .tree {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: clamp(13px, 1.1vw, 20px);
+		line-height: 1.5;
+		white-space: pre;
+		overflow-x: auto;
+		max-width: 100%;
+	}
+</style>

@@ -1,0 +1,82 @@
+---
+/* Figma: "Case study card" 9:97 — Default + Hover state (dark fill, cream text). */
+interface Props {
+	name: string;
+	href: string;
+	cover?: string;
+	coverAlt?: string;
+	coverPosition?: string;
+}
+
+const { name, href, cover, coverAlt = '', coverPosition } = Astro.props;
+---
+
+<a class="card" href={href}>
+	<div class="cover">
+		{cover && (
+			<img
+				src={cover}
+				alt={coverAlt}
+				loading="lazy"
+				style={coverPosition ? `object-position: ${coverPosition};` : undefined}
+			/>
+		)}
+	</div>
+	<div class="name-wrap">
+		<ul class="name-list">
+			<li class="name">{name}</li>
+		</ul>
+	</div>
+</a>
+
+<style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		padding: 7px;
+		border-radius: 16px;
+		background-color: transparent;
+		transition:
+			background-color 200ms ease,
+			color 200ms ease;
+	}
+
+	.cover {
+		width: 100%;
+		aspect-ratio: 573 / 359;
+		border-radius: 16px;
+		background-color: var(--color-accent-light);
+		overflow: hidden;
+	}
+
+	.cover img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.name-wrap {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+	}
+
+	.name-list {
+		list-style: disc;
+		margin-left: 36px;
+	}
+
+	.name {
+		display: list-item;
+		font-size: var(--fs-nav);
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	.card:hover,
+	.card:focus-visible {
+		background-color: var(--color-card-hover-bg);
+		color: var(--color-card-hover-text);
+	}
+</style>

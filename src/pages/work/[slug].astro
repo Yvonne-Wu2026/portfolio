@@ -1,0 +1,230 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Button from '../../components/Button.astro';
+import NumberedSection from '../../components/NumberedSection.astro';
+import ProblemCard from '../../components/ProblemCard.astro';
+import MediaBlock from '../../components/MediaBlock.astro';
+import ImageBand from '../../components/ImageBand.astro';
+import ImageRow from '../../components/ImageRow.astro';
+import CaseStudyNav from '../../components/CaseStudyNav.astro';
+import { caseStudies } from '../../data/caseStudies';
+
+export function getStaticPaths() {
+	return caseStudies.map((study) => ({
+		params: { slug: study.slug },
+		props: { study },
+	}));
+}
+
+const { study } = Astro.props;
+
+/* The next study in the list, wrapping round; undefined if this is the only one. */
+const current = caseStudies.findIndex((entry) => entry.slug === study.slug);
+const next =
+	caseStudies.length > 1
+		? caseStudies[(current + 1) % caseStudies.length]
+		: undefined;
+
+const quickInfo = [
+	{ label: 'ROLE', value: study.meta.role },
+	{ label: 'TYPE', value: study.meta.type },
+	{ label: 'PLATFORM', value: study.meta.platform },
+	{ label: 'DESIGN TOOLS', value: study.meta.tools },
+];
+---
+
+<Layout title={`${study.title} — Yvonne Wu`} description={study.summary}>
+	<Nav />
+
+	<main>
+		<!-- Figma: "Project title and quick info" -->
+		<section class="page title-section">
+			<h1 class="section-heading">{study.title}</h1>
+			<div class="title-row">
+				<dl class="quick-info">
+					{
+						quickInfo.map((item) => (
+							<>
+								<dt>{item.label}</dt>
+								<dd>{item.value}</dd>
+							</>
+						))
+					}
+				</dl>
+				<div class="summary-col">
+					<p class="summary">{study.summary}</p>
+					{study.cta && <Button href={study.cta.href} label={study.cta.label} />}
+				</div>
+			</div>
+		</section>
+
+		<!-- Figma: "project hero image" -->
+		<div
+			class:list={['hero-image', { 'hero-image--filled': study.hero?.src }]}
+			style={[
+				study.hero?.ratio && `aspect-ratio: ${study.hero.ratio};`,
+				study.hero?.maxWidth && `max-width: ${study.hero.maxWidth};`,
+			]
+				.filter(Boolean)
+				.join(' ')}
+		>
+			{study.hero?.src && <img src={study.hero.src} alt={study.hero.alt ?? ''} />}
+		</div>
+
+		{
+			study.sections.map((section) => (
+				<NumberedSection
+					number={section.number}
+					title={section.title}
+					bodyHtml={section.bodyHtml}
+					variant={section.variant}
+					tightBottom={section.tightBottom}
+				>
+					{section.blocks?.map((block) => {
+						if (block.type === 'cards') {
+							return (
+								<div class="problem-grid">
+									{block.cards.map((card) => (
+										<ProblemCard title={card.title} bodyHtml={card.bodyHtml} />
+									))}
+								</div>
+							);
+						}
+						if (block.type === 'media') {
+							return (
+								<MediaBlock
+									src={block.src}
+									alt={block.alt}
+									bodyHtml={block.bodyHtml}
+									reverse={block.reverse}
+								/>
+							);
+						}
+						if (block.type === 'text') {
+							return <div class="prose" set:html={block.bodyHtml} />;
+						}
+						if (block.type === 'imageRow') {
+							return <ImageRow images={block.images} ratio={block.ratio} />;
+						}
+						return (
+							<ImageBand
+								src={block.src}
+								alt={block.alt}
+								ratio={block.ratio}
+								caption={block.caption}
+								href={block.href}
+								maxWidth={block.maxWidth}
+								objectPosition={block.objectPosition}
+								srcWebm={block.srcWebm}
+							/>
+						);
+					})}
+				</NumberedSection>
+			))
+		}
+
+		<CaseStudyNav next={next && { title: next.title, slug: next.slug }} />
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.title-section {
+		display: flex;
+		flex-direction: column;
+		gap: 50px;
+		padding-block: clamp(28px, 3.5vw, 37px);
+	}
+
+	.title-row {
+		display: flex;
+		align-items: center;
+		gap: clamp(32px, 7vw, 97px);
+	}
+
+	.quick-info {
+		flex: 1 1 0;
+		min-width: 0;
+		display: grid;
+		grid-template-columns: minmax(0, 248px) minmax(0, 1fr);
+		column-gap: 10px;
+		font-size: var(--fs-sm);
+		line-height: 1.3;
+	}
+
+	.quick-info dt,
+	.quick-info dd {
+		padding: 10px;
+	}
+
+	.quick-info dt {
+		font-weight: 600;
+	}
+
+	.quick-info dd {
+		text-align: right;
+	}
+
+	.summary-col {
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 26px;
+		text-align: right;
+	}
+
+	.summary {
+		font-size: var(--fs-h3);
+		font-weight: 500;
+		line-height: 1.25;
+	}
+
+	.hero-image {
+		width: 100%;
+		margin-inline: auto;
+		aspect-ratio: 1440 / 847;
+		background-color: var(--color-accent-light);
+		overflow: hidden;
+	}
+
+	/* Transparent PNGs would otherwise show the placeholder fill through their gaps. */
+	.hero-image--filled {
+		background-color: transparent;
+	}
+
+	.hero-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		/* Trim from the top of the arena photo, keeping the stats in frame. */
+		object-position: bottom;
+	}
+
+	.problem-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: clamp(16px, 2.5vw, 36px);
+		align-items: stretch;
+	}
+
+	@media (max-width: 900px) {
+		.title-row {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.summary-col {
+			align-items: flex-start;
+			text-align: left;
+		}
+
+		.problem-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

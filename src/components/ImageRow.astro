@@ -1,0 +1,89 @@
+---
+/* Figma: the multi-image rows used across both case studies
+   (e.g. PawTrainer 63:806, Watt's 99:658 / 102:676). */
+interface Props {
+	images: { src?: string; alt?: string; ratio?: string; caption?: string }[];
+	ratio?: string;
+}
+
+const { images, ratio = '3 / 4' } = Astro.props;
+
+/* With captions the images align at the top, so the captions start on a common
+   line; without them the images hang from a shared bottom baseline. */
+const captioned = images.some((image) => image.caption);
+---
+
+<div class:list={['row', { 'row--captioned': captioned }]} style={`--count: ${images.length};`}>
+	{
+		images.map((image) => (
+			<figure class="item">
+				<div
+					class:list={['cell', { 'cell--filled': image.src }]}
+					style={`aspect-ratio: ${image.ratio ?? ratio};`}
+				>
+					{image.src && <img src={image.src} alt={image.alt ?? ''} loading="lazy" />}
+				</div>
+				{image.caption && <figcaption>{image.caption}</figcaption>}
+			</figure>
+		))
+	}
+</div>
+
+<style>
+	.row {
+		display: grid;
+		grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+		gap: clamp(16px, 2.5vw, 36px);
+		/* Images keep their own proportions, so cells share a bottom baseline.
+		   Each cell fills its column, so images are centred horizontally. */
+		align-items: end;
+		justify-items: center;
+		padding-block: 20px;
+	}
+
+	.row--captioned {
+		align-items: start;
+	}
+
+	.item {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	/* Pushes the image down when a neighbouring caption makes its column taller. */
+	.row:not(.row--captioned) .item .cell {
+		margin-top: auto;
+	}
+
+	.cell {
+		/* Explicit, because justify-items: center stops grid items stretching. */
+		width: 100%;
+		background-color: var(--color-placeholder);
+		overflow: hidden;
+		border-radius: 4px;
+	}
+
+	.cell--filled {
+		background-color: transparent;
+	}
+
+	.cell img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	figcaption {
+		margin-top: 20px;
+		padding: 10px;
+		font-size: var(--fs-body);
+		line-height: 1.45;
+	}
+
+	@media (max-width: 780px) {
+		.row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

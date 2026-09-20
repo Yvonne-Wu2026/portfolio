@@ -1,0 +1,86 @@
+---
+/* Figma: "Homepage hero" 9:180 — offset 86px name/role with profile image at right. */
+interface Props {
+	image?: string;
+	imageAlt?: string;
+}
+
+const {
+	image = '/images/profile.jpg',
+	imageAlt = 'Yvonne Wu standing beside a woven elephant sculpture on a beach',
+} = Astro.props;
+---
+
+<section class="hero page">
+	<div class="text">
+		<h1 class="name">Yvonne Wu</h1>
+		<p class="role">UX Designer</p>
+	</div>
+	<div class="portrait">
+		<img src={image} alt={imageAlt} width="843" height="1124" />
+	</div>
+</section>
+
+<style>
+	.hero {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: clamp(24px, 4vw, 64px);
+		padding-block: clamp(48px, 7vw, 93px);
+	}
+
+	.text {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.name,
+	.role {
+		font-size: var(--fs-display);
+		font-weight: 500;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		white-space: nowrap;
+	}
+
+	/* The role is indented to roughly a third of the column, as in the design. */
+	.role {
+		align-self: flex-start;
+		margin-left: clamp(0px, 32vw, 424px);
+	}
+
+	.portrait {
+		flex: 0 0 auto;
+		width: clamp(140px, 19vw, 277px);
+		aspect-ratio: 277 / 297;
+		border-radius: 23px;
+		overflow: hidden;
+	}
+
+	.portrait img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	@media (max-width: 720px) {
+		.hero {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.role {
+			margin-left: 0;
+		}
+
+		.portrait {
+			width: 100%;
+			max-width: 320px;
+			aspect-ratio: 4 / 3;
+			align-self: center;
+		}
+	}
+</style>

@@ -1,0 +1,121 @@
+---
+/* Figma: full-width image bands inside the case studies.
+   href makes the band a link — used for the live-site preview, which is a
+   code-embed of the real page in Figma. */
+interface Props {
+	src?: string;
+	alt?: string;
+	ratio?: string;
+	caption?: string;
+	href?: string;
+	maxWidth?: string;
+	objectPosition?: string;
+	/** Optional WebM alongside an .mp4 `src`. */
+	srcWebm?: string;
+}
+
+const { src, alt = '', ratio = '1296 / 400', caption, href, maxWidth, objectPosition, srcWebm } =
+	Astro.props;
+
+/* Screen recordings ship as video: a GIF of the same clip is ~25x larger. */
+const isVideo = !!src && /\.(mp4|webm)$/.test(src);
+const Frame = href ? 'a' : 'div';
+---
+
+<figure class="band-wrap">
+	<Frame
+		class:list={['band', { 'band--link': href, 'band--filled': src }]}
+		style={[`aspect-ratio: ${ratio};`, maxWidth && `max-width: ${maxWidth};`].filter(Boolean).join(' ')}
+		href={href}
+		target={href ? '_blank' : undefined}
+		rel={href ? 'noopener noreferrer' : undefined}
+	>
+		{
+			isVideo ? (
+				<video autoplay loop muted playsinline aria-label={alt} data-motion>
+					{srcWebm && <source src={srcWebm} type="video/webm" />}
+					<source src={src} type="video/mp4" />
+				</video>
+			) : (
+				src && (
+					<img
+						src={src}
+						alt={alt}
+						loading="lazy"
+						style={objectPosition ? `object-position: ${objectPosition};` : undefined}
+					/>
+				)
+			)
+		}
+	</Frame>
+	{caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+	.band-wrap {
+		padding-block: 20px;
+	}
+
+	.band {
+		display: block;
+		width: 100%;
+		margin-inline: auto;
+		background-color: var(--color-placeholder);
+		overflow: hidden;
+		border-radius: 4px;
+	}
+
+	/* Transparent PNGs would otherwise show the placeholder grey through their gaps. */
+	.band--filled {
+		background-color: transparent;
+	}
+
+	.band img,
+	.band video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	a.band {
+		transition:
+			transform 250ms ease,
+			box-shadow 250ms ease;
+	}
+
+	/* .band already clips, so the image scales within its frame. */
+	a.band img {
+		transition: transform 400ms ease;
+	}
+
+	a.band:hover,
+	a.band:focus-visible {
+		transform: translateY(-4px);
+		box-shadow: 0 14px 30px rgba(37, 42, 46, 0.18);
+	}
+
+	a.band:hover img,
+	a.band:focus-visible img {
+		transform: scale(1.04);
+	}
+
+	figcaption {
+		margin-top: 20px;
+		padding: 10px;
+		font-size: var(--fs-body);
+		line-height: 1.45;
+		max-width: 90ch;
+	}
+</style>
+
+<script>
+	/* An autoplaying loop is motion the viewer did not ask for: hand them controls instead. */
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		for (const video of document.querySelectorAll('video[data-motion]')) {
+			video.removeAttribute('autoplay');
+			video.setAttribute('controls', '');
+			video.pause();
+		}
+	}
+</script>

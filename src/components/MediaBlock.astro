@@ -1,0 +1,62 @@
+---
+/* Figma: "Product design and description" 19:950 / alternative 24:1004. */
+interface Props {
+	src?: string;
+	alt?: string;
+	bodyHtml: string;
+	reverse?: boolean;
+}
+
+const { src, alt = '', bodyHtml, reverse = false } = Astro.props;
+---
+
+<div class:list={['media', { 'media--reverse': reverse }]}>
+	<div class="frame">
+		{src && <img src={src} alt={alt} loading="lazy" />}
+	</div>
+	<div class="prose copy" set:html={bodyHtml} />
+</div>
+
+<style>
+	.media {
+		display: flex;
+		align-items: flex-end;
+		gap: 25px;
+		padding: 5px;
+	}
+
+	.media--reverse {
+		flex-direction: row-reverse;
+	}
+
+	.frame {
+		flex: 1 1 0;
+		min-width: 0;
+		aspect-ratio: 617 / 752;
+		background-color: var(--color-placeholder);
+		overflow: hidden;
+	}
+
+	.frame img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.copy {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	@media (max-width: 820px) {
+		.media,
+		.media--reverse {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.frame {
+			aspect-ratio: 4 / 3;
+		}
+	}
+</style>

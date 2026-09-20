@@ -1,0 +1,62 @@
+---
+/* Figma: "Explore ptype button" 111:1263 — pill, Accent 1 fill, Accent 2 label.
+   href is optional: the PawTrainer instance in Figma has no link attached yet,
+   so it renders as a non-interactive pill until a URL is supplied. */
+interface Props {
+	href?: string;
+	label?: string;
+}
+
+const { href, label = 'Explore Prototype' } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag
+	class:list={['button', { 'button--unlinked': !href }]}
+	href={href}
+	target={href ? '_blank' : undefined}
+	rel={href ? 'noopener noreferrer' : undefined}
+	aria-disabled={href ? undefined : 'true'}
+>
+	<span>{label}</span>
+	<img class="arrow" src="/icons/arrow-right.svg" alt="" width="32" height="32" />
+</Tag>
+
+<style>
+	.button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		padding: 10px clamp(16px, 1.7vw, 22px);
+		border-radius: 100px;
+		background-color: var(--color-accent-1);
+		color: var(--color-accent-2);
+		/* 24px at desktop, easing down on narrow screens. */
+		font-size: clamp(18px, 1.9vw, 24px);
+		font-weight: 500;
+		line-height: 1.2;
+		white-space: nowrap;
+		transition:
+			filter 150ms ease,
+			transform 150ms ease;
+	}
+
+	a.button:hover,
+	a.button:focus-visible {
+		filter: brightness(0.93);
+		transform: translateY(-1px);
+	}
+
+	.button--unlinked {
+		cursor: default;
+	}
+
+	.arrow {
+		width: clamp(18px, 1.9vw, 24px);
+		height: clamp(18px, 1.9vw, 24px);
+		flex: 0 0 auto;
+		/* Figma mirrors the mi:arrow-left asset to point right. */
+		transform: scaleX(-1);
+	}
+</style>

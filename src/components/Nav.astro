@@ -1,0 +1,72 @@
+---
+/* Figma: "Header navbar" 9:162 — name left, three text buttons right. */
+const isHome = Astro.url.pathname === '/';
+const to = (hash: string) => (isHome ? `#${hash}` : `/#${hash}`);
+
+const links = [
+	{ label: 'Work', href: to('work') },
+	{ label: 'About', href: to('about') },
+	{ label: 'Contact', href: to('contact') },
+];
+---
+
+<header class="header" id="top">
+	<nav class="page navbar" aria-label="Primary">
+		<a class="wordmark" href="/">Yvonne Wu</a>
+		<ul class="links">
+			{
+				links.map((link) => (
+					<li>
+						<a class="link" href={link.href}>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+</header>
+
+<style>
+	.header {
+		padding-block: clamp(20px, 3vw, 37px);
+		border-bottom: var(--rule-strong);
+	}
+
+	.navbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+	}
+
+	.wordmark {
+		font-size: var(--fs-nav);
+		font-weight: 500;
+		line-height: 1;
+		white-space: nowrap;
+	}
+
+	.links {
+		display: flex;
+		align-items: center;
+		gap: clamp(2px, 1vw, 18px);
+	}
+
+	.link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 10px clamp(12px, 1.6vw, 22px);
+		border-radius: 8px;
+		font-size: var(--fs-sm);
+		font-weight: 400;
+		line-height: 1;
+		white-space: nowrap;
+		transition: background-color 150ms ease;
+	}
+
+	.link:hover {
+		background-color: var(--color-accent-light);
+	}
+</style>
