@@ -185,6 +185,19 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 			grid-template-columns: minmax(0, 1fr);
 		}
 
+		/* Below ~780px the email is wider than its column, and an address
+		   is one unbreakable word, so stack the pairs instead. */
+		.contact-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.contact-grid dd {
+			text-align: left;
+			/* Last resort on very narrow phones: break the address rather
+			   than let it push the page into horizontal scroll. */
+			overflow-wrap: anywhere;
+		}
+
 		.split {
 			flex-direction: column;
 			align-items: flex-start;
