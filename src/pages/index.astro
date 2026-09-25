@@ -7,8 +7,6 @@ import Footer from '../components/Footer.astro';
 import { caseStudies } from '../data/caseStudies';
 
 /* Copy transcribed from Figma "Home" 31:1041. */
-const intro = 'Hi, I am a UX designer based in Boston.';
-
 const aboutHtml = `
 	<p>Welcome! I am Yvonne, a current graduate student in Human Factors at Bentley University. I am balancing school with a full-time career in civil service.</p>
 	<p>Outside of work and school, you’ll probably find me hanging out with my cats, searching for a new noodle soup recipe to recreate, doing Pilates, browsing eBay for my next film camera, or getting lost in a good book.</p>
@@ -24,16 +22,12 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 	<Nav />
 
 	<main>
-		<!-- Figma: "Top section" 31:1093 -->
+		<!-- Figma: "Top section" 11:351 -->
 		<Hero />
 		<div class="rule rule--strong"></div>
-		<div class="page intro">
-			<p>{intro}</p>
-		</div>
 
 		<!-- Figma: "Work section homepage" 64:821 -->
 		<section class="block" id="work">
-			<div class="rule"></div>
 			<div class="page">
 				<h2 class="section-heading">Work</h2>
 				<div class="work-grid">
@@ -96,11 +90,6 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 </Layout>
 
 <style>
-	.intro {
-		padding-block: clamp(24px, 3vw, 37px);
-		font-size: clamp(16px, 1.5vw, 20px);
-	}
-
 	.block {
 		display: flex;
 		flex-direction: column;

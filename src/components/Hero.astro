@@ -1,5 +1,5 @@
 ---
-/* Figma: "Homepage hero" 9:180 — offset 86px name/role with profile image at right. */
+/* Figma: "Homepage hero" 176:1343 — centred greeting and tagline, profile image at right. */
 interface Props {
 	image?: string;
 	imageAlt?: string;
@@ -13,8 +13,8 @@ const {
 
 <section class="hero page">
 	<div class="text">
-		<h1 class="name">Yvonne Wu</h1>
-		<p class="role">UX Designer</p>
+		<h1 class="greeting">Hi, I’m Yvonne!</h1>
+		<p class="tagline">I design human-centered <br class="line-break" />digital experiences</p>
 	</div>
 	<div class="portrait">
 		<img src={image} alt={imageAlt} width="843" height="1124" />
@@ -22,11 +22,16 @@ const {
 </section>
 
 <style>
+	/* Figma 176:1343 — the hero hugs its content at 1178px (901 text + 277 image)
+	   and centres in the column, rather than spreading to the full 1296px. The
+	   vw coefficients below are set so every value reaches its designed size at
+	   the same point, keeping the whole block in proportion as it scales. */
 	.hero {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: clamp(24px, 4vw, 64px);
+		gap: 0;
+		max-width: calc(1178px + 2 * var(--gutter));
 		padding-block: clamp(48px, 7vw, 93px);
 	}
 
@@ -35,26 +40,30 @@ const {
 		flex-direction: column;
 		flex: 1 1 auto;
 		min-width: 0;
+		/* Figma 176:1345 — 30px between the two lines, and the block is centred. */
+		gap: clamp(16px, 2.55vw, 30px);
+		text-align: center;
 	}
 
-	.name,
-	.role {
-		font-size: var(--fs-display);
+	/* Figma 176:1346 — 86px. */
+	.greeting {
+		font-size: clamp(44px, 7.3vw, 86px);
 		font-weight: 500;
-		line-height: 1.1;
-		letter-spacing: -0.02em;
-		white-space: nowrap;
+		line-height: 1.2;
+		color: color-mix(in srgb, var(--color-display) 70%, transparent);
 	}
 
-	/* The role is indented to roughly a third of the column, as in the design. */
-	.role {
-		align-self: flex-start;
-		margin-left: clamp(0px, 32vw, 424px);
+	/* Figma 176:1347 — 48px. */
+	.tagline {
+		font-size: clamp(26px, 4.1vw, 48px);
+		font-weight: 500;
+		line-height: 1.2;
+		color: var(--color-display);
 	}
 
 	.portrait {
 		flex: 0 0 auto;
-		width: clamp(140px, 19vw, 277px);
+		width: clamp(140px, 23.5vw, 277px);
 		aspect-ratio: 277 / 297;
 		border-radius: 23px;
 		overflow: hidden;
@@ -69,18 +78,21 @@ const {
 	@media (max-width: 720px) {
 		.hero {
 			flex-direction: column;
-			align-items: flex-start;
+			align-items: center;
+			/* Stacked, the two need breathing room the side-by-side layout doesn't. */
+			gap: clamp(24px, 5vw, 40px);
 		}
 
-		.role {
-			margin-left: 0;
+		/* The designed break sits after "human-centered"; below this width the
+		   line is too narrow for it, so let the text wrap on its own. */
+		.line-break {
+			display: none;
 		}
 
 		.portrait {
 			width: 100%;
 			max-width: 320px;
 			aspect-ratio: 4 / 3;
-			align-self: center;
 		}
 	}
 </style>
