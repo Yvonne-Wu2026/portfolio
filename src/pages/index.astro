@@ -9,8 +9,9 @@ import { caseStudies } from '../data/caseStudies';
 /* Copy transcribed from Figma "Home" 31:1041. */
 const aboutHtml = `
 	<p>Welcome! I am Yvonne, a current graduate student in Human Factors at Bentley University. I am balancing school with a full-time career in civil service.</p>
-	<p>Outside of work and school, you’ll probably find me hanging out with my cats, searching for a new noodle soup recipe to recreate, doing Pilates, browsing eBay for my next film camera, or getting lost in a good book.</p>
-	<p>I am always learning more about UX design, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or exploring AI tools and platforms. At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.</p>
+	<p>Outside of work and school, you’ll find me hanging out with my cats, trying a new noodle soup recipe, or most likely revising my portfolio. This website was designed in Figma, developed with Claude Code + Figma MCP, managed with GitHub and deployed on Cloudflare. I am always making changes and trying new things!</p>
+	<p>I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.</p>
+	<p>At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.</p>
 `;
 
 const contactBody = 'Feel free to reach out to me via email, or connect with me on LinkedIn!';
@@ -52,7 +53,7 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 			<div class="page split">
 				<div class="split-text">
 					<h2 class="section-heading">About</h2>
-					<div class="prose prose--spaced" set:html={aboutHtml} />
+					<div class="prose prose--spaced body-text" set:html={aboutHtml} />
 				</div>
 				<div class="about-photo">
 					<img
@@ -94,7 +95,7 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 		display: flex;
 		flex-direction: column;
 		gap: 50px;
-		padding-block: clamp(28px, 3.5vw, 37px);
+		padding-block: clamp(58px, calc(6vw + 10px), 90px);
 	}
 
 	.block .page {
@@ -109,7 +110,8 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 		gap: clamp(24px, 6vw, 150px);
 	}
 
-	.split {
+	/* `.block` prefix so this outranks `.block .page`, which would stack it. */
+	.block .split {
 		display: flex;
 		flex-direction: row;
 		/* Figma 31:1143: text anchored left, photo at the right gutter, centred against it. */
@@ -127,8 +129,8 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 
 	.about-photo {
 		flex: 0 0 auto;
-		width: clamp(180px, 25vw, 356px);
-		aspect-ratio: 356 / 372;
+		width: clamp(180px, 29.3vw, 421px);
+		aspect-ratio: 421 / 372;
 		border-radius: clamp(48px, 6vw, 85px);
 		overflow: hidden;
 	}
@@ -187,14 +189,14 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 			overflow-wrap: anywhere;
 		}
 
-		.split {
+		.block .split {
 			flex-direction: column;
 			align-items: flex-start;
 		}
 
 		.about-photo {
 			width: 100%;
-			max-width: 356px;
+			max-width: 421px;
 			align-self: center;
 		}
 	}
