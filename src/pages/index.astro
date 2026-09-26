@@ -13,10 +13,6 @@ const aboutHtml = `
 	<p>I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.</p>
 	<p>At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.</p>
 `;
-
-const contactBody = 'Feel free to reach out to me via email, or connect with me on LinkedIn!';
-const email = 'yvonnewu.designs@gmail.com';
-const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 ---
 
 <Layout>
@@ -64,25 +60,6 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 						loading="lazy"
 					/>
 				</div>
-			</div>
-		</section>
-
-		<!-- Figma: "Contact Section" 31:1154 -->
-		<section class="block" id="contact">
-			<div class="rule"></div>
-			<div class="page">
-				<h2 class="section-heading">Contact</h2>
-				<p class="body-text contact-intro">{contactBody}</p>
-				<dl class="contact-grid">
-					<dt>Email</dt>
-					<dd><a href={`mailto:${email}`}>{email}</a></dd>
-					<dt>LinkedIn</dt>
-					<dd>
-						<a class="link-accent" href={linkedin} target="_blank" rel="noopener noreferrer">
-							LinkedIn Profile
-						</a>
-					</dd>
-				</dl>
 			</div>
 		</section>
 	</main>
@@ -141,52 +118,9 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 		object-fit: cover;
 	}
 
-	.contact-intro {
-		max-width: 1296px;
-	}
-
-	.contact-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 10px;
-		font-size: 24px;
-		line-height: 1.3;
-	}
-
-	.contact-grid dt,
-	.contact-grid dd {
-		padding: 10px;
-	}
-
-	.contact-grid dd {
-		text-align: right;
-	}
-
-	.contact-grid a:hover {
-		text-decoration: underline;
-	}
-
-	.link-accent {
-		color: var(--color-link);
-		text-decoration: underline;
-	}
-
 	@media (max-width: 860px) {
 		.work-grid {
 			grid-template-columns: minmax(0, 1fr);
-		}
-
-		/* Below ~780px the email is wider than its column, and an address
-		   is one unbreakable word, so stack the pairs instead. */
-		.contact-grid {
-			grid-template-columns: 1fr;
-		}
-
-		.contact-grid dd {
-			text-align: left;
-			/* Last resort on very narrow phones: break the address rather
-			   than let it push the page into horizontal scroll. */
-			overflow-wrap: anywhere;
 		}
 
 		.block .split {

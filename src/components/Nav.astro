@@ -6,7 +6,8 @@ const to = (hash: string) => (isHome ? `#${hash}` : `/#${hash}`);
 const links = [
 	{ label: 'Work', href: to('work') },
 	{ label: 'About', href: to('about') },
-	{ label: 'Contact', href: to('contact') },
+	// The contact block lives in the footer, which is on every page.
+	{ label: 'Contact', href: '#contact' },
 ];
 ---
 
