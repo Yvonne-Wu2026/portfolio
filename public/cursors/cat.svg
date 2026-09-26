@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 96 96">
+  <!-- Stretched-out cat reaching up-left with a daisy; the daisy is the hotspot. -->
+  <g stroke="#311b14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(48 48) rotate(-45) scale(0.8) translate(0 -4)">
+      <!-- tail -->
+      <path d="M10 50 q14 2 10 14" fill="none"/>
+      <!-- ears -->
+      <path d="M-12 14 L-17 2 L-5 9 Z" fill="#fffdf8"/>
+      <path d="M12 14 L17 2 L5 9 Z" fill="#fffdf8"/>
+      <!-- body -->
+      <rect x="-14" y="6" width="28" height="52" rx="14" fill="#fffdf8"/>
+      <!-- feet -->
+      <ellipse cx="-7" cy="57" rx="5" ry="4" fill="#fffdf8"/>
+      <ellipse cx="7" cy="57" rx="5" ry="4" fill="#fffdf8"/>
+      <!-- stem -->
+      <path d="M0 4 V-34" fill="none" stroke="#6f8f5a"/>
+      <!-- arms raised over the head -->
+      <path d="M-11 26 Q-9 8 -3 -1" fill="none" stroke-width="7" stroke="#311b14"/>
+      <path d="M-11 26 Q-9 8 -3 -1" fill="none" stroke-width="3" stroke="#fffdf8"/>
+      <path d="M11 26 Q9 8 3 -1" fill="none" stroke-width="7" stroke="#311b14"/>
+      <path d="M11 26 Q9 8 3 -1" fill="none" stroke-width="3" stroke="#fffdf8"/>
+      <!-- face -->
+      <path d="M-5 17 v2 M5 17 v2" fill="none" stroke-width="2.6"/>
+      <path d="M-2 22 q2 2 4 0" fill="none" stroke-width="2"/>
+      <!-- daisy -->
+      <g transform="translate(0 -40)">
+        <g fill="#fffdf8" stroke-width="2.6">
+          <ellipse cx="0" cy="-7" rx="4.5" ry="6"/>
+          <ellipse cx="0" cy="-7" rx="4.5" ry="6" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-7" rx="4.5" ry="6" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-7" rx="4.5" ry="6" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-7" rx="4.5" ry="6" transform="rotate(288)"/>
+        </g>
+        <circle r="4.5" fill="#f6d58a" stroke-width="2.6"/>
+      </g>
+    </g>
+  </g>
+</svg>

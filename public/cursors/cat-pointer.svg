@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 96 96">
+  <!-- Sitting cat holding a daisy overhead; the top of the daisy is the hotspot. -->
+  <g stroke="#311b14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(48 40) scale(0.85)">
+      <!-- tail -->
+      <path d="M17 52 q16 4 12 -12" fill="none"/>
+      <!-- ears -->
+      <path d="M-13 16 L-17 3 L-5 10 Z" fill="#fffdf8"/>
+      <path d="M13 16 L17 3 L5 10 Z" fill="#fffdf8"/>
+      <!-- body: narrow head, round sitting bottom -->
+      <path d="M0 7 C12 7 15 16 15 26 C15 36 21 44 21 51 C21 58 13 60 0 60 C-13 60 -21 58 -21 51 C-21 44 -15 36 -15 26 C-15 16 -12 7 0 7 Z" fill="#fffdf8"/>
+      <!-- feet -->
+      <ellipse cx="-9" cy="59" rx="6" ry="4" fill="#fffdf8"/>
+      <ellipse cx="9" cy="59" rx="6" ry="4" fill="#fffdf8"/>
+      <!-- stem -->
+      <path d="M0 6 V-16" fill="none" stroke="#6f8f5a"/>
+      <!-- arms raised -->
+      <path d="M-12 28 Q-10 12 -3 4" fill="none" stroke-width="7"/>
+      <path d="M-12 28 Q-10 12 -3 4" fill="none" stroke-width="3" stroke="#fffdf8"/>
+      <path d="M12 28 Q10 12 3 4" fill="none" stroke-width="7"/>
+      <path d="M12 28 Q10 12 3 4" fill="none" stroke-width="3" stroke="#fffdf8"/>
+      <!-- happy face -->
+      <path d="M-7 20 q2 -3 4 0 M3 20 q2 -3 4 0" fill="none" stroke-width="2.4"/>
+      <path d="M-2.5 24 q2.5 2.5 5 0" fill="none" stroke-width="2"/>
+      <!-- daisy, a little bigger: in bloom -->
+      <g transform="translate(0 -22)">
+        <g fill="#fffdf8" stroke-width="2.6">
+          <ellipse cx="0" cy="-8" rx="5.5" ry="7"/>
+          <ellipse cx="0" cy="-8" rx="5.5" ry="7" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-8" rx="5.5" ry="7" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-8" rx="5.5" ry="7" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-8" rx="5.5" ry="7" transform="rotate(288)"/>
+        </g>
+        <circle r="5.5" fill="#f6d58a" stroke-width="2.6"/>
+      </g>
+    </g>
+  </g>
+</svg>

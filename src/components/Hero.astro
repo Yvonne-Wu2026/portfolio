@@ -1,5 +1,7 @@
 ---
 /* Figma: "Homepage hero" 176:1343 — centred greeting and tagline, profile image at right. */
+import Flower from './Flower.astro';
+
 interface Props {
 	image?: string;
 	imageAlt?: string;
@@ -13,8 +15,8 @@ const {
 
 <section class="hero page">
 	<div class="text">
-		<h1 class="greeting">Hi, I’m Yvonne!</h1>
-		<p class="tagline">I design human-centered <br class="line-break" />digital experiences</p>
+		<h1 class="greeting bloom"><span class="greeting-text">Hi, I’m Yvonne</span><Flower /></h1>
+		<p class="tagline">I design human-centered solutions that are functional, intuitive, and engaging.</p>
 	</div>
 	<div class="portrait">
 		<img src={image} alt={imageAlt} width="843" height="1124" />
@@ -50,7 +52,13 @@ const {
 		font-size: clamp(44px, 7.3vw, 86px);
 		font-weight: 500;
 		line-height: 1.2;
-		color: color-mix(in srgb, var(--color-display) 70%, transparent);
+		color: var(--color-display);
+	}
+
+	/* Raised so the flower tucks in behind the end of the text. */
+	.greeting-text {
+		position: relative;
+		z-index: 1;
 	}
 
 	/* Figma 176:1347 — 48px. */
@@ -59,6 +67,11 @@ const {
 		font-weight: 500;
 		line-height: 1.2;
 		color: var(--color-display);
+		/* Keep the line length short and centred, then even out the lines
+		   rather than hard-coding a break. */
+		max-width: 14em;
+		margin-inline: auto;
+		text-wrap: balance;
 	}
 
 	.portrait {
@@ -81,12 +94,6 @@ const {
 			align-items: center;
 			/* Stacked, the two need breathing room the side-by-side layout doesn't. */
 			gap: clamp(24px, 5vw, 40px);
-		}
-
-		/* The designed break sits after "human-centered"; below this width the
-		   line is too narrow for it, so let the text wrap on its own. */
-		.line-break {
-			display: none;
 		}
 
 		.portrait {

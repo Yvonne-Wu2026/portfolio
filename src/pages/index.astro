@@ -141,4 +141,23 @@ const aboutHtml = `
 	.prose--spaced > * + * {
 		margin-top: 1.7em;
 	}
+
+	/* Homepage-only cat cursors: a stretching cat whose daisy is the tip, and
+	   a sitting cat holding it up over anything clickable. Hotspots sit on
+	   each daisy's centre. This page's styles only load here. */
+	@media (pointer: fine) {
+		html {
+			cursor:
+				url('/cursors/cat.svg') 15 15,
+				auto;
+		}
+
+		a,
+		button,
+		.bloom {
+			cursor:
+				url('/cursors/cat-pointer.svg') 32 14,
+				pointer;
+		}
+	}
 </style>
