@@ -1,16 +1,6 @@
 ---
-/* Figma: "Homepage hero" 176:1343 — centred greeting and tagline, profile image at right. */
+/* Figma: "Homepage hero" 176:1343 — centred greeting and tagline. */
 import Flower from './Flower.astro';
-
-interface Props {
-	image?: string;
-	imageAlt?: string;
-}
-
-const {
-	image = '/images/profile.webp',
-	imageAlt = 'Yvonne Wu smiling, against a grey studio backdrop',
-} = Astro.props;
 ---
 
 <section class="hero page">
@@ -18,21 +8,16 @@ const {
 		<h1 class="greeting bloom"><span class="greeting-text">Hi, I’m Yvonne</span><Flower /></h1>
 		<p class="tagline">I design human-centered solutions that are functional, intuitive, and engaging.</p>
 	</div>
-	<div class="portrait">
-		<img src={image} alt={imageAlt} width="843" height="1124" />
-	</div>
 </section>
 
 <style>
-	/* Figma 176:1343 — the hero hugs its content at 1178px (901 text + 277 image)
-	   and centres in the column, rather than spreading to the full 1296px. The
-	   vw coefficients below are set so every value reaches its designed size at
-	   the same point, keeping the whole block in proportion as it scales. */
+	/* Figma 176:1343 — the hero is capped at 1178px and centres in the column,
+	   rather than spreading to the full 1296px. The vw coefficients below are
+	   set so every value reaches its designed size at the same point, keeping
+	   the whole block in proportion as it scales. */
 	.hero {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 0;
 		max-width: calc(1178px + 2 * var(--gutter));
 		padding-block: clamp(48px, 7vw, 93px);
 	}
@@ -47,9 +32,10 @@ const {
 		text-align: center;
 	}
 
-	/* Figma 176:1346 — 86px. */
+	/* Figma 176:1346 was 86px; enlarged for the Nority display face. */
 	.greeting {
-		font-size: clamp(44px, 7.3vw, 86px);
+		font-family: var(--font-display);
+		font-size: clamp(52px, 8.8vw, 104px);
 		font-weight: 500;
 		line-height: 1.2;
 		color: var(--color-display);
@@ -72,34 +58,5 @@ const {
 		max-width: 14em;
 		margin-inline: auto;
 		text-wrap: balance;
-	}
-
-	.portrait {
-		flex: 0 0 auto;
-		width: clamp(140px, 23.5vw, 277px);
-		aspect-ratio: 277 / 297;
-		border-radius: 23px;
-		overflow: hidden;
-	}
-
-	.portrait img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	@media (max-width: 720px) {
-		.hero {
-			flex-direction: column;
-			align-items: center;
-			/* Stacked, the two need breathing room the side-by-side layout doesn't. */
-			gap: clamp(24px, 5vw, 40px);
-		}
-
-		.portrait {
-			width: 100%;
-			max-width: 320px;
-			aspect-ratio: 4 / 3;
-		}
 	}
 </style>

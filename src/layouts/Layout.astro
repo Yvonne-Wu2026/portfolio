@@ -32,6 +32,16 @@ const {
 </html>
 
 <style is:global>
+	/* Nority Inktrap Bold (demo, personal-use licence) — display face for the
+	   wordmark and hero headline. The face is bold by design, so it covers
+	   every weight to stop the browser synthesising a heavier one. */
+	@font-face {
+		font-family: 'Nority';
+		src: url('/fonts/nority-bold.woff2') format('woff2');
+		font-weight: 100 900;
+		font-display: swap;
+	}
+
 	*,
 	*::before,
 	*::after {
@@ -59,6 +69,7 @@ const {
 
 		--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 		--font-serif: 'Instrument Serif', Georgia, serif;
+		--font-display: 'Nority', var(--font-sans);
 
 		/* Layout — Figma frames are 1440 wide with 72px gutters (1296 content) */
 		--page-max: 1440px;
