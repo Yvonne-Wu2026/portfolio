@@ -51,7 +51,7 @@ export interface CaseStudy {
 	coverPosition?: string;
 	hero?: { src?: string; alt?: string; ratio?: string; maxWidth?: string };
 	cta?: { label: string; href?: string };
-	meta: { role: string; type: string; platform: string; tools: string };
+	meta: { role: string; type: string; client: string; tools: string };
 	sections: Section[];
 }
 
@@ -76,7 +76,7 @@ const pawtrainer: CaseStudy = {
 	meta: {
 		role: 'AI integration and conversational experience design',
 		type: 'Mobile App Prototype',
-		platform: 'Mobile App',
+		client: 'Student Project',
 		tools: 'Figma Make, Supabase, Google AI Studio, Procreate',
 	},
 	sections: [
@@ -453,7 +453,7 @@ const watts: CaseStudy = {
 	meta: {
 		role: 'UI/UX Design',
 		type: 'Webpage Design',
-		platform: 'Desktop + Tablet',
+		client: 'Bentley University Office of Sustainability',
 		tools: 'Figma, Figma Make, Datawrapper',
 	},
 	sections: [
