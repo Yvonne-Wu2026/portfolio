@@ -2,119 +2,152 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
-import WorkCard from '../components/WorkCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import Footer from '../components/Footer.astro';
-import { caseStudies } from '../data/caseStudies';
 
-/* Copy transcribed from Figma "Home" 31:1041. */
-const aboutHtml = `
-	<p>Welcome! I am Yvonne, a current graduate student in Human Factors at Bentley University. I am balancing school with a full-time career in civil service.</p>
-	<p>Outside of work and school, you’ll find me hanging out with my cats, trying a new noodle soup recipe, or most likely revising my portfolio. This website was designed in Figma, developed with Claude Code + Figma MCP, managed with GitHub and deployed on Cloudflare. I am always making changes and trying new things!</p>
-	<p>I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.</p>
-	<p>At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.</p>
-`;
+/* Copy and crops transcribed from Figma "Home Page" 24:609. Crops place
+   each screenshot inside the card's 452×613 slot. */
+const projects = [
+	{
+		name: 'Dog Training Companion',
+		description:
+			'A data-driven dog training app featuring a Gemini-powered chatbot trainer. PawTrainer helps new dog owners build confidence and reduce training stress.',
+		href: '/work/pawtrainer',
+		image: '/images/home-card-pawtrainer.webp',
+		imageAlt: 'PawTrainer on a phone, showing the "Ready to train?" screen for a loose leash walking session',
+		imageWidth: 458,
+		imageHeight: 920,
+		tint: 'var(--color-sky)',
+		crop: { left: '12.3%', top: '9.25%', width: '75.4%' },
+	},
+	{
+		name: 'Data Visualization',
+		description:
+			'An engaging, interactive platform that transforms solar panel data into intuitive, easy-to-understand visualizations.',
+		href: '/work/watts-the-big-deal',
+		image: '/images/home-card-watts.webp',
+		imageAlt: 'The "Watt’s the Big Deal?" page: Bentley Arena at dusk above three yellow stat circles',
+		imageWidth: 1000,
+		imageHeight: 1489,
+		tint: 'var(--color-butter)',
+		crop: { left: '-4.65%', top: '15.58%', width: '109.3%' },
+	},
+];
+
+const aboutParagraphs = [
+	'Hi, I’m Yvonne! I am currently studying Human Factors at Bentley University and working full time in civil service.',
+	'Outside of work, you’ll find me hanging out with my cats, crocheting or knitting something for a family member, doing pilates, or revising my portfolio. This website was designed in Figma, developed with Claude Code + Figma MCP, managed with GitHub and deployed on Cloudflare. I am always learning and trying new things!',
+	'I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.',
+	'At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.',
+];
 ---
 
 <Layout>
-	<Nav />
+	<div class="home">
+		<Nav />
 
-	<main>
-		<!-- Figma: "Top section" 11:351 -->
-		<Hero />
-		<div class="rule rule--strong"></div>
+		<main class="sections">
+			<Hero />
+			<hr class="divider" />
 
-		<!-- Figma: "Work section homepage" 64:821 -->
-		<section class="block" id="work">
-			<div class="page">
-				<h2 class="section-heading">Work</h2>
+			<!-- Figma: 24:629 -->
+			<section class="section page" id="work">
+				<h2 class="heading">Work</h2>
 				<div class="work-grid">
-					{
-						caseStudies.map((study) => (
-							<WorkCard
-								name={study.title}
-								href={`/work/${study.slug}`}
-								cover={study.cover}
-								coverAlt={study.coverAlt}
-								coverPosition={study.coverPosition}
-							/>
-						))
-					}
+					{projects.map((project) => <ProjectCard {...project} />)}
 				</div>
-			</div>
-		</section>
+			</section>
+			<hr class="divider" />
 
-		<!-- Figma: "About section" 31:1143 -->
-		<section class="block" id="about">
-			<div class="rule"></div>
-			<div class="page split">
-				<div class="split-text">
-					<h2 class="section-heading">About</h2>
-					<div class="prose prose--spaced body-text" set:html={aboutHtml} />
-				</div>
-				<div class="about-photo">
+			<!-- Figma: 24:701 -->
+			<section class="section page" id="about">
+				<h2 class="heading">About</h2>
+				<div class="about-body">
+					<div class="about-text">
+						{aboutParagraphs.map((text) => <p>{text}</p>)}
+					</div>
 					<img
-						src="/images/about-portrait.webp"
-						alt="Yvonne standing beside a life-size woven elephant sculpture on a beach at dusk"
-						width="1148"
-						height="1200"
+						class="about-photo"
+						src="/images/home-about.webp"
+						alt="Yvonne crouching by a pen of sheep in coats, making a peace sign"
+						width="1964"
+						height="1473"
 						loading="lazy"
 					/>
 				</div>
-			</div>
-		</section>
-	</main>
+			</section>
+		</main>
 
-	<Footer />
+		<Footer />
+	</div>
 </Layout>
 
 <style>
-	.block {
+	/* Figma 24:609 — every top-level block is 50px apart. */
+	.home,
+	.sections {
 		display: flex;
 		flex-direction: column;
 		gap: 50px;
-		padding-block: clamp(58px, calc(6vw + 10px), 90px);
 	}
 
-	.block .page {
-		display: flex;
-		flex-direction: column;
-		gap: clamp(32px, 4vw, 53px);
+	/* Figma 24:628 / 24:719 — 1350px, 3px, black at 70%. */
+	.divider {
+		width: calc(100% - 2 * var(--gutter));
+		max-width: 1350px;
+		margin-inline: auto;
+		border: 0;
+		border-top: 3px solid rgba(0, 0, 0, 0.7);
 	}
 
-	.work-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: clamp(24px, 6vw, 150px);
-	}
-
-	/* `.block` prefix so this outranks `.block .page`, which would stack it. */
-	.block .split {
-		display: flex;
-		flex-direction: row;
-		/* Figma 31:1143: text anchored left, photo at the right gutter, centred against it. */
-		align-items: center;
-		justify-content: space-between;
-		gap: clamp(24px, 4vw, 64px);
-	}
-
-	.split-text {
+	.section {
 		display: flex;
 		flex-direction: column;
 		gap: 30px;
-		max-width: 730px;
+		max-width: calc(1202px + 2 * var(--gutter));
+		padding-block: 50px;
+		color: var(--color-ink);
 	}
 
+	.heading {
+		font-family: var(--font-playfair);
+		font-size: clamp(40px, 4.44vw, 64px);
+		font-weight: 700;
+		line-height: 1.33;
+		text-transform: uppercase;
+	}
+
+	/* Figma 24:678 — two 568px cards across 1204px. */
+	.work-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: clamp(20px, 4.7vw, 68px);
+	}
+
+	.about-body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 50px;
+	}
+
+	/* Figma 24:729 — paragraphs separated by one empty 24px line. */
+	.about-text {
+		align-self: stretch;
+		font-size: clamp(18px, 1.67vw, 24px);
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	.about-text p + p {
+		margin-top: 1.2em;
+	}
+
+	/* Figma 24:731 — 982×737. */
 	.about-photo {
-		flex: 0 0 auto;
-		width: clamp(180px, 29.3vw, 421px);
-		aspect-ratio: 421 / 372;
-		border-radius: clamp(48px, 6vw, 85px);
-		overflow: hidden;
-	}
-
-	.about-photo img {
 		width: 100%;
-		height: 100%;
+		max-width: 982px;
+		aspect-ratio: 982 / 737;
 		object-fit: cover;
 	}
 
@@ -122,24 +155,12 @@ const aboutHtml = `
 		.work-grid {
 			grid-template-columns: minmax(0, 1fr);
 		}
-
-		.block .split {
-			flex-direction: column;
-			align-items: flex-start;
-		}
-
-		.about-photo {
-			width: 100%;
-			max-width: 421px;
-			align-self: center;
-		}
 	}
 </style>
 
 <style is:global>
-	/* Roomier paragraph breaks for the About copy. */
-	.prose--spaced > * + * {
-		margin-top: 1.7em;
+	body {
+		background-color: var(--color-page);
 	}
 
 	/* Homepage-only cat cursors: a stretching cat whose daisy is the tip, and
@@ -153,8 +174,7 @@ const aboutHtml = `
 		}
 
 		a,
-		button,
-		.bloom {
+		button {
 			cursor:
 				url('/cursors/cat-pointer.svg') 32 14,
 				pointer;

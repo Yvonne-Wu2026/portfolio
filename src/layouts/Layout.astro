@@ -22,7 +22,7 @@ const {
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&family=Playfair+Display:wght@500;600;700&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
@@ -63,6 +63,14 @@ const {
 		--color-link: #0013be;
 		--color-placeholder: #d9d9d9;
 
+		/* Homepage redesign palette — Figma "Home Page" 24:609 */
+		--color-page: #f2efea;
+		--color-ink: #2b1c0f;
+		--color-chrome: #43302e; /* header and footer band */
+		--color-butter: #fff3b4;
+		--color-sky: #c1dbe8;
+		--color-cream: #fffcf2; /* Secondary */
+
 		/* Rules */
 		--rule-strong: 1.5px solid rgba(37, 42, 46, 0.85);
 		--rule-faint: 1px solid rgba(37, 42, 46, 0.28);
@@ -70,6 +78,7 @@ const {
 		--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 		--font-serif: 'Instrument Serif', Georgia, serif;
 		--font-display: 'Nority', var(--font-sans);
+		--font-playfair: 'Playfair Display', Georgia, serif;
 
 		/* Layout — Figma frames are 1440 wide with 72px gutters (1296 content) */
 		--page-max: 1440px;
@@ -158,10 +167,10 @@ const {
 	}
 
 	.section-heading {
+		font-family: var(--font-playfair);
 		font-size: var(--fs-display);
 		font-weight: 700;
-		line-height: 1;
-		letter-spacing: -0.02em;
+		line-height: 1.1;
 	}
 
 	.body-text {

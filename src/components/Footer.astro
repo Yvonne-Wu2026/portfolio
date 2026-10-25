@@ -1,116 +1,124 @@
 ---
-/* Figma: "Contact Section" 31:1154 above the large rounded photo from "Footer" 11:347. */
+/* Figma: "Footer" 24:866 — dark band with the Contact block and three contact links. */
 const contactBody = 'Feel free to reach out to me via email, or connect with me on LinkedIn!';
 const email = 'yvonnewu.designs@gmail.com';
 const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 ---
 
 <footer class="footer" id="contact">
-	<div class="rule"></div>
+	<div class="footer-rule"></div>
 	<div class="page inner">
-		<div class="contact">
-			<h2 class="section-heading">Contact</h2>
-			<p class="body-text contact-intro">{contactBody}</p>
-			<dl class="contact-grid">
-				<dt>Email</dt>
-				<dd><a href={`mailto:${email}`}>{email}</a></dd>
-				<dt>LinkedIn</dt>
-				<dd>
-					<a class="link-accent" href={linkedin} target="_blank" rel="noopener noreferrer">
-						LinkedIn Profile
-					</a>
-				</dd>
-			</dl>
+		<div class="intro">
+			<h2 class="heading">Contact</h2>
+			<p class="body">{contactBody}</p>
 		</div>
-		<div class="photo">
-			<img
-				src="/images/footer-cats.webp"
-				alt="Three cats resting on the tiers of a cat tree beside a sunlit window"
-				width="1920"
-				height="2560"
-				loading="lazy"
-			/>
-		</div>
+		<ul class="channels">
+			<li>
+				<a class="channel" href={`mailto:${email}`}>
+					<img src="/icons/email.svg" alt="" width="28.5" height="26.5" />
+					<span>{email}</span>
+				</a>
+			</li>
+			<li>
+				<a class="channel channel--underline" href={linkedin} target="_blank" rel="noopener noreferrer">
+					<img src="/icons/linkedin.svg" alt="" width="28.9979" height="29" />
+					<span>LinkedIn</span>
+				</a>
+			</li>
+			<li>
+				<!-- No profile link in the design yet; becomes an <a> once there is one. -->
+				<span class="channel">
+					<img src="/icons/instagram.svg" alt="" width="29" height="29" />
+					<span>Instagram</span>
+				</span>
+			</li>
+		</ul>
 	</div>
 </footer>
 
 <style>
+	/* Figma 24:866 — 110px above the rule, 100px below the links. */
 	.footer {
-		padding-top: clamp(58px, calc(6vw + 10px), 90px);
-		padding-bottom: 50px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 50px;
+		padding-top: clamp(64px, 7.6vw, 110px);
+		padding-bottom: clamp(56px, 6.9vw, 100px);
+		background-color: var(--color-chrome);
+	}
+
+	/* Figma 24:794 — 1350px, 3px, butter. */
+	.footer-rule {
+		width: calc(100% - 2 * var(--gutter));
+		max-width: 1350px;
+		border-top: 3px solid var(--color-butter);
 	}
 
 	.inner {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: center;
 		gap: 50px;
-		padding-top: 50px;
 	}
 
-	.contact {
-		width: 100%;
+	.intro {
 		display: flex;
 		flex-direction: column;
-		gap: clamp(32px, 4vw, 53px);
+		align-items: center;
+		gap: 30px;
+		text-align: center;
 	}
 
-	.contact-intro {
-		max-width: 1296px;
+	.heading {
+		font-family: var(--font-playfair);
+		font-size: clamp(40px, 4.44vw, 64px);
+		font-weight: 700;
+		line-height: 1.33;
+		text-transform: uppercase;
+		color: var(--color-butter);
 	}
 
-	.contact-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+	.body {
+		font-size: clamp(18px, 1.67vw, 24px);
+		line-height: 1.2;
+		color: var(--color-cream);
+	}
+
+	/* Figma 24:831 — the LinkedIn item sits centred in a 406px slot,
+	   which leaves ~133px either side of it. */
+	.channels {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 16px clamp(24px, 9.2vw, 133px);
+	}
+
+	.channel {
+		display: inline-flex;
+		align-items: center;
 		gap: 10px;
-		font-size: 24px;
-		line-height: 1.3;
+		font-size: clamp(18px, 1.67vw, 24px);
+		font-weight: 700;
+		line-height: 1.2;
+		color: var(--color-sky);
+		overflow-wrap: anywhere;
 	}
 
-	.contact-grid dt,
-	.contact-grid dd {
-		padding: 10px;
+	.channel img {
+		flex: 0 0 auto;
 	}
 
-	.contact-grid dd {
-		text-align: right;
-	}
-
-	.contact-grid a:hover {
+	.channel--underline span {
 		text-decoration: underline;
 	}
 
-	.link-accent {
-		color: var(--color-link);
+	a.channel:hover span {
 		text-decoration: underline;
 	}
 
-	.photo {
-		align-self: center;
-		width: clamp(240px, 30vw, 430px);
-		aspect-ratio: 430 / 515;
-		border-radius: clamp(36px, 5vw, 72px);
-		overflow: hidden;
-	}
-
-	.photo img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-
-	@media (max-width: 860px) {
-		/* Below ~780px the email is wider than its column, and an address
-		   is one unbreakable word, so stack the pairs instead. */
-		.contact-grid {
-			grid-template-columns: 1fr;
-		}
-
-		.contact-grid dd {
-			text-align: left;
-			/* Last resort on very narrow phones: break the address rather
-			   than let it push the page into horizontal scroll. */
-			overflow-wrap: anywhere;
-		}
+	.footer :focus-visible {
+		outline-color: var(--color-butter);
 	}
 </style>

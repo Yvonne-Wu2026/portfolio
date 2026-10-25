@@ -1,5 +1,5 @@
 ---
-/* Figma: "Header navbar" 9:162 — name left, three text buttons right. */
+/* Figma: "Header of every page" 5:77 — dark band, wordmark left, three text buttons right. */
 const isHome = Astro.url.pathname === '/';
 const to = (hash: string) => (isHome ? `#${hash}` : `/#${hash}`);
 
@@ -29,9 +29,11 @@ const links = [
 </header>
 
 <style>
+	/* Figma 24:610 — 37px vertical padding around a 127px-tall menu row. */
 	.header {
-		padding-block: clamp(20px, 3vw, 37px);
-		border-bottom: var(--rule-strong);
+		background-color: var(--color-chrome);
+		color: var(--color-butter);
+		padding-block: clamp(16px, 2.6vw, 37px);
 	}
 
 	.navbar {
@@ -39,36 +41,56 @@ const links = [
 		align-items: center;
 		justify-content: space-between;
 		gap: 24px;
+		min-height: clamp(64px, 8.8vw, 127px);
 	}
 
+	/* Figma I3:53;1:273 — inset 15px from the left and sitting ~10px below
+	   the links' centre line; the top margin shifts the centred box down. */
 	.wordmark {
-		font-family: var(--font-display);
-		font-size: var(--fs-nav);
+		margin-top: clamp(0px, 1.3vw, 19px);
+		padding-left: clamp(0px, 1.04vw, 15px);
+		font-family: var(--font-playfair);
+		font-size: clamp(28px, 3.33vw, 48px);
 		font-weight: 500;
-		line-height: 1;
+		line-height: 1.2;
 		white-space: nowrap;
 	}
 
 	.links {
 		display: flex;
 		align-items: center;
-		gap: clamp(2px, 1vw, 18px);
+		gap: clamp(2px, 1.25vw, 18px);
 	}
 
 	.link {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 10px clamp(12px, 1.6vw, 22px);
+		padding: 10px clamp(8px, 1.6vw, 22px);
 		border-radius: 8px;
-		font-size: var(--fs-sm);
-		font-weight: 400;
-		line-height: 1;
+		font-family: var(--font-playfair);
+		font-size: clamp(18px, 1.67vw, 24px);
+		font-weight: 500;
+		line-height: 1.2;
 		white-space: nowrap;
 		transition: background-color 150ms ease;
 	}
 
 	.link:hover {
-		background-color: var(--color-accent-light);
+		background-color: rgba(255, 243, 180, 0.12);
+	}
+
+	.header :focus-visible {
+		outline-color: var(--color-butter);
+	}
+
+	@media (max-width: 520px) {
+		.wordmark {
+			font-size: 24px;
+		}
+
+		.link {
+			font-size: 16px;
+		}
 	}
 </style>

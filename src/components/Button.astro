@@ -1,5 +1,5 @@
 ---
-/* Figma: "Explore ptype button" 111:1263 — pill, Accent 1 fill, Accent 2 label.
+/* Figma: "Explore ptype button" 111:1263 — pill, now sky fill with an ink label.
    href is optional: the PawTrainer instance in Figma has no link attached yet,
    so it renders as a non-interactive pill until a URL is supplied. */
 interface Props {
@@ -19,7 +19,7 @@ const Tag = href ? 'a' : 'span';
 	aria-disabled={href ? undefined : 'true'}
 >
 	<span>{label}</span>
-	<img class="arrow" src="/icons/arrow-right.svg" alt="" width="32" height="32" />
+	<span class="arrow" aria-hidden="true"></span>
 </Tag>
 
 <style>
@@ -30,8 +30,8 @@ const Tag = href ? 'a' : 'span';
 		gap: 10px;
 		padding: 10px clamp(16px, 1.7vw, 22px);
 		border-radius: 100px;
-		background-color: var(--color-accent-1);
-		color: var(--color-accent-2);
+		background-color: var(--color-sky);
+		color: var(--color-ink);
 		/* 24px at desktop, easing down on narrow screens. */
 		font-size: clamp(18px, 1.9vw, 24px);
 		font-weight: 500;
@@ -56,6 +56,11 @@ const Tag = href ? 'a' : 'span';
 		width: clamp(18px, 1.9vw, 24px);
 		height: clamp(18px, 1.9vw, 24px);
 		flex: 0 0 auto;
+		/* The icon file is filled with the old brown, so use it as a mask and
+		   paint it in the label colour instead. */
+		background-color: currentColor;
+		-webkit-mask: url('/icons/arrow-right.svg') center / contain no-repeat;
+		mask: url('/icons/arrow-right.svg') center / contain no-repeat;
 		/* Figma mirrors the mi:arrow-left asset to point right. */
 		transform: scaleX(-1);
 	}

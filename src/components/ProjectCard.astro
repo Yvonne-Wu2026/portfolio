@@ -1,0 +1,95 @@
+---
+/* Figma: "Project cards" 24:591 — tinted card with title, summary, and a
+   screenshot that bleeds off the bottom edge. */
+interface Props {
+	name: string;
+	description: string;
+	href: string;
+	image: string;
+	imageAlt: string;
+	imageWidth: number;
+	imageHeight: number;
+	tint: string;
+	/** Screenshot box within the 452×613 slot, as left/top/width percentages. */
+	crop: { left: string; top: string; width: string };
+}
+
+const { name, description, href, image, imageAlt, imageWidth, imageHeight, tint, crop } = Astro.props;
+---
+
+<a class="card" href={href} style={`--tint: ${tint};`}>
+	<h3 class="name">{name}</h3>
+	<p class="description">{description}</p>
+	<div class="slot">
+		<img
+			src={image}
+			alt={imageAlt}
+			width={imageWidth}
+			height={imageHeight}
+			loading="lazy"
+			style={`left: ${crop.left}; top: ${crop.top}; width: ${crop.width};`}
+		/>
+	</div>
+</a>
+
+<style>
+	/* Figma 24:591 — 568 wide, 100px top padding, 30px sides, 16px gaps. */
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: clamp(40px, 6.9vw, 100px) clamp(20px, 2.1vw, 30px) 0;
+		border-radius: 32px;
+		background-color: var(--tint);
+		color: var(--color-ink);
+		overflow: hidden;
+		transition:
+			transform 350ms var(--ease-out),
+			box-shadow 350ms var(--ease-out);
+		--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	/* Hover: the card lifts onto a soft shadow and the screenshot rises to
+	   show more of itself. */
+	.card:hover,
+	.card:focus-visible {
+		transform: translateY(-8px);
+		box-shadow: 0 24px 48px -20px rgba(43, 28, 15, 0.45);
+	}
+
+	.name {
+		font-family: var(--font-playfair);
+		font-size: clamp(28px, 2.78vw, 40px);
+		font-weight: 600;
+		line-height: 1.33;
+	}
+
+	/* Four lines at 24px in Figma; reserve them so both cards' slots line up. */
+	.description {
+		font-size: clamp(18px, 1.67vw, 24px);
+		line-height: 1.2;
+		min-height: 4.8em;
+	}
+
+	/* Figma 24:597 — a 452×613 slot centred in the card, clipping its image. */
+	.slot {
+		position: relative;
+		margin-top: auto;
+		align-self: center;
+		width: 89%;
+		aspect-ratio: 452 / 613;
+		overflow: hidden;
+	}
+
+	.slot img {
+		position: absolute;
+		max-width: none;
+		height: auto;
+		transition: transform 500ms var(--ease-out);
+	}
+
+	.card:hover .slot img,
+	.card:focus-visible .slot img {
+		transform: translateY(-4%) scale(1.03);
+	}
+</style>

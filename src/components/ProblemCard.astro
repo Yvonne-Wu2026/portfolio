@@ -1,5 +1,5 @@
 ---
-/* Figma: "Problem card" 19:887 — Accent light fill, Accent 2 border and text. */
+/* Figma: "Problem card" 19:887, restyled: borderless butter card with navy text. */
 interface Props {
 	title: string;
 	bodyHtml: string;
@@ -19,13 +19,18 @@ const { title, bodyHtml } = Astro.props;
 		flex-direction: column;
 		gap: 8px;
 		padding: 30px;
-		border: 1px solid var(--color-accent-2);
 		border-radius: 36px;
-		background-color: var(--color-accent-light);
-		color: var(--color-accent-2);
+		background-color: var(--color-butter);
+		color: #1f4072;
+		/* A navy-tinted hairline edge plus a soft lift, so it doesn't sit flat. */
+		box-shadow:
+			0 0 0 1px rgba(31, 64, 114, 0.08),
+			0 2px 4px rgba(31, 64, 114, 0.06),
+			0 12px 28px -10px rgba(31, 64, 114, 0.22);
 	}
 
 	.title {
+		font-family: var(--font-playfair);
 		font-size: var(--fs-body);
 		font-weight: 700;
 		line-height: 1.3;

@@ -1,62 +1,95 @@
 ---
-/* Figma: "Homepage hero" 176:1343 — centred greeting and tagline. */
-import Flower from './Flower.astro';
+/* Figma: "Home Page" 24:611 — headline and intro on the left, rounded portrait on the right. */
 ---
 
 <section class="hero page">
 	<div class="text">
-		<h1 class="greeting bloom"><span class="greeting-text">Hi, I’m Yvonne</span><Flower /></h1>
-		<p class="tagline">I design human-centered solutions that are functional, intuitive, and engaging.</p>
+		<h1 class="headline">
+			<span class="role">UX<img class="heart" src="/icons/heart.svg" alt="and" width="21.9812" height="19.23" />UI</span>
+			<span>Designer</span>
+		</h1>
+		<p class="intro">I’m Yvonne! I create human-centered experiences that are functional, intuitive, and engaging.</p>
+	</div>
+	<div class="portrait">
+		<img
+			src="/images/home-hero-portrait.webp"
+			alt="Yvonne in glasses, with a grey cat asleep on the sofa behind her"
+			width="896"
+			height="1200"
+		/>
 	</div>
 </section>
 
 <style>
-	/* Figma 176:1343 — the hero is capped at 1178px and centres in the column,
-	   rather than spreading to the full 1296px. The vw coefficients below are
-	   set so every value reaches its designed size at the same point, keeping
-	   the whole block in proportion as it scales. */
+	/* Figma 24:611 — a 1202px row, 50px vertical padding, text and photo pushed apart. */
 	.hero {
 		display: flex;
 		align-items: center;
-		max-width: calc(1178px + 2 * var(--gutter));
-		padding-block: clamp(48px, 7vw, 93px);
+		justify-content: space-between;
+		gap: clamp(32px, 5vw, 92px);
+		max-width: calc(1202px + 2 * var(--gutter));
+		padding-block: 50px;
+		color: var(--color-ink);
 	}
 
 	.text {
 		display: flex;
 		flex-direction: column;
-		flex: 1 1 auto;
+		gap: clamp(16px, 2vw, 30px);
+		max-width: 724px;
 		min-width: 0;
-		/* Figma 176:1345 — 30px between the two lines, and the block is centred. */
-		gap: clamp(16px, 2.55vw, 30px);
-		text-align: center;
 	}
 
-	/* Figma 176:1346 was 86px; enlarged for the Nority display face. */
-	.greeting {
-		font-family: var(--font-display);
-		font-size: clamp(52px, 8.8vw, 104px);
+	/* Figma 24:613 — "UX ♥ UI" and "DESIGNER" sit 20px apart on one line. */
+	.headline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		column-gap: 0.23em;
+		font-family: var(--font-playfair);
+		font-size: clamp(48px, 5.97vw, 86px);
+		font-weight: 700;
+		line-height: 1.33;
+		text-transform: uppercase;
+	}
+
+	.role {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.07em;
+	}
+
+	/* Figma 24:616 — a 24px icon frame around the 22×19 glyph. */
+	.heart {
+		flex: 0 0 auto;
+		margin-inline: 1px;
+	}
+
+	.intro {
+		font-size: clamp(22px, 2.5vw, 36px);
 		font-weight: 500;
 		line-height: 1.2;
-		color: var(--color-display);
 	}
 
-	/* Raised so the flower tucks in behind the end of the text. */
-	.greeting-text {
-		position: relative;
-		z-index: 1;
+	/* Figma 24:627 — 386×370 with a 107px corner radius. */
+	.portrait {
+		flex: 0 0 auto;
+		width: clamp(220px, 26.8vw, 386px);
+		aspect-ratio: 386 / 370;
+		border-radius: 27.7%;
+		overflow: hidden;
 	}
 
-	/* Figma 176:1347 — 48px. */
-	.tagline {
-		font-size: clamp(26px, 4.1vw, 48px);
-		font-weight: 500;
-		line-height: 1.2;
-		color: var(--color-display);
-		/* Keep the line length short and centred, then even out the lines
-		   rather than hard-coding a break. */
-		max-width: 14em;
-		margin-inline: auto;
-		text-wrap: balance;
+	.portrait img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	@media (max-width: 760px) {
+		.hero {
+			flex-direction: column-reverse;
+			align-items: flex-start;
+		}
 	}
 </style>
