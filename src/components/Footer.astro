@@ -3,6 +3,7 @@
 const contactBody = 'Feel free to reach out to me via email, or connect with me on LinkedIn!';
 const email = 'yvonnewu.designs@gmail.com';
 const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
+const instagram = 'https://www.instagram.com/threepudgybeans/';
 ---
 
 <footer class="footer" id="contact">
@@ -20,17 +21,16 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 				</a>
 			</li>
 			<li>
-				<a class="channel channel--underline" href={linkedin} target="_blank" rel="noopener noreferrer">
+				<a class="channel" href={linkedin} target="_blank" rel="noopener noreferrer">
 					<img src="/icons/linkedin.svg" alt="" width="28.9979" height="29" />
 					<span>LinkedIn</span>
 				</a>
 			</li>
 			<li>
-				<!-- No profile link in the design yet; becomes an <a> once there is one. -->
-				<span class="channel">
+				<a class="channel" href={instagram} target="_blank" rel="noopener noreferrer">
 					<img src="/icons/instagram.svg" alt="" width="29" height="29" />
 					<span>Instagram</span>
-				</span>
+				</a>
 			</li>
 		</ul>
 	</div>
@@ -108,10 +108,6 @@ const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
 
 	.channel img {
 		flex: 0 0 auto;
-	}
-
-	.channel--underline span {
-		text-decoration: underline;
 	}
 
 	a.channel:hover span {
