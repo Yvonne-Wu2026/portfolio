@@ -20,6 +20,7 @@ export type Block =
 			alt?: string;
 			ratio?: string;
 			caption?: string;
+			captionAlign?: 'left' | 'center';
 			srcWebm?: string;
 			href?: string;
 			maxWidth?: string;
@@ -27,12 +28,21 @@ export type Block =
 			objectPosition?: string;
 	  }
 	| { type: 'imageRow'; images: { src?: string; alt?: string }[]; ratio?: string }
-	| { type: 'media'; src?: string; alt?: string; bodyHtml: string; reverse?: boolean };
+	| { type: 'media'; src?: string; alt?: string; bodyHtml: string; reverse?: boolean }
+	| { type: 'flow'; steps: FlowStep[] };
+
+export interface FlowStep {
+	icon: 'activity' | 'insight' | 'guidance';
+	title: string;
+	question: string;
+}
 
 export interface Section {
 	/** Figma "line sep section" numeral. Omitted for sub-sections. */
 	number?: string;
 	title: string;
+	/** Short line set under the heading. */
+	subtitle?: string;
 	bodyHtml?: string;
 	/** 'section' = 64px heading with rule; 'detail' = 32px heading, no rule. */
 	variant?: 'section' | 'detail';
@@ -62,7 +72,7 @@ export interface CaseStudy {
 const pawtrainer: CaseStudy = {
 	slug: 'pawtrainer',
 	title: 'PawTrainer',
-	summary: 'Building an AI-powered dog training app to ease new dog parent stress',
+	summary: 'Exploring an AI-powered companion for smart dog care',
 	cover: '/images/pawtrainer-cover.jpg',
 	coverAlt: 'PawTrainer app shown on a phone beside a computer mouse',
 	hero: {
@@ -76,7 +86,7 @@ const pawtrainer: CaseStudy = {
 	meta: {
 		role: 'AI integration and conversational experience design',
 		type: 'Mobile App Prototype',
-		client: 'Student Project',
+		client: 'Student team project',
 		tools: 'Figma Make, Supabase, Google AI Studio, Procreate',
 	},
 	sections: [
@@ -84,18 +94,156 @@ const pawtrainer: CaseStudy = {
 			number: '01',
 			title: 'Overview',
 			bodyHtml: `
-				<p>PawTrainer is a mobile dog-training app that was inspired by the challenges of training a new puppy. The app combines smart collar data with AI coaching to provide personalized support, behavioral insights, and real-time feedback.</p>
-				<p>My primary role was to <strong>connect a Gemini model</strong> to our chatbot interface, transforming it from a static concept into a functional experience.</p>
+				<p>PawTrainer is a mobile app concept exploring how smart-collar data and conversational AI could help dog owners understand their dogs’ activity and training needs. Its interactive prototype pairs a dynamic dashboard with Scout, an AI training companion that uses simulated metrics to generate contextual responses.</p>
+				<p>I contributed to Scout’s conversational experience and AI integration, connecting Gemini API responses with dashboard data. I also used feedback from user interviews, surveys, and peer critiques to inform design iterations. Although the physical collar remains conceptual, the project explores how we can make dog training more accessible and convenient by translating metrics into actionable, behavior focused training.</p>
 			`,
 		},
 		{
 			number: '02',
-			title: 'Role + Process',
+			title: 'Problem',
+			subtitle: 'Understanding a dog’s needs shouldn’t be complicated.',
+			bodyHtml: `
+				<p>Dog owners may have difficulty interpreting dog behavior, especially first time dog owners. Are the behaviors presented caused by stress, excitement, boredom, or fear? Lack of understanding can make it difficult to identify triggers and measure training effectiveness.</p>
+				<p>Additionally, dog owners may have limited access to training support. Professional trainers are typically available only during scheduled sessions, while behavioral challenges can happen at any time.</p>
+				<p>Consistent training can require high cognitive effort. Owners may struggle to:</p>
+				<ul>
+					<li>Remember training methods</li>
+					<li>Track progress over time</li>
+					<li>Maintain consistent sessions</li>
+					<li>Recognize behavioral trends</li>
+					<li>Know what to focus on next</li>
+				</ul>
+			`,
+			blocks: [
+				{
+					type: 'flow',
+					steps: [
+						{ icon: 'activity', title: 'Activity data', question: 'What is my dog doing?' },
+						{
+							icon: 'insight',
+							title: 'Interpretation',
+							question: 'What might this mean for my dog’s behavior or training?',
+						},
+						{
+							icon: 'guidance',
+							title: 'Practical guidance',
+							question: 'How can I respond or support my dog?',
+						},
+					],
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: 'The Opportunity',
+			bodyHtml: `
+				<p>How can we make dog training more accessible, convenient and effective while helping owners translate activity data into meaningful training guidance?</p>
+				<p>PawTrainer explores this opportunity by combining a smart-collar concept with a Gemini integrated mobile experience. A dynamic activity dashboard presents key metrics, while Scout helps connect those metrics to conversational, behavior-focused guidance.</p>
+			`,
+		},
+		{
+			number: '03',
+			title: 'Research and Usability Testing',
+			bodyHtml: `
+				<p>Our team explored how AI and sensor data could support dog training while keeping the experience approachable for new dog owners.</p>
+				<p>We researched:</p>
+				<ul>
+					<li>AI &amp; Machine Learning application for behavioral analysis</li>
+					<li>Human-canine training interactions</li>
+					<li>Ethical considerations surrounding AI-assisted behavioral guidance</li>
+				</ul>
+				<p>We explored machine learning approaches including:</p>
+				<ul>
+					<li>Long Short-Term Memory (LSTM) models for time-series sensor analysis</li>
+					<li>Kernel Principal Component Analysis (KPCA) for behavioral pattern detection</li>
+					<li>Retrieval-Augmented Generation (RAG) for conversational assistance</li>
+				</ul>
+				<p>Our research helped us understand how raw sensor data could be translated to provide a personalized training experience.</p>
+			`,
+		},
+		{
+			variant: 'detail',
+			title: 'Usability Testing',
+			subtitle: 'Testing whether PawTrainer feels intuitive to use',
+			bodyHtml: `
+				<p>We ran an in-person usability evaluation to see how easily first-time users could set up PawTrainer, choose a training program, and follow a guided training session.</p>
+				<p>The study focused on two questions:</p>
+				<ul>
+					<li>Can users complete the initial setup and collar-pairing flow without help?</li>
+					<li>Can users confidently find and follow a relevant training program?</li>
+				</ul>
+				<p>We tested an interactive prototype with three participants across two scenarios: getting started with PawTrainer and completing a guided dog-walking program. Participants attempted key tasks, rated their difficulty, and told us where interactions felt confusing or information was missing.</p>
+			`,
+			blocks: [
+				{
+					type: 'cards',
+					cards: [
+						{ title: 'Method', bodyHtml: '<p>Moderated, in-person usability evaluation</p>' },
+						{ title: 'Participants', bodyHtml: '<p>3 first-time users</p>' },
+						{
+							title: 'Data collected',
+							bodyHtml:
+								'<p>Task completion, difficulty ratings, navigation errors, and qualitative feedback</p>',
+						},
+					],
+				},
+				{
+					type: 'text',
+					bodyHtml:
+						'<p>As a small, exploratory study, it was meant to surface usability issues rather than predict how all dog owners would use the product. Three findings stood out.</p>',
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: '1. Getting started was easy, but key steps were missing',
+			subtitle: 'Setup and account creation',
+			bodyHtml: `
+				<p>All three participants completed setup and generally found it easy. However, they pointed out missing account-security and consent steps, and one noted that some buttons and dropdowns were too small to use comfortably.</p>
+				<p class="callout"><strong>Design opportunity:</strong> Clarify account creation, add terms and conditions, consider asking for notification permissions, and enlarge small interactive elements.</p>
+			`,
+		},
+		{
+			variant: 'detail',
+			title: '2. Finding the right program wasn’t always intuitive',
+			subtitle: 'Program discovery and navigation',
+			bodyHtml: `
+				<p>All three participants completed program selection, but they were unsure how programs were organized and what “My Programs” meant. Participants also ran into unexpected navigation behavior elsewhere in the training flow.</p>
+				<blockquote>
+					<p>“The programs listed are confusing and not organized.”</p>
+					<cite>— Participant 2</cite>
+				</blockquote>
+				<p class="callout"><strong>Design opportunity:</strong> Distinguish available programs from selected ones, keep setup preferences consistent with the Programs menu, and fix unexpected navigation behavior.</p>
+			`,
+		},
+		{
+			variant: 'detail',
+			title: '3. Training sessions needed clearer timing feedback',
+			subtitle: 'In-session guidance',
+			bodyHtml: `
+				<p>Two participants were confused by the timer or by how the session progressed. One wasn’t sure when the session had ended, because the app advanced automatically without a clear completion message.</p>
+				<blockquote>
+					<p>“Was it cumulative for the whole program, or were you supposed to spend the time on each step?”</p>
+					<cite>— Participant 3</cite>
+				</blockquote>
+				<p class="callout"><strong>Design opportunity:</strong> Explain what the timer measures, signal clearly when a step or session ends, and let users choose when to move on to the next activity.</p>
+			`,
+		},
+		{
+			number: '04',
+			title: 'Role + Exploration',
 			bodyHtml: `
 				<p>I led the AI integration and conversational experience design, collaborating with a UX Designer and Project Manager. I focused on designing and implementing <strong>Scout</strong>, PawTrainer's chatbot.</p>
-				<p>This was my first time integrating the Gemini API into a project, so there was definitely a huge learning curve!</p>
-				<p>I generated a free Gemini API key in Google AI Studio after my team was satisfied with the current iteration of our app. Since our prototype was built in Figma Make, I directly prompted the AI chat to configure a secure connection between our project and Supabase, where the key could be safely stored.</p>
-				<p>Behind the scenes, there was plenty of trial and error: testing different models, troubleshooting unexpected errors, and learning about API rate limits, all while having no coding experience. Ultimately, we selected <strong>gemini-3-flash-preview</strong> based on our use case and added a spending cap to our workspace to help manage API usage during development.</p>
+				<p>This was my first time integrating the Gemini API into a project, so there was definitely a huge learning curve! Once my team was satisfied with the current iteration of our app, I integrated Gemini into our Figma Make project. To do this, I:</p>
+				<ul>
+					<li>Created a free Gemini API key through Google AI Studio</li>
+					<li>Configured a Supabase backend</li>
+					<li>Connected the frontend experience to the backend</li>
+					<li>Secured credentials using Supabase Edge Functions</li>
+					<li>Tested and troubleshot API requests</li>
+					<li>Evaluated different Gemini models</li>
+				</ul>
+				<p>To set up the secure Supabase connection, I prompted Figma Make's AI chat directly. Behind the scenes, there was plenty of trial and error: troubleshooting unexpected errors and learning about API rate limits, all while having no coding experience. Ultimately, we selected <strong>gemini-3-flash-preview</strong> based on our use case and added a spending cap to our workspace to help manage API usage during development.</p>
 			`,
 		},
 		{
@@ -135,112 +283,39 @@ const pawtrainer: CaseStudy = {
 			],
 		},
 		{
-			number: '03',
-			title: 'App Overview',
-			bodyHtml: `
-				<p>PawTrainer was designed with new dog parents in mind because we know how amazing and overwhelming a new puppy can be.</p>
-				<p>New users can easily set up an account, logging details such as dog name, age, breed, training goals, and concerns. Connecting to a smart collar gives owners a look at key metrics, such as heart rate, sleep score, and stress levels.</p>
-				<p>In the app, users can read a daily tip specific to their dog breed, chat with Scout, check out training programs, view progress reports, start a training session, toggle between weekly and monthly calendar views, and get training reminders.</p>
-			`,
-		},
-		{
-			number: '04',
-			title: 'Research',
-			bodyHtml: `
-				<p>Our team explored how AI and sensor data could support dog training while keeping the experience approachable for new dog owners.</p>
-				<p>We researched:</p>
-				<ul>
-					<li>AI &amp; Machine Learning application for behavioral analysis</li>
-					<li>Human-canine training interactions</li>
-					<li>Ethical considerations surrounding AI-assisted behavioral guidance</li>
-				</ul>
-				<p>We explored machine learning approaches including:</p>
-				<ul>
-					<li>Long Short-Term Memory (LSTM) models for time-series sensor analysis</li>
-					<li>Kernel Principal Component Analysis (KPCA) for behavioral pattern detection</li>
-					<li>Retrieval-Augmented Generation (RAG) for conversational assistance</li>
-				</ul>
-				<p>Our research helped us understand how raw sensor data could be translated to provide a personalized training experience.</p>
-			`,
-		},
-		{
 			number: '05',
-			title: 'Problem',
-			bodyHtml:
-				'<p>Through research and user interviews, we identified three major pain points in the dog-training experience.</p>',
-			blocks: [
-				{
-					type: 'cards',
-					cards: [
-						{
-							title: 'Understanding Dog Behavior',
-							bodyHtml:
-								'<p>Are the behaviors presented caused by stress, excitement, boredom, or fear? Without objective metrics, it can be difficult to understand progress, identify triggers, and measure training effectiveness.</p>',
-						},
-						{
-							title: 'Limited Access to Training Support',
-							bodyHtml: `
-								<p>Professional trainers are typically available only during scheduled sessions, while behavioral challenges can happen at any time. Owners may find themselves asking questions in the moment:</p>
-								<ul>
-									<li><em>Why is my dog barking?</em></li>
-									<li><em>Am I reinforcing this behavior correctly?</em></li>
-									<li><em>What should I do right now?</em></li>
-								</ul>
-							`,
-						},
-						{
-							title: 'High Cognitive Load',
-							bodyHtml: `
-								<p>Training requires high cognitive effort. Owners may struggle to:</p>
-								<ul>
-									<li>Remember training methods</li>
-									<li>Track progress over time</li>
-									<li>Maintain consistent sessions</li>
-									<li>Recognize behavioral trends</li>
-									<li>Know what to focus on next</li>
-								</ul>
-							`,
-						},
-					],
-				},
-			],
-		},
-		{
-			number: '06',
-			title: 'Solution + Features',
+			title: 'Features + Iterations',
 			bodyHtml: `
 				<p>PawTrainer was designed to be a human and canine centered experience. Our goal is not to replace, but <strong>supplement and enhance</strong> traditional (in person) dog training with our features.</p>
 				<p>PawTrainer combines smart collar data with AI coaching to transform passive observations into personalized, actionable training guidance. This helps dog owners <strong>understand</strong> their dog's behavior, <strong>reduce</strong> the cognitive load of training, and <strong>see</strong> measurable progress over time.</p>
 			`,
+			blocks: [
+				{
+					type: 'text',
+					bodyHtml: `
+						<aside class="callout callout--panel">
+							<p class="callout-label">App Overview</p>
+							<p>Designed with new dog parents in mind, PawTrainer explores how smart-collar data and AI-powered guidance could make caring for and training a puppy feel more manageable.</p>
+							<p>Users can create a dog profile, explore personalized training programs and daily tips, and track activity metrics through a dashboard. Scout, the AI training companion, helps connect these insights to training guidance, while progress reports, training sessions, and reminders support ongoing practice.</p>
+						</aside>
+					`,
+				},
+			],
 		},
 		{
 			variant: 'detail',
-			title: 'Data-Driven Training',
+			title: 'Connecting Dashboard Data to AI',
+			subtitle: 'From activity metrics to conversational guidance',
 			bodyHtml: `
-				<p>Paired with a smart collar, PawTrainer can help owners better understand their dog's behavior.</p>
-				<ul>
-					<li>AI can explain potential reasons behind a behavior.</li>
-					<li>Behavioral patterns can surface potential triggers.</li>
-					<li>Recommendations can be personalized based on training history and metrics</li>
-				</ul>
-				<p>The app translates behavioral and physical metrics into clear, actionable coaching while providing continuous support between training sessions.</p>
+				<p>Activity metrics can show dog owners what is happening, but they may not explain what those numbers mean for everyday training. Scout explores how conversational AI could help bridge that gap.</p>
+				<p>I contributed to Scout’s conversational UX and AI integration, connecting dashboard metric values to Gemini-generated responses. This allowed the prototype to explore a more contextual interaction in which Scout could respond using the data available in the dashboard, rather than relying on a generic chat experience alone.</p>
 			`,
 		},
 		{
 			variant: 'detail',
 			title: 'Meet Scout',
 			bodyHtml: `
-				<p>My primary responsibility was designing and implementing Scout, PawTrainer's AI-powered training companion.</p>
-				<p>Scout provides guidance and contextual support when owners need it most. Whether it's a late-night concern about barking or uncertainty about reinforcement timing, Scout serves as an accessible source of coaching and reassurance.</p>
-				<p>In order to integrate the Gemini API into our Figma project, I had to:</p>
-				<ul>
-					<li>Create a Gemini API key through Google AI Studio</li>
-					<li>Configure a Supabase backend</li>
-					<li>Connect the frontend experience to the backend</li>
-					<li>Secure credentials using Supabase Edge Functions</li>
-					<li>Test and troubleshoot API requests</li>
-					<li>Evaluate different Gemini models</li>
-				</ul>
+				<p>Scout, PawTrainer's AI-powered training companion, provides guidance and contextual support when owners need it most. Whether it's a late-night concern about barking or uncertainty about reinforcement timing, Scout serves as an accessible source of coaching and reassurance.</p>
 			`,
 			blocks: [
 				{
@@ -268,44 +343,6 @@ const pawtrainer: CaseStudy = {
 						},
 					],
 				},
-				{
-					type: 'image',
-					src: '/images/pawtrainer-api-errors.webp',
-					alt: 'The Gemini API usage dashboard over 90 days, showing total requests against '
-						+ 'success rate and a spike of 429 TooManyRequests errors in late April.',
-					ratio: '1174 / 588',
-					maxWidth: '1174px',
-					caption:
-						'During testing, we encountered API rate limit errors that prevented requests '
-						+ 'from reaching Gemini. I added a spending cap to manage usage during development.',
-				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Real-Time Behavioral Feedback',
-			bodyHtml: `
-				<p>Traditional training often relies on retrospective feedback from trainers. PawTrainer introduces real-time coaching by using smart collar data to provide contextual, real-time coaching. The system can identify patterns associated with behaviors such as:</p>
-				<ul>
-					<li>Excessive barking</li>
-					<li>Leash pulling</li>
-					<li>Signs of stress</li>
-					<li>Changes in activity</li>
-				</ul>
-			`,
-			blocks: [
-				{
-					type: 'image',
-					src: '/images/pawtrainer-training-session.mp4',
-					srcWebm: '/images/pawtrainer-training-session.webm',
-					alt: 'A training session screen playing through its step-by-step instructions, '
-						+ 'with live heart rate shown as the session runs.',
-					ratio: '392 / 846',
-					maxWidth: '392px',
-					caption:
-						'The app can give immediate recommendations, helping owners reinforce desired '
-						+ 'behaviors at the moment they occur.',
-				},
 			],
 		},
 		{
@@ -330,6 +367,19 @@ const pawtrainer: CaseStudy = {
 						+ 'rate and stress, a step timer with a tip, and the completed session summary.',
 					ratio: '1360 / 920',
 					maxWidth: '1360px',
+				},
+				{
+					type: 'image',
+					src: '/images/pawtrainer-training-session.mp4',
+					srcWebm: '/images/pawtrainer-training-session.webm',
+					alt: 'A training session screen playing through its step-by-step instructions, '
+						+ 'with live heart rate shown as the session runs.',
+					ratio: '392 / 846',
+					maxWidth: '392px',
+					caption:
+						'A guided session walks owners through each step, with live heart rate shown '
+						+ 'as the session runs.',
+					captionAlign: 'center',
 				},
 				{
 					type: 'text',
@@ -406,7 +456,7 @@ const pawtrainer: CaseStudy = {
 			],
 		},
 		{
-			number: '07',
+			number: '06',
 			title: 'Outcome',
 			bodyHtml: `
 				<p>PawTrainer has evolved significantly since our earliest concepts. At the time of writing, the project has gone through over 150 iterations and continues evolving. This journey was filled with error messages because I was stepping into unfamiliar territory, but it has been such a valuable learning experience as a designer.</p>

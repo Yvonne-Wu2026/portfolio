@@ -8,6 +8,7 @@ import ProblemCard from '../../components/ProblemCard.astro';
 import MediaBlock from '../../components/MediaBlock.astro';
 import ImageBand from '../../components/ImageBand.astro';
 import ImageRow from '../../components/ImageRow.astro';
+import FlowDiagram from '../../components/FlowDiagram.astro';
 import CaseStudyNav from '../../components/CaseStudyNav.astro';
 import { caseStudies } from '../../data/caseStudies';
 
@@ -78,6 +79,7 @@ const quickInfo = [
 				<NumberedSection
 					number={section.number}
 					title={section.title}
+					subtitle={section.subtitle}
 					bodyHtml={section.bodyHtml}
 					variant={section.variant}
 					tightBottom={section.tightBottom}
@@ -102,6 +104,9 @@ const quickInfo = [
 								/>
 							);
 						}
+						if (block.type === 'flow') {
+							return <FlowDiagram steps={block.steps} />;
+						}
 						if (block.type === 'text') {
 							return <div class="prose" set:html={block.bodyHtml} />;
 						}
@@ -114,6 +119,7 @@ const quickInfo = [
 								alt={block.alt}
 								ratio={block.ratio}
 								caption={block.caption}
+								captionAlign={block.captionAlign}
 								href={block.href}
 								maxWidth={block.maxWidth}
 								objectPosition={block.objectPosition}
@@ -210,6 +216,7 @@ const quickInfo = [
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: clamp(16px, 2.5vw, 36px);
 		align-items: stretch;
+		padding: 10px;
 	}
 
 	@media (max-width: 900px) {

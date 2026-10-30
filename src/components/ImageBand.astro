@@ -7,6 +7,7 @@ interface Props {
 	alt?: string;
 	ratio?: string;
 	caption?: string;
+	captionAlign?: 'left' | 'center';
 	href?: string;
 	maxWidth?: string;
 	objectPosition?: string;
@@ -14,8 +15,17 @@ interface Props {
 	srcWebm?: string;
 }
 
-const { src, alt = '', ratio = '1296 / 400', caption, href, maxWidth, objectPosition, srcWebm } =
-	Astro.props;
+const {
+	src,
+	alt = '',
+	ratio = '1296 / 400',
+	caption,
+	captionAlign = 'left',
+	href,
+	maxWidth,
+	objectPosition,
+	srcWebm,
+} = Astro.props;
 
 /* Screen recordings ship as video: a GIF of the same clip is ~25x larger. */
 const isVideo = !!src && /\.(mp4|webm)$/.test(src);
@@ -48,7 +58,7 @@ const Frame = href ? 'a' : 'div';
 			)
 		}
 	</Frame>
-	{caption && <figcaption>{caption}</figcaption>}
+	{caption && <figcaption class={`caption--${captionAlign}`}>{caption}</figcaption>}
 </figure>
 
 <style>
@@ -106,6 +116,11 @@ const Frame = href ? 'a' : 'div';
 		font-size: var(--fs-body);
 		line-height: 1.45;
 		max-width: 90ch;
+	}
+
+	.caption--center {
+		margin-inline: auto;
+		text-align: center;
 	}
 </style>
 
