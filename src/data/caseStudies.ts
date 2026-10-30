@@ -287,7 +287,7 @@ const pawtrainer: CaseStudy = {
 			title: 'Features + Iterations',
 			bodyHtml: `
 				<p>PawTrainer was designed to be a human and canine centered experience. Our goal is not to replace, but <strong>supplement and enhance</strong> traditional (in person) dog training with our features.</p>
-				<p>PawTrainer combines smart collar data with AI coaching to transform passive observations into personalized, actionable training guidance. This helps dog owners <strong>understand</strong> their dog's behavior, <strong>reduce</strong> the cognitive load of training, and <strong>see</strong> measurable progress over time.</p>
+				<p>Because the smart collar is still a concept, the prototype’s dashboard metrics change dynamically to simulate collar data, which Scout uses to generate personalized, actionable training guidance. The aim is to help dog owners <strong>understand</strong> their dog's behavior, <strong>reduce</strong> the cognitive load of training, and <strong>see</strong> measurable progress over time.</p>
 			`,
 			blocks: [
 				{
