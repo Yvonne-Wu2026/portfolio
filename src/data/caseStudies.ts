@@ -466,7 +466,7 @@ const pawtrainer: CaseStudy = {
 					<li>Conducting accessibility evaluations</li>
 					<li>Exploring multimodal AI capabilities: adding speech-based interactions, and supporting image/video uploads for training analysis</li>
 				</ul>
-				<p>Building a functional AI prototype with Gemini showed me that designers can create interactive experiences without coding backgrounds, as long as</p>
+				<p>Building a functional AI prototype with Gemini showed me that designers can create interactive experiences without coding backgrounds, as long as they stay curious, patient, and willing to learn through trial and error.</p>
 			`,
 		},
 		{
