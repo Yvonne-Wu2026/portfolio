@@ -32,9 +32,14 @@ export type Block =
 	| { type: 'flow'; steps: FlowStep[] };
 
 export interface FlowStep {
-	icon: 'activity' | 'insight' | 'guidance';
+	/** A small icon tile; ignored when the step has an image. */
+	icon?: 'activity' | 'insight' | 'guidance';
+	/** A screenshot shown under the copy. Steps in a flow should share one size. */
+	image?: { src: string; alt: string; ratio: string };
+	/** Small uppercase line above the title. */
+	label?: string;
 	title: string;
-	question: string;
+	body: string;
 }
 
 export interface Section {
@@ -118,16 +123,16 @@ const pawtrainer: CaseStudy = {
 				{
 					type: 'flow',
 					steps: [
-						{ icon: 'activity', title: 'Activity data', question: 'What is my dog doing?' },
+						{ icon: 'activity', title: 'Activity data', body: 'What is my dog doing?' },
 						{
 							icon: 'insight',
 							title: 'Interpretation',
-							question: 'What might this mean for my dog’s behavior or training?',
+							body: 'What might this mean for my dog’s behavior or training?',
 						},
 						{
 							icon: 'guidance',
 							title: 'Practical guidance',
-							question: 'How can I respond or support my dog?',
+							body: 'How can I respond or support my dog?',
 						},
 					],
 				},
@@ -310,6 +315,47 @@ const pawtrainer: CaseStudy = {
 				<p>Activity metrics can show dog owners what is happening, but they may not explain what those numbers mean for everyday training. Scout explores how conversational AI could help bridge that gap.</p>
 				<p>I contributed to Scout’s conversational UX and AI integration, connecting dashboard metric values to Gemini-generated responses. This allowed the prototype to explore a more contextual interaction in which Scout could respond using the data available in the dashboard, rather than relying on a generic chat experience alone.</p>
 			`,
+			blocks: [
+				{
+					type: 'flow',
+					steps: [
+						{
+							label: 'Step 1 · The data',
+							title: 'Dashboard metrics',
+							body: 'Simulated collar data, like heart rate and stress, appears on Daisy Mae’s dashboard.',
+							image: {
+								src: '/images/pawtrainer-scout-metrics.webp',
+								alt: "Daisy Mae's dashboard: heart rate 136 bpm (normal), activity 73% "
+									+ '(active), stress low (relaxed) and sleep 8.2 hours (great).',
+								ratio: '389 / 463',
+							},
+						},
+						{
+							label: 'Step 2 · The question',
+							title: 'The owner asks Scout',
+							body: 'In the chat, the owner asks a training question: “How do I stop leash pulling?”',
+							image: {
+								src: '/images/pawtrainer-scout-question.webp',
+								alt: 'The Scout chat: the owner asks "How do I stop leash pulling?" and '
+									+ 'Scout shows a typing indicator.',
+								ratio: '389 / 463',
+							},
+						},
+						{
+							label: 'Step 3 · The response',
+							title: 'Scout responds in context',
+							body: 'Gemini generates a reply that draws on the dashboard, citing her steady heart rate before suggesting a session.',
+							image: {
+								src: '/images/pawtrainer-scout-response.webp',
+								alt: "Scout's reply: Daisy Mae is calm and focused with a steady 136 bpm "
+									+ 'heart rate, so it suggests a 10-minute leash session and explains '
+									+ 'how to reward slack on the leash.',
+								ratio: '389 / 463',
+							},
+						},
+					],
+				},
+			],
 		},
 		{
 			variant: 'detail',
@@ -319,29 +365,45 @@ const pawtrainer: CaseStudy = {
 			`,
 			blocks: [
 				{
-					type: 'imageRow',
-					ratio: '3 / 2',
-					images: [
-						{
-							src: '/images/pawtrainer-scout-avatar.webp',
-							alt: 'Scout, the PawTrainer AI training companion: a cartoon puppy with '
-								+ 'orange ears, a blue spotted collar and a bone-shaped tag.',
-							ratio: '1536 / 1024',
-							caption:
-								'Scout began as an avatar generated through Figma Make. I wanted to add a '
-								+ 'more human and personalized touch. I illustrated Scout in Procreate, '
-								+ "referencing photos of our teammate's beagle.",
-						},
-						{
-							src: '/images/pawtrainer-scout-screens.webp',
-							alt: "Three PawTrainer screens: Scout's chat offering collar-data insights, "
-								+ "the Meet Scout introduction, and Daisy Mae's dashboard showing heart "
-								+ 'rate, activity, stress and sleep.',
-							ratio: '580 / 382',
-							caption:
-								"The illustration became Scout's visual identity throughout the app.",
-						},
-					],
+					type: 'image',
+					src: '/images/pawtrainer-scout-chat.mp4',
+					srcWebm: '/images/pawtrainer-scout-chat.webm',
+					alt: "Moving from Daisy Mae's dashboard into a chat with Scout, which summarizes "
+						+ 'her calm 131 bpm heart rate and low stress and suggests a 12-minute '
+						+ '"Leave It" session.',
+					ratio: '388 / 844',
+					maxWidth: '388px',
+					caption:
+						'A demo of Scout powered by the Gemini integration: asked to summarize the '
+						+ "dog's metrics, Scout recommends a training session to match.",
+					captionAlign: 'center',
+				},
+				{
+					type: 'text',
+					bodyHtml: `
+						<aside class="callout callout--panel callout--media">
+							<img
+								src="/images/pawtrainer-scout-avatar.webp"
+								alt="Scout, the PawTrainer AI training companion: a cartoon puppy with orange ears, a blue spotted collar and a bone-shaped tag."
+								loading="lazy"
+							/>
+							<div>
+								<p class="callout-label">Designing Scout</p>
+								<p>Scout began as an avatar generated through Figma Make. I wanted to add a more human and personalized touch, so I illustrated Scout in Procreate, referencing photos of our teammate’s beagle.</p>
+							</div>
+						</aside>
+					`,
+				},
+				{
+					type: 'image',
+					src: '/images/pawtrainer-scout-screens.webp',
+					alt: "Three PawTrainer screens: Scout's chat offering collar-data insights, "
+						+ "the Meet Scout introduction, and Daisy Mae's dashboard showing heart "
+						+ 'rate, activity, stress and sleep.',
+					ratio: '580 / 382',
+					maxWidth: '580px',
+					caption: "The illustration became Scout's visual identity throughout the app.",
+					captionAlign: 'center',
 				},
 			],
 		},
@@ -350,14 +412,6 @@ const pawtrainer: CaseStudy = {
 			title: 'Reducing Cognitive Load',
 			bodyHtml: `
 				<p>A core design goal was to make training easier to follow for busy pet parents. PawTrainer organizes training into manageable steps so owners don't have to remember every technique or track their progress manually.</p>
-				<p>Guided Training Sessions include:</p>
-				<ul>
-					<li>Step-by-step instructions</li>
-					<li>Helpful tips</li>
-					<li>Flexible controls</li>
-					<li>Real-time heart rate information</li>
-				</ul>
-				<p>Users can pause or skip ahead when needed, giving them more control over the pace of a session. We also added a heart-rate indicator to the training experience after receiving feedback from users.</p>
 			`,
 			blocks: [
 				{
@@ -367,6 +421,19 @@ const pawtrainer: CaseStudy = {
 						+ 'rate and stress, a step timer with a tip, and the completed session summary.',
 					ratio: '1360 / 920',
 					maxWidth: '1360px',
+				},
+				{
+					type: 'text',
+					bodyHtml: `
+						<p>Guided Training Sessions include:</p>
+						<ul>
+							<li>Step-by-step instructions</li>
+							<li>Helpful tips</li>
+							<li>Flexible controls</li>
+							<li>Real-time heart rate information</li>
+						</ul>
+						<p>Users can pause or skip ahead when needed, giving them more control over the pace of a session. We also added a heart-rate indicator to the training experience after receiving feedback from users.</p>
+					`,
 				},
 				{
 					type: 'image',
@@ -428,7 +495,7 @@ const pawtrainer: CaseStudy = {
 				{
 					type: 'text',
 					bodyHtml: `
-						<p><strong>Smart Collar Experience</strong><br />The collar ecosystem was designed to feel like an integrated part of the product.</p>
+						<p><strong>Smart Collar Experience</strong><br />Although the smart collar is still a concept, we designed the pairing experience to show how connecting a collar could feel like a seamless, integrated part of the app.</p>
 					`,
 				},
 				{

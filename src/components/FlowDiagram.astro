@@ -1,5 +1,6 @@
 ---
-/* Conceptual flow: a row of steps joined by arrows, stacking on narrow screens. */
+/* A row of steps joined by arrows, stacking on narrow screens. Each step shows
+   either an icon (a conceptual flow) or a screenshot (a walkthrough). */
 import type { FlowStep } from '../data/caseStudies';
 
 interface Props {
@@ -15,28 +16,41 @@ const tones = ['butter', 'sky', 'cream'];
 	{
 		steps.map((step, index) => (
 			<li class:list={['step', `step--${tones[index % tones.length]}`]}>
-				<span class="icon" aria-hidden="true">
-					{step.icon === 'activity' && (
-						<svg viewBox="0 0 24 24">
-							<rect x="4" y="11" width="3.5" height="9" rx="1" />
-							<rect x="10.25" y="5" width="3.5" height="15" rx="1" />
-							<rect x="16.5" y="8" width="3.5" height="12" rx="1" />
-						</svg>
-					)}
-					{step.icon === 'insight' && (
-						<svg viewBox="0 0 24 24" class="stroke">
-							<path d="M12 3.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2v.5h5v-.5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3.5Z" />
-							<path d="M9.75 20.5h4.5" />
-						</svg>
-					)}
-					{step.icon === 'guidance' && (
-						<svg viewBox="0 0 24 24" class="stroke">
-							<path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.1 0-2.2-.2-3.1-.6L4 19.5l1.3-3.6A7.2 7.2 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z" />
-						</svg>
-					)}
-				</span>
+				{step.label && <p class="label">{step.label}</p>}
+				{!step.image && (
+					<span class="icon" aria-hidden="true">
+						{step.icon === 'activity' && (
+							<svg viewBox="0 0 24 24">
+								<rect x="4" y="11" width="3.5" height="9" rx="1" />
+								<rect x="10.25" y="5" width="3.5" height="15" rx="1" />
+								<rect x="16.5" y="8" width="3.5" height="12" rx="1" />
+							</svg>
+						)}
+						{step.icon === 'insight' && (
+							<svg viewBox="0 0 24 24" class="stroke">
+								<path d="M12 3.5a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2v.5h5v-.5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3.5Z" />
+								<path d="M9.75 20.5h4.5" />
+							</svg>
+						)}
+						{step.icon === 'guidance' && (
+							<svg viewBox="0 0 24 24" class="stroke">
+								<path d="M20 11.5c0 4.1-3.6 7.5-8 7.5-1.1 0-2.2-.2-3.1-.6L4 19.5l1.3-3.6A7.2 7.2 0 0 1 4 11.5C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z" />
+							</svg>
+						)}
+					</span>
+				)}
 				<h3 class="title">{step.title}</h3>
-				<p class="question">{step.question}</p>
+				<p class="body">{step.body}</p>
+				{step.image && (
+					<div class="shot">
+						<img
+							src={step.image.src}
+							alt={step.image.alt}
+							style={`aspect-ratio: ${step.image.ratio};`}
+							loading="lazy"
+						/>
+					</div>
+				)}
 			</li>
 		))
 	}
@@ -123,14 +137,41 @@ const tones = ['butter', 'sky', 'cream'];
 		line-height: 1.3;
 	}
 
-	.question {
+	.body {
 		font-size: var(--fs-body);
 		line-height: 1.4;
+	}
+
+	.label {
+		font-size: var(--fs-sm);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	/* Pinned to the card's foot, so screenshots line up whatever the copy length. */
+	.shot {
+		margin-top: auto;
+		padding-top: 12px;
+	}
+
+	.shot img {
+		display: block;
+		width: 100%;
+		border-radius: 18px;
+		object-fit: cover;
+		object-position: top;
 	}
 
 	@media (max-width: 900px) {
 		.flow {
 			grid-template-columns: minmax(0, 1fr);
+		}
+
+		/* A full-width card would blow the screenshot up past its real size. */
+		.shot img {
+			max-width: 389px;
+			margin-inline: auto;
 		}
 
 		.step:not(:last-child)::after {

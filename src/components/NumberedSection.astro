@@ -174,7 +174,45 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		border-radius: 28px;
 	}
 
-	.prose .callout > * + * {
+	/* An image beside the callout text, stacking on narrow screens. */
+	/* The prose column hugs the left edge; let a media callout's wrapper span the
+	   section so the callout itself can sit centred. */
+	.prose:has(> .callout--media) {
+		max-width: none;
+	}
+
+	.prose .callout--media {
+		max-width: 90ch;
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+		gap: clamp(20px, 3vw, 40px);
+		align-items: center;
+	}
+
+	.prose .callout--media > img {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+		border-radius: 20px;
+		background-color: #fff;
+	}
+
+	.prose .callout--media > div > * + * {
+		margin-top: 0.6em;
+	}
+
+	@media (max-width: 640px) {
+		.prose .callout--media {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.prose .callout--media > img {
+			max-width: 200px;
+		}
+	}
+
+	.prose .callout:not(.callout--media) > * + * {
 		margin-top: 1em;
 	}
 

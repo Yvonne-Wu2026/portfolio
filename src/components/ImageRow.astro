@@ -77,8 +77,12 @@ const captioned = images.some((image) => image.caption);
 	figcaption {
 		margin-top: 20px;
 		padding: 10px;
-		font-size: var(--fs-body);
+		/* A step below body copy, so captions read as secondary. */
+		font-size: clamp(15px, 1.15vw, 19px);
 		line-height: 1.45;
+		max-width: 60ch;
+		/* Evens out line lengths when a caption wraps. */
+		text-wrap: balance;
 	}
 
 	@media (max-width: 780px) {
