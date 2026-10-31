@@ -170,20 +170,20 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 
 	/* A larger aside that frames context, such as an app overview, apart from the body. */
 	.prose .callout--panel {
+		max-width: 90ch;
+		margin-inline: auto;
 		padding: clamp(24px, 2.8vw, 40px);
 		border-radius: 28px;
 	}
 
 	/* An image beside the callout text, stacking on narrow screens. */
-	/* The prose column hugs the left edge; let a media callout's wrapper span the
-	   section so the callout itself can sit centred. */
-	.prose:has(> .callout--media) {
+	/* The prose column hugs the left edge; let a panel's wrapper span the
+	   section so the panel itself can sit centred. */
+	.prose:has(> .callout--panel) {
 		max-width: none;
 	}
 
 	.prose .callout--media {
-		max-width: 90ch;
-		margin-inline: auto;
 		display: grid;
 		grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
 		gap: clamp(20px, 3vw, 40px);
