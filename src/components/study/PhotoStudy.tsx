@@ -235,6 +235,23 @@ function PhotoHint({ stage, at, hint, children }: { stage: Stage; at: Point; hin
 	);
 }
 
+/**
+ * A brass museum tag on the shelf under the case studies: always there, so
+ * it's clear the two books are the way into the work. Brightens while either
+ * book is under the hand. Decorative; the books themselves are the buttons.
+ */
+function ShelfTag({ stage, at }: { stage: Stage; at: Point }) {
+	const lit = useStudy((s) => s.hovered?.startsWith('book:') ?? false);
+	const [x, y] = px(stage, at);
+	return (
+		<p className={`photo-tag${lit ? ' is-lit' : ''}`} style={{ left: x, top: y }} aria-hidden="true">
+			<span className="photo-tag__arrow">↑</span>
+			<span className="photo-tag__title">Case Studies</span>
+			<span className="photo-tag__hint">Select a book to read</span>
+		</p>
+	);
+}
+
 /* ---------------------------------------------------------------- */
 /* Calibration (?calibrate): click to read coordinates               */
 /* ---------------------------------------------------------------- */
@@ -532,9 +549,7 @@ export default function PhotoStudy() {
 										<PhotoHint stage={stage} hint="book" at={[50, 64]}>
 											Explore the study — the book is your guide
 										</PhotoHint>
-										<PhotoHint stage={stage} hint="shelf" at={[85.3, 40]}>
-											Select a book to explore my work
-										</PhotoHint>
+										<ShelfTag stage={stage} at={studyPhoto.shelfTag} />
 										<PhotoHint stage={stage} hint="lamp" at={[26.5, 45]}>
 											Adjust the lighting
 										</PhotoHint>

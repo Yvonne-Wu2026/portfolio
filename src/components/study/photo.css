@@ -569,3 +569,113 @@
 [data-grade='reading'] .photo-hotspot.is-active .photo-spine {
 	filter: brightness(1.3) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.6));
 }
+
+/* Shelf tag -------------------------------------------------------- */
+
+.photo-tag {
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 4px 12px 5px;
+	border: 1px solid #8a6a3c;
+	border-radius: 2px;
+	background: linear-gradient(#e8cf94, #b08d57);
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.55),
+		inset 0 1px 0 rgba(255, 245, 215, 0.6);
+	color: #2a1c13;
+	text-align: center;
+	white-space: nowrap;
+	transform: translate(-50%, 0);
+	pointer-events: none;
+	transition:
+		box-shadow 400ms ease,
+		filter 400ms ease;
+}
+
+.photo-tag.is-lit {
+	filter: brightness(1.12);
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.55),
+		0 0 18px rgba(255, 200, 120, 0.55),
+		inset 0 1px 0 rgba(255, 245, 215, 0.6);
+}
+
+/* The arrow points up at the books, nudging gently. */
+.photo-tag__arrow {
+	position: absolute;
+	top: -22px;
+	left: 50%;
+	color: #f0c070;
+	font-size: 16px;
+	line-height: 1;
+	text-shadow: 0 0 8px rgba(240, 180, 90, 0.8);
+	transform: translateX(-50%);
+	animation: tag-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes tag-nudge {
+	0%,
+	100% {
+		transform: translate(-50%, 0);
+	}
+	50% {
+		transform: translate(-50%, -4px);
+	}
+}
+
+.photo-tag__title {
+	font-family: var(--font-display);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	line-height: 1.2;
+}
+
+.photo-tag__hint {
+	font-family: var(--font-body);
+	font-size: 12px;
+	font-style: italic;
+	line-height: 1.2;
+	color: #4a3424;
+}
+
+[data-leaving] .photo-tag {
+	opacity: 0;
+	transition: opacity 300ms ease;
+}
+
+/* A slow warm shimmer across the two spines, staggered, so they read as live. */
+.photo-hotspot[aria-label*='Case study']::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(100deg, transparent 30%, rgba(255, 220, 160, 0.45) 50%, transparent 70%) 0 0 / 300% 100%;
+	mix-blend-mode: screen;
+	animation: spine-shimmer 6s ease-in-out infinite;
+	pointer-events: none;
+}
+
+.photo-hotspot[aria-label*='Case study'] + .photo-hotspot[aria-label*='Case study']::after {
+	animation-delay: 0.35s;
+}
+
+@keyframes spine-shimmer {
+	0%,
+	60% {
+		background-position: 100% 0;
+	}
+	85%,
+	100% {
+		background-position: 0% 0;
+	}
+}
+
+.photo-hotspot.is-active::after,
+[data-leaving] .photo-hotspot::after {
+	animation: none;
+	opacity: 0;
+}

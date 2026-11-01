@@ -56,6 +56,9 @@ export const studyPhoto = {
 	lampPool: [36, 85] as Point,
 	window: [40, 0, 60, 65] as Box,
 
+	/** Where the brass label hangs: the shelf board's front edge, under the case studies. */
+	shelfTag: [85.3, 61.6] as Point,
+
 	/** The bookcase as a whole, for the Work zoom. */
 	shelf: [74, 10, 100, 84] as Box,
 
