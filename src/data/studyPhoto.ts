@@ -16,46 +16,53 @@ type Box = [number, number, number, number];
 type Quad = [Point, Point, Point, Point];
 
 export const studyPhoto = {
-	/** Pixel size of the images; all three share it. */
-	width: 2400,
-	height: 1350,
+	/** Pixel size of the images; all share it. */
+	width: 1672,
+	height: 941,
+	/**
+	 * One photo per lighting preset. A preset without its own photo is graded
+	 * from the golden-hour one instead (see photo.css, [data-grade]).
+	 */
 	images: {
 		golden: '/study/study-golden.jpg',
-		evening: '/study/study-evening.jpg',
-		reading: '/study/study-reading.jpg',
-	} satisfies Record<PresetName, string>,
+	} as { golden: string } & Partial<Record<PresetName, string>>,
 
 	/** The open book's pages, onto which the contents are printed. */
 	pages: {
 		left: [
-			[38.51, 67.79],
-			[50, 68.75],
-			[49.95, 93.48],
-			[35.99, 92.49],
+			[38.73, 67.59],
+			[50.24, 68.97],
+			[50.24, 91.39],
+			[35.89, 91.39],
 		] as Quad,
 		right: [
-			[50, 68.75],
-			[61.49, 67.82],
-			[63.92, 92.56],
-			[49.95, 93.48],
+			[50.39, 68.97],
+			[61.45, 67.75],
+			[64.0, 91.39],
+			[50.39, 91.66],
 		] as Quad,
 	},
 
 	/** Spines of the case study books on the shelf, by slug. */
 	books: {
-		pawtrainer: [80.9, 41, 83.6, 60.1],
-		'watts-the-big-deal': [83.7, 42, 86.9, 60.1],
+		pawtrainer: [83.39, 44.1, 85.17, 60.6],
+		'watts-the-big-deal': [85.23, 44.1, 87.36, 60.6],
 	} as Record<string, Box>,
 
-	lamp: [17.1, 63.5, 28.8, 92.1] as Box,
+	lamp: [16.3, 61.6, 29.4, 91.4] as Box,
+
+	/** For the graded presets: where the lamp's light comes from and pools, and the window. */
+	lampShade: [22.5, 65] as Point,
+	lampPool: [36, 84] as Point,
+	window: [34, 0, 67, 66] as Box,
 
 	/** The bookcase as a whole, for the Work zoom. */
-	shelf: [74, 18, 100, 82] as Box,
+	shelf: [74, 10, 100, 84] as Box,
 
 	/** What to keep in view when the screen is narrower than the photo. */
 	focus: {
-		desk: [50, 70] as Point,
-		shelf: [84, 52] as Point,
+		desk: [50, 72] as Point,
+		shelf: [86, 52] as Point,
 	},
 };
 

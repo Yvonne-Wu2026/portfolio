@@ -2,7 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { chapters, shelfBooks, type Chapter } from '../../data/library';
 import { studyPhoto, type Box, type Point, type Quad } from '../../data/studyPhoto';
 import { toggleLighting } from './actions';
-import { presetOrder, presets } from './lighting';
+import { presets, type PresetName } from './lighting';
 import { LightingControls } from './LightingControls';
 import { dismissHint, getState, setHovered, setState, useStudy, type Hint, type Target } from './store';
 import './study.css';
@@ -405,7 +405,11 @@ export default function PhotoStudy() {
 		depart({ kind: 'book', slug }, `/work/${slug}`, TIMING.book);
 	};
 
-	const image = studyPhoto.images[preset];
+	// Presets without their own photo are graded from the golden-hour one.
+	const photos = Object.entries(studyPhoto.images) as [PresetName, string][];
+	const shown: PresetName = studyPhoto.images[preset] ? preset : 'golden';
+	const graded = shown !== preset ? preset : undefined;
+	const image = studyPhoto.images[shown]!;
 	const ready = loaded && size.vw > 0;
 	useEffect(() => {
 		if (ready) setState({ ready: true });
@@ -452,22 +456,35 @@ export default function PhotoStudy() {
 						<div ref={parallax} className="photo-parallax">
 							<div
 								className="photo-stage"
+								data-grade={graded}
 								style={{ width: stage.w, height: stage.h, transform: `translate(${offset.x}px, ${offset.y}px)` }}
 							>
-								{presetOrder.map((name) => (
+								{photos.map(([name, src]) => (
 									<img
 										key={name}
-										className={`photo-image${name === preset ? ' is-on' : ''}`}
-										src={studyPhoto.images[name]}
+										className={`photo-image${name === shown ? ' is-on' : ''}`}
+										src={src}
 										alt=""
 										width={studyPhoto.width}
 										height={studyPhoto.height}
 										fetchPriority={name === 'golden' ? 'high' : 'low'}
-										onLoad={name === preset ? () => setLoaded(true) : undefined}
+										onLoad={name === 'golden' ? () => setLoaded(true) : undefined}
 										draggable={false}
 									/>
 								))}
-								<div className="photo-grade" data-preset={preset} aria-hidden="true" />
+								{/* Light for the graded presets: dusk in the window, the lamp's glow and pool. */}
+								<div className="photo-dusk" style={boxStyle(stage, studyPhoto.window)} aria-hidden="true" />
+								<div
+									className="photo-lamplight"
+									style={{ left: px(stage, studyPhoto.lampShade)[0], top: px(stage, studyPhoto.lampShade)[1] }}
+									aria-hidden="true"
+								/>
+								<div
+									className="photo-lamplight photo-lamplight--pool"
+									style={{ left: px(stage, studyPhoto.lampPool)[0], top: px(stage, studyPhoto.lampPool)[1] }}
+									aria-hidden="true"
+								/>
+								<div className="photo-grade" aria-hidden="true" />
 
 								{stage.w > 0 && (
 									<>
@@ -514,7 +531,7 @@ export default function PhotoStudy() {
 										<PhotoHint stage={stage} hint="book" at={[50, 64]}>
 											Explore the study — the book is your guide
 										</PhotoHint>
-										<PhotoHint stage={stage} hint="shelf" at={[84, 36]}>
+										<PhotoHint stage={stage} hint="shelf" at={[85.3, 40]}>
 											Select a book to explore my work
 										</PhotoHint>
 										<PhotoHint stage={stage} hint="lamp" at={[23, 60]}>
