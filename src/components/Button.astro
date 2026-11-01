@@ -1,5 +1,5 @@
 ---
-/* Figma: "Explore ptype button" 111:1263 — pill, now sky fill with an ink label.
+/* Figma: "Explore ptype button" 111:1263 — restyled as an espresso pill with a brass edge.
    href is optional: the PawTrainer instance in Figma has no link attached yet,
    so it renders as a non-interactive pill until a URL is supplied. */
 interface Props {
@@ -30,10 +30,11 @@ const Tag = href ? 'a' : 'span';
 		gap: 10px;
 		padding: 10px clamp(16px, 1.7vw, 22px);
 		border-radius: 100px;
-		background-color: var(--color-sky);
-		color: var(--color-ink);
-		/* 24px at desktop, easing down on narrow screens. */
-		font-size: clamp(18px, 1.9vw, 24px);
+		border: 1px solid var(--color-brass);
+		background-color: var(--color-espresso);
+		color: var(--color-ivory);
+		font-size: clamp(18px, 1.5vw, 21px);
+		font-style: italic;
 		font-weight: 500;
 		line-height: 1.2;
 		white-space: nowrap;
@@ -44,7 +45,7 @@ const Tag = href ? 'a' : 'span';
 
 	a.button:hover,
 	a.button:focus-visible {
-		filter: brightness(0.93);
+		box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.3);
 		transform: translateY(-1px);
 	}
 

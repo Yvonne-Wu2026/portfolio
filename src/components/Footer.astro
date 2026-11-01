@@ -1,120 +1,88 @@
 ---
-/* Figma: "Footer" 24:866 — dark band with the Contact block and three contact links. */
-const contactBody = 'Feel free to reach out to me via email, or connect with me on LinkedIn!';
-const email = 'yvonnewu.designs@gmail.com';
-const linkedin = 'https://www.linkedin.com/in/yvonne-wu-54b7a335b/';
-const instagram = 'https://www.instagram.com/threepudgybeans/';
+/* Colophon for the reading pages: a short note on where to write, and a
+   closing line about how the book was made. */
+import { contact } from '../data/library';
 ---
 
-<footer class="footer" id="contact">
-	<div class="footer-rule"></div>
+<footer class="footer">
 	<div class="page inner">
-		<div class="intro">
-			<h2 class="heading">Contact</h2>
-			<p class="body">{contactBody}</p>
-		</div>
+		<p class="ornament" aria-hidden="true">❦</p>
+		<h2 class="heading">Correspondence</h2>
+		<p class="body">Feel free to reach out!</p>
 		<ul class="channels">
-			<li>
-				<a class="channel" href={`mailto:${email}`}>
-					<img src="/icons/email.svg" alt="" width="28.5" height="26.5" />
-					<span>{email}</span>
-				</a>
-			</li>
-			<li>
-				<a class="channel" href={linkedin} target="_blank" rel="noopener noreferrer">
-					<img src="/icons/linkedin.svg" alt="" width="28.9979" height="29" />
-					<span>LinkedIn</span>
-				</a>
-			</li>
-			<li>
-				<a class="channel" href={instagram} target="_blank" rel="noopener noreferrer">
-					<img src="/icons/instagram.svg" alt="" width="29" height="29" />
-					<span>Instagram</span>
-				</a>
-			</li>
+			<li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+			<li><a href={contact.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+			<li><a href={contact.instagram} target="_blank" rel="noopener noreferrer">Instagram</a></li>
 		</ul>
+		<p class="colophon">
+			Designed in Figma, set in Cormorant &amp; EB Garamond, built with Claude Code, and kept on Cloudflare.
+		</p>
 	</div>
 </footer>
 
 <style>
-	/* Figma 24:866 — 110px above the rule, 100px below the links. */
 	.footer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 50px;
-		padding-top: clamp(64px, 7.6vw, 110px);
-		padding-bottom: clamp(56px, 6.9vw, 100px);
-		background-color: var(--color-chrome);
-	}
-
-	/* Figma 24:794 — 1350px, 3px, butter. */
-	.footer-rule {
-		width: calc(100% - 2 * var(--gutter));
-		max-width: 1350px;
-		border-top: 3px solid var(--color-butter);
+		padding-block: clamp(56px, 7vw, 96px);
+		background:
+			radial-gradient(ellipse at 50% 0%, rgba(217, 162, 76, 0.14), transparent 60%),
+			var(--color-espresso);
+		color: var(--color-ivory);
+		border-top: 1px solid rgba(176, 141, 87, 0.55);
 	}
 
 	.inner {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 50px;
-	}
-
-	.intro {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 30px;
+		gap: 18px;
 		text-align: center;
 	}
 
 	.heading {
-		font-family: var(--font-playfair);
-		font-size: clamp(40px, 4.44vw, 64px);
-		font-weight: 700;
-		line-height: 1.33;
-		text-transform: uppercase;
-		color: var(--color-butter);
+		font-family: var(--font-display);
+		font-size: var(--fs-h2);
+		font-weight: 600;
+		font-style: italic;
+		line-height: 1.1;
+		color: var(--color-brass-light);
 	}
 
 	.body {
-		font-size: clamp(18px, 1.67vw, 24px);
-		line-height: 1.2;
-		color: var(--color-cream);
+		max-width: 46ch;
+		font-size: var(--fs-body);
+		color: rgba(246, 239, 224, 0.85);
 	}
 
-	/* Figma 24:831 — the LinkedIn item sits centred in a 406px slot,
-	   which leaves ~133px either side of it. */
 	.channels {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		align-items: center;
-		gap: 16px clamp(24px, 9.2vw, 133px);
+		gap: 10px 36px;
+		margin-top: 8px;
 	}
 
-	.channel {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-		font-size: clamp(18px, 1.67vw, 24px);
-		font-weight: 700;
-		line-height: 1.2;
-		color: var(--color-sky);
-		overflow-wrap: anywhere;
-	}
-
-	.channel img {
-		flex: 0 0 auto;
-	}
-
-	a.channel:hover span {
+	.channels a {
+		font-size: var(--fs-body);
+		color: var(--color-ivory);
 		text-decoration: underline;
+		text-decoration-color: rgba(176, 141, 87, 0.7);
+		text-underline-offset: 5px;
+		overflow-wrap: anywhere;
+		transition: color 200ms ease;
+	}
+
+	.channels a:hover {
+		color: var(--color-brass-light);
+	}
+
+	.colophon {
+		margin-top: 32px;
+		font-size: 15px;
+		font-style: italic;
+		color: rgba(220, 194, 140, 0.7);
 	}
 
 	.footer :focus-visible {
-		outline-color: var(--color-butter);
+		outline-color: var(--color-brass-light);
 	}
 </style>

@@ -1,0 +1,304 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+/* Copy carried over unchanged from the previous homepage's hero and About section. */
+const intro = 'I’m Yvonne! I create human-centered experiences that are functional, intuitive, and engaging.';
+
+const paragraphs = [
+	'Hi, I’m Yvonne! I am currently studying Human Factors at Bentley University and working full time in civil service.',
+	'Outside of work, you’ll find me hanging out with my cats, crocheting or knitting something for a family member, doing pilates, or revising my portfolio. This website was designed in Figma, developed with Claude Code + Figma MCP, managed with GitHub and deployed on Cloudflare. I am always learning and trying new things!',
+	'I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.',
+	'At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.',
+];
+---
+
+<Layout title="About — Yvonne Wu" description="About Yvonne Wu, a UX and UI designer studying Human Factors at Bentley University.">
+	<Nav />
+	<main id="main" class="about">
+		<header class="page intro">
+			<p class="small-caps kicker">Chapter 03</p>
+			<h1 class="title">About</h1>
+			<p class="lede">From the journal on the desk.</p>
+		</header>
+
+		<article class="journal" aria-labelledby="entry-heading">
+			<div class="spread">
+				<!-- Left page: photographs tucked into corners, captioned by hand. -->
+				<div class="leaf leaf--left">
+					<figure class="photo photo--portrait">
+						<span class="corner corner--tl" aria-hidden="true"></span>
+						<span class="corner corner--br" aria-hidden="true"></span>
+						<img
+							src="/images/home-hero-portrait.webp"
+							alt="Yvonne in glasses, with a grey cat asleep on the sofa behind her"
+							width="896"
+							height="1200"
+						/>
+						<figcaption>at home — the cat, asleep as ever</figcaption>
+					</figure>
+					<figure class="photo photo--sheep">
+						<span class="tape" aria-hidden="true"></span>
+						<img
+							src="/images/home-about.webp"
+							alt="Yvonne crouching by a pen of sheep in coats, making a peace sign"
+							width="1964"
+							height="1473"
+							loading="lazy"
+						/>
+						<figcaption>sheep in coats!</figcaption>
+					</figure>
+				</div>
+
+				<!-- Right page: the entry itself. -->
+				<div class="leaf leaf--right">
+					<p class="entry-date small-caps">Boston</p>
+					<h2 id="entry-heading" class="entry-heading">UX &amp; UI Designer</h2>
+					<p class="entry-intro">{intro}</p>
+					<p class="ornament" aria-hidden="true">❦</p>
+					<div class="entry-body">
+						{paragraphs.map((text) => <p>{text}</p>)}
+					</div>
+					<p class="signature" aria-hidden="true">— Yvonne</p>
+				</div>
+			</div>
+		</article>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	.intro {
+		padding-block: clamp(48px, 7vw, 96px) clamp(24px, 4vw, 48px);
+		text-align: center;
+	}
+
+	.kicker {
+		color: var(--color-burgundy);
+	}
+
+	.title {
+		font-family: var(--font-display);
+		font-size: var(--fs-display);
+		font-weight: 600;
+		font-style: italic;
+		line-height: 1;
+	}
+
+	.lede {
+		margin-top: 14px;
+		font-size: var(--fs-lg);
+		font-style: italic;
+		color: var(--color-ink-soft);
+	}
+
+	/* The journal: a leather binding around two cream pages. */
+	.journal {
+		max-width: calc(1240px + 2 * var(--gutter));
+		margin-inline: auto;
+		padding: 0 var(--gutter) clamp(64px, 8vw, 120px);
+	}
+
+	.spread {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		padding: clamp(8px, 1.2vw, 16px);
+		border-radius: 10px;
+		background:
+			radial-gradient(ellipse at 30% 20%, rgba(255, 200, 160, 0.12), transparent 60%),
+			#4a1c18;
+		box-shadow:
+			0 0 0 1px rgba(0, 0, 0, 0.3),
+			0 40px 80px -30px rgba(42, 28, 19, 0.7);
+		animation: open-journal 1100ms var(--ease-page) both;
+		transform-origin: 50% 0;
+	}
+
+	@keyframes open-journal {
+		from {
+			opacity: 0;
+			transform: perspective(2000px) rotateX(12deg) translateY(24px);
+		}
+	}
+
+	.leaf {
+		position: relative;
+		padding: clamp(28px, 4.5vw, 72px);
+		background:
+			var(--paper-grain),
+			repeating-linear-gradient(transparent 0 37px, rgba(111, 43, 42, 0.09) 37px 38px),
+			linear-gradient(#f4ead6, #efe3c8);
+	}
+
+	/* The page curves into the gutter. */
+	.leaf--left {
+		border-radius: 4px 0 0 4px;
+		box-shadow: inset -40px 0 50px -40px rgba(70, 45, 20, 0.55);
+	}
+
+	.leaf--right {
+		border-radius: 0 4px 4px 0;
+		box-shadow: inset 40px 0 50px -40px rgba(70, 45, 20, 0.55);
+	}
+
+	/* Photographs ----------------------------------------------------- */
+
+	.leaf--left {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: clamp(32px, 5vw, 64px);
+	}
+
+	.photo {
+		position: relative;
+		padding: 12px 12px 0;
+		background: #fbf6ea;
+		box-shadow: 0 12px 24px -12px rgba(42, 28, 19, 0.5);
+	}
+
+	.photo img {
+		display: block;
+		width: 100%;
+		object-fit: cover;
+		filter: sepia(0.18) saturate(0.9) contrast(1.02);
+	}
+
+	.photo figcaption {
+		padding: 10px 4px 12px;
+		text-align: center;
+		font-family: var(--font-hand);
+		font-size: clamp(20px, 1.8vw, 26px);
+		line-height: 1.1;
+		color: #3b3060;
+	}
+
+	.photo--portrait {
+		width: min(320px, 78%);
+		transform: rotate(-2.5deg);
+	}
+
+	.photo--portrait img {
+		aspect-ratio: 896 / 1100;
+	}
+
+	.photo--sheep {
+		width: min(400px, 92%);
+		align-self: flex-end;
+		transform: rotate(2deg);
+	}
+
+	.photo--sheep img {
+		aspect-ratio: 4 / 3;
+	}
+
+	/* Black photo corners */
+	.corner {
+		position: absolute;
+		width: 34px;
+		height: 34px;
+		z-index: 1;
+	}
+
+	.corner--tl {
+		left: -6px;
+		top: -6px;
+		background: linear-gradient(135deg, #2a1c13 50%, transparent 50%);
+	}
+
+	.corner--br {
+		right: -6px;
+		bottom: 40px;
+		background: linear-gradient(-45deg, #2a1c13 50%, transparent 50%);
+	}
+
+	.tape {
+		position: absolute;
+		top: -14px;
+		left: 50%;
+		width: 110px;
+		height: 30px;
+		background: rgba(196, 176, 120, 0.55);
+		transform: translateX(-50%) rotate(-3deg);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		z-index: 1;
+	}
+
+	/* The entry ------------------------------------------------------- */
+
+	.entry-date {
+		color: var(--color-burgundy);
+	}
+
+	.entry-heading {
+		margin-top: 6px;
+		font-family: var(--font-display);
+		font-size: var(--fs-h2);
+		font-weight: 600;
+		line-height: 1.05;
+	}
+
+	.entry-intro {
+		margin-top: 16px;
+		font-family: var(--font-display);
+		font-size: var(--fs-lg);
+		font-style: italic;
+		line-height: 1.35;
+		color: var(--color-ink-soft);
+	}
+
+	.leaf--right .ornament {
+		margin-block: 28px;
+	}
+
+	.entry-body {
+		font-size: var(--fs-body);
+		line-height: 1.65;
+	}
+
+	.entry-body p + p {
+		margin-top: 1em;
+		text-indent: 1.5em;
+	}
+
+	/* Drop cap on the first paragraph. */
+	.entry-body p:first-child::first-letter {
+		float: left;
+		margin: 0.06em 0.1em 0 0;
+		font-family: var(--font-display);
+		font-size: 3.6em;
+		font-weight: 600;
+		line-height: 0.8;
+		color: var(--color-burgundy);
+	}
+
+	.signature {
+		margin-top: 28px;
+		text-align: right;
+		font-family: var(--font-hand);
+		font-size: 34px;
+		color: #3b3060;
+	}
+
+	@media (max-width: 900px) {
+		.spread {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.leaf--left,
+		.leaf--right {
+			border-radius: 4px;
+			box-shadow: none;
+		}
+
+		.leaf--left {
+			order: 2;
+			border-top: 1px dashed rgba(111, 43, 42, 0.3);
+		}
+
+		.photo--sheep {
+			align-self: center;
+		}
+	}
+</style>

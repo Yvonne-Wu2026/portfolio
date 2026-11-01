@@ -39,40 +39,42 @@ const quickInfo = [
 <Layout title={`${study.title} — Yvonne Wu`} description={study.summary}>
 	<Nav />
 
-	<main>
-		<!-- Figma: "Project title and quick info" -->
-		<section class="page title-section">
-			<h1 class="section-heading">{study.title}</h1>
-			<div class="title-row">
-				<dl class="quick-info">
-					{
-						quickInfo.map((item) => (
-							<>
-								<dt>{item.label}</dt>
-								<dd>{item.value}</dd>
-							</>
-						))
-					}
-				</dl>
-				<div class="summary-col">
-					<p class="summary">{study.summary}</p>
-					{study.cta && <Button href={study.cta.href} label={study.cta.label} />}
-				</div>
-			</div>
-		</section>
+	<main id="main">
+		<!-- Title page: kicker, title, summary, then the colophon of facts. -->
+		<header class="page title-section">
+			<a class="back" href="/work"><span aria-hidden="true">←</span> Back to the shelf</a>
+			<p class="small-caps kicker">A case study</p>
+			<h1 class="title">{study.title}</h1>
+			<p class="summary">{study.summary}</p>
+			<p class="ornament" aria-hidden="true">❦</p>
+			<dl class="quick-info">
+				{
+					quickInfo.map((item) => (
+						<div class="fact">
+							<dt>{item.label}</dt>
+							<dd>{item.value}</dd>
+						</div>
+					))
+				}
+			</dl>
+			{study.cta && <div class="cta"><Button href={study.cta.href} label={study.cta.label} /></div>}
+		</header>
 
-		<!-- Figma: "project hero image" -->
-		<div
-			class:list={['hero-image', { 'hero-image--filled': study.hero?.src }]}
-			style={[
-				study.hero?.ratio && `aspect-ratio: ${study.hero.ratio};`,
-				study.hero?.maxWidth && `max-width: ${study.hero.maxWidth};`,
-			]
-				.filter(Boolean)
-				.join(' ')}
-		>
-			{study.hero?.src && <img src={study.hero.src} alt={study.hero.alt ?? ''} />}
-		</div>
+		<!-- The hero, mounted like a plate in an old monograph. -->
+		<figure class="plate">
+			<div
+				class:list={['hero-image', { 'hero-image--filled': study.hero?.src }]}
+				style={[
+					study.hero?.ratio && `aspect-ratio: ${study.hero.ratio};`,
+					study.hero?.maxWidth && `max-width: ${study.hero.maxWidth};`,
+				]
+					.filter(Boolean)
+					.join(' ')}
+			>
+				{study.hero?.src && <img src={study.hero.src} alt={study.hero.alt ?? ''} />}
+			</div>
+			<figcaption class="small-caps">Plate I · {study.title}</figcaption>
+		</figure>
 
 		{
 			study.sections.map((section) => (
@@ -141,66 +143,115 @@ const quickInfo = [
 	.title-section {
 		display: flex;
 		flex-direction: column;
-		gap: 50px;
-		padding-block: clamp(28px, 3.5vw, 37px);
-	}
-
-	.title-row {
-		display: flex;
 		align-items: center;
-		gap: clamp(32px, 7vw, 97px);
+		gap: 14px;
+		max-width: calc(1000px + 2 * var(--gutter));
+		padding-block: clamp(36px, 6vw, 80px) clamp(24px, 4vw, 48px);
+		text-align: center;
 	}
 
-	.quick-info {
-		flex: 1 1 0;
-		min-width: 0;
-		display: grid;
-		grid-template-columns: minmax(0, 248px) minmax(0, 1fr);
-		column-gap: 10px;
-		font-size: var(--fs-sm);
-		line-height: 1.3;
+	.back {
+		align-self: flex-start;
+		margin-bottom: clamp(16px, 3vw, 36px);
+		font-size: 17px;
+		font-style: italic;
+		color: var(--color-ink-soft);
 	}
 
-	.quick-info dt,
-	.quick-info dd {
-		padding: 10px;
+	.back:hover {
+		color: var(--color-burgundy);
 	}
 
-	.quick-info dt {
+	.kicker {
+		color: var(--color-burgundy);
+	}
+
+	.title {
+		font-family: var(--font-display);
+		font-size: var(--fs-display);
 		font-weight: 600;
-	}
-
-	.quick-info dd {
-		text-align: right;
-	}
-
-	.summary-col {
-		flex: 1 1 0;
-		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 26px;
-		text-align: right;
+		font-style: italic;
+		line-height: 1;
+		text-wrap: balance;
 	}
 
 	.summary {
+		max-width: 34ch;
+		font-family: var(--font-display);
 		font-size: var(--fs-h3);
 		font-weight: 500;
 		line-height: 1.25;
+		color: var(--color-ink-soft);
+		text-wrap: balance;
+	}
+
+	.title-section .ornament {
+		width: 100%;
+		margin-block: 10px;
+	}
+
+	/* Facts set as a two-column colophon with brass hairlines. */
+	.quick-info {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		width: 100%;
+		border-top: var(--rule-brass);
+		text-align: left;
+	}
+
+	.fact {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		padding: 14px 18px;
+		border-bottom: var(--rule-brass);
+	}
+
+	.fact:nth-child(odd) {
+		border-right: var(--rule-brass);
+	}
+
+	.fact dt {
+		font-size: 15px;
+		font-variant: all-small-caps;
+		letter-spacing: 0.16em;
+		color: var(--color-burgundy);
+	}
+
+	.fact dd {
+		font-size: var(--fs-body);
+		line-height: 1.4;
+	}
+
+	.cta {
+		margin-top: 18px;
+	}
+
+	.plate {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		max-width: calc(1200px + 2 * var(--gutter));
+		margin: 0 auto clamp(24px, 4vw, 56px);
+		padding-inline: var(--gutter);
+	}
+
+	.plate figcaption {
+		font-size: 15px;
+		color: var(--color-ink-soft);
 	}
 
 	.hero-image {
 		width: 100%;
 		margin-inline: auto;
 		aspect-ratio: 1440 / 847;
-		background-color: var(--color-accent-light);
+		padding: clamp(10px, 1.6vw, 22px);
+		background-color: var(--color-ivory);
+		box-shadow:
+			0 0 0 1px rgba(176, 141, 87, 0.6),
+			0 24px 50px -28px rgba(42, 28, 19, 0.6);
 		overflow: hidden;
-	}
-
-	/* Transparent PNGs would otherwise show the placeholder fill through their gaps. */
-	.hero-image--filled {
-		background-color: transparent;
 	}
 
 	.hero-image img {
@@ -220,18 +271,18 @@ const quickInfo = [
 	}
 
 	@media (max-width: 900px) {
-		.title-row {
-			flex-direction: column;
-			align-items: stretch;
-		}
-
-		.summary-col {
-			align-items: flex-start;
-			text-align: left;
-		}
-
 		.problem-grid {
 			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.quick-info {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.fact:nth-child(odd) {
+			border-right: 0;
 		}
 	}
 </style>

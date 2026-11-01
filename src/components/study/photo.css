@@ -1,0 +1,681 @@
+/* The photographed study: photo layers, printed pages, hotspots, departures. */
+
+.photo-viewport {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	background: var(--color-espresso);
+}
+
+/* Pans and zooms over the photo for each departure. */
+.photo-camera {
+	position: absolute;
+	inset: 0;
+	transform-origin: 0 0;
+	transition: transform 1.3s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* A few pixels of drift under the pointer; slightly oversized so edges never show. */
+.photo-parallax {
+	position: absolute;
+	inset: 0;
+	transform: translate(var(--px, 0px), var(--py, 0px)) scale(1.03);
+	transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-stage {
+	position: absolute;
+	left: 0;
+	top: 0;
+	transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.photo-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	opacity: 0;
+	user-select: none;
+}
+
+.photo-image.is-on {
+	opacity: 1;
+}
+
+/*
+ * Presets without their own photo, graded from the golden-hour one.
+ * Evening: the room falls dim, the window turns to dusk, the lamp glows.
+ * Reading: brighter and more even, the lamp on.
+ */
+.photo-image,
+.photo-spine {
+	transition:
+		opacity 1.4s ease,
+		filter 1.4s ease;
+}
+
+/* Golden hour: the photo warmed and taken down a touch. */
+[data-preset='golden'] .photo-image,
+[data-preset='golden'] .photo-spine {
+	filter: brightness(0.9) sepia(0.16) saturate(1.12) contrast(1.03);
+}
+
+[data-grade='evening'] .photo-image,
+[data-grade='evening'] .photo-spine {
+	filter: brightness(0.42) saturate(0.85) contrast(1.1) sepia(0.12);
+}
+
+[data-grade='reading'] .photo-image,
+[data-grade='reading'] .photo-spine {
+	filter: brightness(1.12) contrast(0.94) saturate(0.92);
+}
+
+.photo-dusk,
+.photo-lamplight {
+	position: absolute;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 1.4s ease;
+}
+
+/* Twilight over the window: violet-blue, strongest at the top of the arch. */
+.photo-dusk {
+	background: linear-gradient(rgba(70, 70, 140, 0.75), rgba(120, 80, 110, 0.55) 70%, rgba(60, 40, 50, 0));
+	mix-blend-mode: color;
+}
+
+[data-grade='evening'] .photo-dusk {
+	opacity: 1;
+}
+
+/* Lamplight: a hot core under the shade, and the warm pool it throws on the desk. */
+.photo-lamplight {
+	width: 34vmax;
+	height: 34vmax;
+	transform: translate(-50%, -50%);
+	background: radial-gradient(circle, rgba(255, 190, 110, 0.75), rgba(255, 160, 80, 0.25) 35%, transparent 65%);
+	mix-blend-mode: screen;
+}
+
+.photo-lamplight--pool {
+	width: 60vmax;
+	height: 30vmax;
+	background: radial-gradient(ellipse, rgba(255, 170, 90, 0.55), rgba(255, 150, 70, 0.18) 40%, transparent 70%);
+}
+
+[data-grade='evening'] .photo-lamplight {
+	opacity: 1;
+}
+
+[data-grade='reading'] .photo-lamplight {
+	opacity: 0.45;
+}
+
+/* Film finish: fine animated grain and a soft vignette, deeper in the evening. */
+.photo-grade {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background: radial-gradient(ellipse at 50% 55%, transparent 55%, rgba(20, 12, 7, 0.45) 100%);
+	transition: opacity 1.4s ease;
+}
+
+.photo-grade::after {
+	content: '';
+	position: absolute;
+	inset: -50%;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+	opacity: 0.07;
+	mix-blend-mode: overlay;
+	animation: grain 0.9s steps(4) infinite;
+}
+
+@keyframes grain {
+	0% {
+		transform: translate(0, 0);
+	}
+	25% {
+		transform: translate(-3%, 2%);
+	}
+	50% {
+		transform: translate(2%, -3%);
+	}
+	75% {
+		transform: translate(-2%, -1%);
+	}
+}
+
+/* Printed pages ---------------------------------------------------- */
+
+.photo-page {
+	position: absolute;
+	left: 0;
+	top: 0;
+	transform-origin: 0 0;
+	transform-style: preserve-3d;
+}
+
+/* Ink on paper: multiplied onto the photo so it takes the page's light and grain. */
+.photo-print {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 92px 70px 60px;
+	color: #2a1c13;
+	text-align: center;
+	mix-blend-mode: multiply;
+	opacity: 0.9;
+}
+
+.photo-print p {
+	margin: 0;
+}
+
+.photo-print__kicker {
+	font-family: var(--font-body);
+	font-size: 22px;
+	letter-spacing: 0.32em;
+	text-transform: uppercase;
+	color: #5c4838;
+}
+
+.photo-print__name {
+	margin-top: 26px !important;
+	font-family: var(--font-display);
+	font-size: 84px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.photo-print__fleuron {
+	margin-top: 28px !important;
+	font-family: var(--font-display);
+	font-size: 36px;
+	color: #9a7640;
+}
+
+.photo-print__role {
+	margin-top: 28px !important;
+	font-family: var(--font-body);
+	font-size: 34px;
+	font-style: italic;
+}
+
+.photo-print__blurb {
+	max-width: 400px;
+	margin-top: 48px !important;
+	font-family: var(--font-body);
+	font-size: 25px;
+	line-height: 1.45;
+	color: #5c4838;
+}
+
+.photo-print__year {
+	margin-top: auto !important;
+	font-family: var(--font-body);
+	font-size: 19px;
+	letter-spacing: 0.3em;
+	color: #5c4838;
+}
+
+.photo-print__heading {
+	padding-bottom: 18px;
+	margin-bottom: 44px !important;
+	border-bottom: 2px solid #b08d57;
+	font-family: var(--font-display);
+	font-size: 42px;
+	font-weight: 600;
+	letter-spacing: 0.32em;
+	text-transform: uppercase;
+	text-indent: 0.32em;
+}
+
+.photo-print--contents ol {
+	width: 100%;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.photo-print--contents a {
+	position: relative;
+	display: flex;
+	align-items: baseline;
+	gap: 16px;
+	padding: 14px 18px;
+	margin-inline: -18px;
+	border-radius: 3px;
+	color: inherit;
+	text-decoration: none;
+	transition:
+		background-color 400ms ease,
+		color 300ms ease;
+}
+
+/* Hover or focus: a warm wash and the title inked in burgundy with an underline. */
+.photo-print--contents a.is-active,
+.photo-print--contents a:focus-visible {
+	background: rgba(217, 162, 76, 0.32);
+	color: #6f2b2a;
+	outline: none;
+}
+
+.photo-print__num {
+	font-family: var(--font-body);
+	font-size: 26px;
+	color: #8a6f55;
+}
+
+.photo-print__label {
+	position: relative;
+	font-family: var(--font-display);
+	font-size: 50px;
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.photo-print__label::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -2px;
+	height: 3px;
+	border-radius: 2px;
+	background: currentColor;
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-print--contents a.is-active .photo-print__label,
+.photo-print--contents a:focus-visible .photo-print__label {
+	font-style: italic;
+}
+
+.photo-print--contents a.is-active .photo-print__label::after,
+.photo-print--contents a:focus-visible .photo-print__label::after {
+	transform: scaleX(1);
+}
+
+.photo-print__dots {
+	flex: 1;
+	border-bottom: 3px dotted rgba(92, 72, 56, 0.55);
+	transform: translateY(-8px);
+}
+
+.photo-print__pg {
+	font-family: var(--font-body);
+	font-size: 26px;
+}
+
+.photo-print__foot {
+	margin-top: auto !important;
+	font-family: var(--font-body);
+	font-size: 22px;
+	font-style: italic;
+	color: #8a6f55;
+}
+
+.photo-print--opening {
+	justify-content: center;
+	gap: 18px;
+}
+
+.photo-print__chapter {
+	font-family: var(--font-display);
+	font-size: 104px;
+	font-style: italic;
+	font-weight: 600;
+	line-height: 1;
+}
+
+/* The leaf that turns: rotates about the gutter onto the left page. */
+.photo-leaf {
+	position: absolute;
+	inset: 0;
+	transform-origin: left center;
+	transform-style: preserve-3d;
+	animation: leaf-turn 950ms cubic-bezier(0.45, 0, 0.25, 1) forwards;
+}
+
+.photo-leaf__front,
+.photo-leaf__back {
+	position: absolute;
+	inset: 0;
+	backface-visibility: hidden;
+	background:
+		linear-gradient(90deg, rgba(110, 75, 35, 0.28), transparent 18%),
+		#ece0c4;
+}
+
+.photo-leaf__back {
+	transform: rotateY(180deg);
+	background:
+		linear-gradient(270deg, rgba(110, 75, 35, 0.3), transparent 20%),
+		#e9dcbf;
+}
+
+@keyframes leaf-turn {
+	from {
+		transform: rotateY(0deg);
+	}
+	to {
+		transform: rotateY(-180deg);
+	}
+}
+
+/* Hotspots --------------------------------------------------------- */
+
+.photo-hotspot {
+	position: absolute;
+	padding: 0;
+	border: 0;
+	border-radius: 4px;
+	background: none;
+	cursor: pointer;
+}
+
+.photo-hotspot:disabled {
+	cursor: default;
+}
+
+.photo-hotspot:focus-visible {
+	outline: 2px solid var(--color-brass-light);
+	outline-offset: 4px;
+}
+
+/* A warm bloom over the object while it's under the hand. */
+.photo-hotspot::before {
+	content: '';
+	position: absolute;
+	inset: -20%;
+	background: radial-gradient(ellipse at center, rgba(255, 196, 120, 0.35), transparent 65%);
+	mix-blend-mode: screen;
+	opacity: 0;
+	transition: opacity 500ms ease;
+	pointer-events: none;
+}
+
+.photo-hotspot.is-active::before {
+	opacity: 1;
+}
+
+.photo-hotspot__dot {
+	position: absolute;
+	left: 50%;
+	top: 22%;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: #f0c070;
+	box-shadow: 0 0 10px 2px rgba(240, 180, 90, 0.75);
+	transform: translate(-50%, -50%);
+	animation: hint-pulse 2.4s ease-out infinite;
+	transition: opacity 300ms ease;
+}
+
+.photo-hotspot.is-active .photo-hotspot__dot,
+[data-leaving] .photo-hotspot__dot {
+	opacity: 0;
+}
+
+.photo-hotspot__label {
+	position: absolute;
+	left: 50%;
+	bottom: calc(100% + 10px);
+	padding: 5px 12px 6px;
+	border: 1px solid rgba(220, 194, 140, 0.7);
+	border-radius: 999px;
+	background: rgba(31, 20, 13, 0.82);
+	color: var(--color-ivory);
+	font-family: var(--font-body);
+	font-size: 15px;
+	font-style: italic;
+	white-space: nowrap;
+	opacity: 0;
+	transform: translate(-50%, 4px);
+	transition:
+		opacity 300ms ease,
+		transform 300ms ease;
+	backdrop-filter: blur(4px);
+	pointer-events: none;
+}
+
+.photo-hotspot.is-active .photo-hotspot__label {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+/* The spine cut from the photo, tipped out toward the visitor on hover. */
+.photo-spine {
+	position: absolute;
+	inset: 0;
+	background-repeat: no-repeat;
+	transform-origin: 50% 100%;
+	opacity: 0;
+	transition:
+		transform 550ms cubic-bezier(0.22, 1, 0.36, 1),
+		filter 550ms ease,
+		opacity 200ms ease;
+}
+
+.photo-hotspot.is-active .photo-spine,
+[data-leaving='book'] .photo-hotspot:disabled .photo-spine {
+	opacity: 1;
+	transform: perspective(500px) translateY(-3%) rotateX(9deg) scale(1.04);
+	filter: brightness(1.18) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.6));
+}
+
+.photo-hint {
+	position: absolute;
+	transform: translate(-50%, -100%);
+	pointer-events: none;
+}
+
+.photo-glance {
+	display: block;
+}
+
+/* Taking a book down: its title page rises to fill the view. */
+.photo-titlepage {
+	position: absolute;
+	inset: 0;
+	z-index: 55;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 18px;
+	background:
+		var(--paper-grain),
+		radial-gradient(ellipse at 50% 40%, #f6eedb, #e6d6b6 80%);
+	color: var(--color-ink);
+	text-align: center;
+	animation: titlepage-in 800ms 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes titlepage-in {
+	from {
+		opacity: 0;
+		transform: scale(1.06);
+	}
+}
+
+.photo-titlepage__kicker {
+	font-size: 16px;
+	letter-spacing: 0.32em;
+	text-transform: uppercase;
+	color: var(--color-ink-soft);
+}
+
+.photo-titlepage__title {
+	font-family: var(--font-display);
+	font-size: clamp(52px, 8vw, 104px);
+	font-weight: 600;
+	line-height: 1;
+}
+
+.photo-titlepage__subtitle {
+	font-size: var(--fs-lg);
+	font-style: italic;
+	color: var(--color-ink-soft);
+}
+
+.photo-titlepage__fleuron {
+	font-family: var(--font-display);
+	font-size: 34px;
+	color: var(--color-brass);
+}
+
+/* Calibration overlay (?calibrate) */
+.photo-calibrate {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	cursor: crosshair;
+}
+
+.photo-calibrate__box {
+	position: absolute;
+	outline: 1px dashed #7df;
+	pointer-events: none;
+}
+
+.photo-calibrate__read {
+	position: fixed;
+	left: 16px;
+	bottom: 16px;
+	padding: 6px 10px;
+	background: #000c;
+	color: #7df;
+	font: 14px ui-monospace, monospace;
+}
+
+/* Hints step aside once the visitor is on the move. */
+[data-leaving] .photo-hint {
+	opacity: 0 !important;
+}
+
+/* A lifted spine keeps the room's grade, just a touch brighter than its neighbours. */
+[data-grade='evening'] .photo-hotspot.is-active .photo-spine {
+	filter: brightness(0.6) saturate(0.85) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.6));
+}
+
+[data-grade='reading'] .photo-hotspot.is-active .photo-spine {
+	filter: brightness(1.3) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.6));
+}
+
+/* Shelf tag -------------------------------------------------------- */
+
+.photo-tag {
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 4px 12px 5px;
+	border: 1px solid #8a6a3c;
+	border-radius: 2px;
+	background: linear-gradient(#e8cf94, #b08d57);
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.55),
+		inset 0 1px 0 rgba(255, 245, 215, 0.6);
+	color: #2a1c13;
+	text-align: center;
+	white-space: nowrap;
+	transform: translate(-50%, 0);
+	pointer-events: none;
+	transition:
+		box-shadow 400ms ease,
+		filter 400ms ease;
+}
+
+.photo-tag.is-lit {
+	filter: brightness(1.12);
+	box-shadow:
+		0 2px 6px rgba(0, 0, 0, 0.55),
+		0 0 18px rgba(255, 200, 120, 0.55),
+		inset 0 1px 0 rgba(255, 245, 215, 0.6);
+}
+
+/* The arrow points up at the books, nudging gently. */
+.photo-tag__arrow {
+	position: absolute;
+	top: -22px;
+	left: 50%;
+	color: #f0c070;
+	font-size: 16px;
+	line-height: 1;
+	text-shadow: 0 0 8px rgba(240, 180, 90, 0.8);
+	transform: translateX(-50%);
+	animation: tag-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes tag-nudge {
+	0%,
+	100% {
+		transform: translate(-50%, 0);
+	}
+	50% {
+		transform: translate(-50%, -4px);
+	}
+}
+
+.photo-tag__title {
+	font-family: var(--font-display);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	line-height: 1.2;
+}
+
+.photo-tag__hint {
+	font-family: var(--font-body);
+	font-size: 12px;
+	font-style: italic;
+	line-height: 1.2;
+	color: #4a3424;
+}
+
+[data-leaving] .photo-tag {
+	opacity: 0;
+	transition: opacity 300ms ease;
+}
+
+/* A slow warm shimmer across the two spines, staggered, so they read as live. */
+.photo-hotspot[aria-label*='Case study']::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(100deg, transparent 30%, rgba(255, 220, 160, 0.45) 50%, transparent 70%) 0 0 / 300% 100%;
+	mix-blend-mode: screen;
+	animation: spine-shimmer 6s ease-in-out infinite;
+	pointer-events: none;
+}
+
+.photo-hotspot[aria-label*='Case study'] + .photo-hotspot[aria-label*='Case study']::after {
+	animation-delay: 0.35s;
+}
+
+@keyframes spine-shimmer {
+	0%,
+	60% {
+		background-position: 100% 0;
+	}
+	85%,
+	100% {
+		background-position: 0% 0;
+	}
+}
+
+.photo-hotspot.is-active::after,
+[data-leaving] .photo-hotspot::after {
+	animation: none;
+	opacity: 0;
+}

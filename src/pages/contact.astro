@@ -1,0 +1,249 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import { contact } from '../data/library';
+
+const channels = [
+	{ label: 'By email', value: contact.email, href: `mailto:${contact.email}` },
+	{ label: 'On LinkedIn', value: 'Yvonne Wu', href: contact.linkedin, external: true },
+	{ label: 'On Instagram', value: '@threepudgybeans', href: contact.instagram, external: true },
+];
+---
+
+<Layout title="Contact — Yvonne Wu" description="Write to Yvonne Wu by email, or connect on LinkedIn.">
+	<Nav />
+	<main id="main" class="desk">
+		<h1 class="sr-only">Contact</h1>
+		<div class="envelope" aria-hidden="true">
+			<span class="envelope__flap"></span>
+		</div>
+
+		<article class="letter" aria-label="A letter from Yvonne">
+			<header class="letterhead">
+				<p class="letterhead__name">Yvonne Wu</p>
+				<p class="letterhead__line small-caps">UX &amp; UI Designer · Boston, Massachusetts</p>
+			</header>
+
+			<p class="salutation">Dear reader,</p>
+			<div class="body">
+				<p>Thank you for spending a little time in my study.</p>
+				<p>Feel free to reach out to me via email, or connect with me on LinkedIn!</p>
+			</div>
+
+			<dl class="addresses">
+				{
+					channels.map((channel) => (
+						<div class="address">
+							<dt>{channel.label}</dt>
+							<dd>
+								<a
+									href={channel.href}
+									target={channel.external ? '_blank' : undefined}
+									rel={channel.external ? 'noopener noreferrer' : undefined}
+								>
+									{channel.value}
+								</a>
+							</dd>
+						</div>
+					))
+				}
+			</dl>
+
+			<p class="closing">With warm regards,</p>
+			<p class="signature">Yvonne</p>
+
+			<span class="seal" aria-hidden="true">YW</span>
+		</article>
+	</main>
+</Layout>
+
+<style>
+	/* The letter lies on the walnut desk, the envelope tucked behind it. */
+	.desk {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: calc(100vh - 84px);
+		padding: clamp(40px, 7vw, 96px) var(--gutter);
+		overflow: hidden;
+		background:
+			radial-gradient(ellipse at 30% 10%, rgba(255, 200, 120, 0.28), transparent 55%),
+			repeating-linear-gradient(176deg, rgba(0, 0, 0, 0.1) 0 3px, transparent 3px 14px),
+			linear-gradient(160deg, #6b4126, #3a2416 70%);
+	}
+
+	.envelope {
+		position: absolute;
+		top: clamp(60px, 10vw, 120px);
+		left: 50%;
+		width: min(560px, 80vw);
+		aspect-ratio: 16 / 10;
+		background: linear-gradient(160deg, #e9dcc0, #d6c39e);
+		transform: translateX(-62%) rotate(-8deg);
+		box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
+		overflow: hidden;
+	}
+
+	.envelope__flap {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 60%;
+		background: linear-gradient(#ddd0b2, #cdb98f);
+		clip-path: polygon(0 0, 100% 0, 50% 100%);
+		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+	}
+
+	.letter {
+		position: relative;
+		width: min(640px, 100%);
+		padding: clamp(32px, 6vw, 72px) clamp(24px, 6vw, 72px) clamp(40px, 6vw, 64px);
+		background:
+			var(--paper-grain),
+			radial-gradient(ellipse at 50% 0%, rgba(255, 252, 240, 0.8), transparent 70%),
+			linear-gradient(#f6eedb, #ede0c3);
+		box-shadow:
+			0 1px 0 rgba(255, 255, 255, 0.5) inset,
+			0 30px 60px -20px rgba(0, 0, 0, 0.65);
+		transform: rotate(1.2deg);
+		animation: lay-letter 1000ms var(--ease-page) both;
+	}
+
+	@keyframes lay-letter {
+		from {
+			opacity: 0;
+			transform: translateY(40px) rotate(4deg);
+		}
+	}
+
+	/* A soft fold across the middle. */
+	.letter::after {
+		content: '';
+		position: absolute;
+		inset: 50% 0 auto;
+		height: 2px;
+		background: linear-gradient(rgba(120, 90, 50, 0.12), rgba(255, 255, 255, 0.4));
+		pointer-events: none;
+	}
+
+	.letterhead {
+		padding-bottom: 18px;
+		margin-bottom: 36px;
+		border-bottom: 1px solid var(--color-brass);
+		text-align: center;
+	}
+
+	.letterhead__name {
+		font-family: var(--font-display);
+		font-size: clamp(32px, 4vw, 44px);
+		font-weight: 600;
+		line-height: 1;
+		letter-spacing: 0.04em;
+	}
+
+	.letterhead__line {
+		margin-top: 8px;
+		font-size: 15px;
+		color: var(--color-ink-soft);
+	}
+
+	.salutation {
+		font-family: var(--font-display);
+		font-size: var(--fs-lg);
+		font-style: italic;
+		font-weight: 600;
+	}
+
+	.body {
+		margin-top: 16px;
+		font-size: var(--fs-body);
+		line-height: 1.65;
+	}
+
+	.body p + p {
+		margin-top: 0.8em;
+	}
+
+	.addresses {
+		display: grid;
+		gap: 14px;
+		margin: 32px 0;
+		padding: 22px 24px;
+		border: 1px solid rgba(176, 141, 87, 0.6);
+		background: rgba(255, 250, 238, 0.45);
+	}
+
+	.address {
+		display: grid;
+		grid-template-columns: 9.5em minmax(0, 1fr);
+		gap: 12px;
+		align-items: baseline;
+	}
+
+	.address dt {
+		font-variant: all-small-caps;
+		letter-spacing: 0.14em;
+		color: var(--color-ink-soft);
+	}
+
+	.address a {
+		font-size: var(--fs-body);
+		color: var(--color-burgundy);
+		text-decoration: underline;
+		text-decoration-color: rgba(111, 43, 42, 0.35);
+		text-underline-offset: 4px;
+		overflow-wrap: anywhere;
+		transition: text-decoration-color 250ms ease;
+	}
+
+	.address a:hover {
+		text-decoration-color: currentColor;
+	}
+
+	.closing {
+		font-style: italic;
+	}
+
+	.signature {
+		margin-top: 4px;
+		font-family: var(--font-hand);
+		font-size: 46px;
+		line-height: 1;
+		color: #3b3060;
+	}
+
+	/* Wax seal in the lower corner. */
+	.seal {
+		position: absolute;
+		right: clamp(20px, 5vw, 56px);
+		bottom: clamp(24px, 5vw, 48px);
+		display: grid;
+		place-items: center;
+		width: 78px;
+		height: 78px;
+		border-radius: 47% 53% 50% 50% / 52% 48% 52% 48%;
+		background: radial-gradient(circle at 38% 32%, #9a3b37, #6f2b2a 55%, #4a1c1b);
+		color: rgba(255, 220, 200, 0.55);
+		font-family: var(--font-display);
+		font-size: 26px;
+		font-style: italic;
+		font-weight: 700;
+		box-shadow:
+			inset 0 0 0 6px rgba(0, 0, 0, 0.12),
+			inset 0 0 0 7px rgba(255, 200, 180, 0.15),
+			0 6px 10px -4px rgba(0, 0, 0, 0.5);
+		transform: rotate(-12deg);
+	}
+
+	@media (max-width: 560px) {
+		.address {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 2px;
+		}
+
+		.seal {
+			width: 60px;
+			height: 60px;
+			font-size: 20px;
+		}
+	}
+</style>
