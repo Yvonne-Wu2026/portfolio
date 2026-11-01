@@ -1,7 +1,8 @@
 /**
  * The study's furniture, as data. Each shelf book is one case study (matched
  * to `caseStudies` by slug), so adding a project means adding a book here.
- * Kept apart from caseStudies.ts so the 3D island doesn't ship case study copy.
+ * Kept apart from caseStudies.ts so the homepage island doesn't ship case
+ * study copy.
  */
 
 export interface ShelfBook {
@@ -14,7 +15,7 @@ export interface ShelfBook {
 	/** Binding cloth and foil colours. */
 	cloth: string;
 	foil: string;
-	/** Physical size in metres: height, thickness, depth. */
+	/** Proportions as height, thickness, depth in metres; the Work page scales height and thickness to pixels. */
 	size: [number, number, number];
 }
 

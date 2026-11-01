@@ -225,7 +225,7 @@ function SpineLift({ stage, box, image }: { stage: Stage; box: Box; image: strin
 }
 
 /** What each hint points at; the hint steps aside while that object's own label shows. */
-const HINT_TARGETS: Record<Hint, string> = { book: 'chapter:', shelf: 'book:', lamp: 'lamp' };
+const HINT_TARGETS: Record<Hint, string> = { book: 'chapter:', lamp: 'lamp' };
 
 function PhotoHint({ stage, at, hint, children }: { stage: Stage; at: Point; hint: Hint; children: string }) {
 	const visible = useStudy(
@@ -411,7 +411,6 @@ export default function PhotoStudy() {
 			return;
 		}
 		if (chapter.href === '/work') {
-			dismissHint('shelf');
 			setMessage('Turning to the shelf…');
 			depart({ kind: 'shelf' }, chapter.href, TIMING.shelf);
 			return;
@@ -421,7 +420,6 @@ export default function PhotoStudy() {
 	};
 
 	const openBook = (slug: string) => {
-		dismissHint('shelf');
 		const book = shelfBooks.find((b) => b.slug === slug)!;
 		setMessage(`Opening ${book.title}…`);
 		depart({ kind: 'book', slug }, `/work/${slug}`, TIMING.book);
@@ -577,7 +575,7 @@ export default function PhotoStudy() {
 				)}
 
 				{overflowing && !leaving && (
-					<div className="study-glance photo-glance">
+					<div className="study-glance">
 						<button type="button" className="study-glance__btn" onClick={() => setView(view === 'shelf' ? 'desk' : 'shelf')}>
 							{view === 'shelf' ? '← Back to the desk' : 'Look at the shelf →'}
 						</button>

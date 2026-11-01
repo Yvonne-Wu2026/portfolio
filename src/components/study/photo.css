@@ -67,6 +67,17 @@
 	filter: brightness(0.42) saturate(0.85) contrast(1.1) sepia(0.12);
 }
 
+/* The turning leaf is drawn paper, not photo, so it takes the room's light
+   too. On its faces, not the leaf: a filter on a 3D parent flattens it and
+   lets the front show through mirrored mid-turn. */
+[data-grade='evening'] .photo-leaf > * {
+	filter: brightness(0.55) sepia(0.45) saturate(1.2);
+}
+
+[data-preset='golden'] .photo-leaf > * {
+	filter: brightness(0.9) sepia(0.16);
+}
+
 [data-grade='reading'] .photo-image,
 [data-grade='reading'] .photo-spine {
 	filter: brightness(1.12) contrast(0.94) saturate(0.92);
@@ -475,10 +486,6 @@
 	position: absolute;
 	transform: translate(-50%, -100%);
 	pointer-events: none;
-}
-
-.photo-glance {
-	display: block;
 }
 
 /* Taking a book down: its title page rises to fill the view. */

@@ -1,24 +1,16 @@
 import { useSyncExternalStore } from 'react';
 import type { PresetName } from './lighting';
 
-/** Where the camera rests. */
-export type View = 'desk' | 'shelf' | 'book' | 'reading';
+/** Objects that can be hovered or keyboard-focused in the study. */
+export type Target = `chapter:${string}` | `book:${string}` | 'lamp';
 
-/** Objects that can be hovered or keyboard-focused in the scene. */
-export type Target = `chapter:${string}` | `book:${string}` | 'lamp' | 'shelf';
-
-export type Hint = 'book' | 'shelf' | 'lamp';
+export type Hint = 'book' | 'lamp';
 
 export interface StudyState {
 	preset: PresetName;
-	view: View;
 	hovered: Target | null;
-	/** The shelf book being pulled out and opened, by slug. */
-	activeBook: string | null;
-	/** The chapter href the navigation book is turning to, if any. */
-	turningTo: string | null;
 	controlsOpen: boolean;
-	/** First frame rendered; hides the loading card. */
+	/** The photo has loaded; hides the loading card. */
 	ready: boolean;
 	hintsDismissed: Record<Hint, boolean>;
 	reducedMotion: boolean;
@@ -27,7 +19,7 @@ export interface StudyState {
 const HINTS_KEY = 'study-hints';
 
 function loadHints(): Record<Hint, boolean> {
-	const none = { book: false, shelf: false, lamp: false };
+	const none = { book: false, lamp: false };
 	try {
 		return { ...none, ...JSON.parse(localStorage.getItem(HINTS_KEY) ?? '{}') };
 	} catch {
@@ -37,13 +29,10 @@ function loadHints(): Record<Hint, boolean> {
 
 let state: StudyState = {
 	preset: 'golden',
-	view: 'desk',
 	hovered: null,
-	activeBook: null,
-	turningTo: null,
 	controlsOpen: false,
 	ready: false,
-	hintsDismissed: typeof window === 'undefined' ? { book: true, shelf: true, lamp: true } : loadHints(),
+	hintsDismissed: typeof window === 'undefined' ? { book: true, lamp: true } : loadHints(),
 	reducedMotion: typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 };
 
