@@ -224,8 +224,13 @@ function SpineLift({ stage, box, image }: { stage: Stage; box: Box; image: strin
 	);
 }
 
+/** What each hint points at; the hint steps aside while that object's own label shows. */
+const HINT_TARGETS: Record<Hint, string> = { book: 'chapter:', shelf: 'book:', lamp: 'lamp' };
+
 function PhotoHint({ stage, at, hint, children }: { stage: Stage; at: Point; hint: Hint; children: string }) {
-	const visible = useStudy((s) => s.ready && !s.hintsDismissed[hint]);
+	const visible = useStudy(
+		(s) => s.ready && !s.hintsDismissed[hint] && !s.hovered?.startsWith(HINT_TARGETS[hint]),
+	);
 	const [x, y] = px(stage, at);
 	return (
 		<p className={`scene-hint photo-hint${visible ? ' is-visible' : ''}`} style={{ left: x, top: y }} aria-hidden="true">
