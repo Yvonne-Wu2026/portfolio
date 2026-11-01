@@ -1,183 +1,83 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Hero from '../components/Hero.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import Footer from '../components/Footer.astro';
-
-/* Copy and crops transcribed from Figma "Home Page" 24:609. Crops place
-   each screenshot inside the card's 452×613 slot. */
-const projects = [
-	{
-		name: 'Dog Training Companion',
-		description:
-			'A mobile app concept exploring how smart-collar data and conversational AI could help dog owners understand their dogs. PawTrainer pairs an activity dashboard with Scout, a Gemini-powered training companion.',
-		href: '/work/pawtrainer',
-		image: '/images/home-card-pawtrainer.webp',
-		imageAlt: 'PawTrainer on a phone, showing the "Ready to train?" screen for a loose leash walking session',
-		imageWidth: 458,
-		imageHeight: 920,
-		tint: 'var(--color-sky)',
-		crop: { left: '12.3%', top: '9.25%', width: '75.4%' },
-	},
-	{
-		name: 'Data Visualization',
-		description:
-			'An engaging, interactive platform that transforms solar panel data into intuitive, easy-to-understand visualizations.',
-		href: '/work/watts-the-big-deal',
-		image: '/images/home-card-watts.webp',
-		imageAlt: 'The "Watt’s the Big Deal?" page: Bentley Arena at dusk above three yellow stat circles',
-		imageWidth: 1000,
-		imageHeight: 1489,
-		tint: 'var(--color-butter)',
-		crop: { left: '-4.65%', top: '15.58%', width: '109.3%' },
-	},
-];
-
-const aboutParagraphs = [
-	'Hi, I’m Yvonne! I am currently studying Human Factors at Bentley University and working full time in civil service.',
-	'Outside of work, you’ll find me hanging out with my cats, crocheting or knitting something for a family member, doing pilates, or revising my portfolio. This website was designed in Figma, developed with Claude Code + Figma MCP, managed with GitHub and deployed on Cloudflare. I am always learning and trying new things!',
-	'I’m constantly exploring the UX design world, whether that be trying a new Figma tool or plugin, vibe coding a new idea, or experimenting with AI tools and platforms.',
-	'At the heart of it all, I’m interested in understanding people: how they think, what they need, and what gets in their way. I believe good UX starts with putting people first and using technology thoughtfully to create experiences that feel intuitive, useful, and genuinely human.',
-];
+import PhotoStudy from '../components/study/PhotoStudy';
+import { chapters, shelfBooks } from '../data/library';
 ---
 
-<Layout>
-	<div class="home">
-		<Nav />
+<Layout
+	title="Yvonne Wu — UX & UI Designer"
+	description="Step into Yvonne Wu's study: a UX and UI design portfolio. Open the book to navigate, take a case study from the shelf, and adjust the lamp."
+	bodyClass="study-body"
+>
+	<!-- The study sizes itself to the window, so it renders client-side. Until
+	     it mounts, the same loading card the island shows stands in for it. -->
+	<PhotoStudy client:only="react">
+		<div slot="fallback" class="study-fallback" role="status">
+			<span class="study-fallback__flame"></span>
+			<p>Lighting the lamp…</p>
+		</div>
+	</PhotoStudy>
 
-		<main class="sections">
-			<Hero />
-			<hr class="divider" />
-
-			<!-- Figma: 24:629 -->
-			<section class="section page" id="work">
-				<h2 class="heading">Work</h2>
-				<div class="work-grid">
-					{projects.map((project) => <ProjectCard {...project} />)}
-				</div>
-			</section>
-			<hr class="divider" />
-
-			<!-- Figma: 24:701 -->
-			<section class="section page" id="about">
-				<h2 class="heading">About</h2>
-				<div class="about-body">
-					<div class="about-text">
-						{aboutParagraphs.map((text) => <p>{text}</p>)}
-					</div>
-					<img
-						class="about-photo"
-						src="/images/home-about.webp"
-						alt="Yvonne crouching by a pen of sheep in coats, making a peace sign"
-						width="1964"
-						height="1473"
-						loading="lazy"
-					/>
-				</div>
-			</section>
-		</main>
-
-		<Footer />
-	</div>
+	<noscript>
+		<nav class="noscript-nav" aria-label="Primary">
+			<h1>Yvonne Wu — UX &amp; UI Designer</h1>
+			<ul>
+				{chapters.map((chapter) => <li><a href={chapter.href}>{chapter.label}</a></li>)}
+				{shelfBooks.map((book) => <li><a href={`/work/${book.slug}`}>{book.title}</a></li>)}
+			</ul>
+		</nav>
+	</noscript>
 </Layout>
 
-<style>
-	/* Figma 24:609 — every top-level block is 50px apart. */
-	.home,
-	.sections {
-		display: flex;
-		flex-direction: column;
-		gap: 50px;
-	}
-
-	/* Figma 24:628 / 24:719 — 1350px, 3px, black at 70%. */
-	.divider {
-		width: calc(100% - 2 * var(--gutter));
-		max-width: 1350px;
-		margin-inline: auto;
-		border: 0;
-		border-top: 3px solid rgba(0, 0, 0, 0.7);
-	}
-
-	.section {
-		display: flex;
-		flex-direction: column;
-		gap: 30px;
-		max-width: calc(1202px + 2 * var(--gutter));
-		padding-block: 50px;
-		color: var(--color-ink);
-	}
-
-	.heading {
-		font-family: var(--font-playfair);
-		font-size: clamp(40px, 4.44vw, 64px);
-		font-weight: 700;
-		line-height: 1.33;
-		text-transform: uppercase;
-	}
-
-	/* Figma 24:678 — two 568px cards across 1204px. */
-	.work-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: clamp(20px, 4.7vw, 68px);
-	}
-
-	.about-body {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 50px;
-	}
-
-	/* Figma 24:729 — paragraphs separated by one empty 24px line. */
-	.about-text {
-		align-self: stretch;
-		font-size: clamp(18px, 1.67vw, 24px);
-		font-weight: 500;
-		line-height: 1.2;
-	}
-
-	.about-text p + p {
-		margin-top: 1.2em;
-	}
-
-	/* Figma 24:731 — 982×737. */
-	.about-photo {
-		width: 100%;
-		max-width: 982px;
-		aspect-ratio: 982 / 737;
-		object-fit: cover;
-	}
-
-	@media (max-width: 860px) {
-		.work-grid {
-			grid-template-columns: minmax(0, 1fr);
-		}
+<style is:global>
+	.study-body {
+		background: #1f140d;
+		overflow: hidden;
 	}
 </style>
 
-<style is:global>
-	body {
-		background-color: var(--color-page);
+<style>
+	.study-fallback {
+		position: fixed;
+		inset: 0;
+		display: grid;
+		place-content: center;
+		justify-items: center;
+		gap: 14px;
+		background:
+			radial-gradient(ellipse at 50% 40%, rgba(217, 162, 76, 0.18), transparent 60%),
+			var(--color-espresso);
+		color: var(--color-brass-light);
+		font-family: var(--font-display);
+		font-size: 22px;
+		font-style: italic;
 	}
 
-	/* Homepage-only cat cursors: a stretching cat whose daisy is the tip, and
-	   a sitting cat holding it up over anything clickable. Hotspots sit on
-	   each daisy's centre. This page's styles only load here. */
-	@media (pointer: fine) {
-		html {
-			cursor:
-				url('/cursors/cat.svg') 15 15,
-				auto;
-		}
+	.study-fallback__flame {
+		width: 10px;
+		height: 16px;
+		border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+		background: radial-gradient(circle at 50% 70%, #fff3d0, var(--color-amber) 60%, transparent 75%);
+		box-shadow: 0 0 30px 10px rgba(217, 162, 76, 0.35);
+	}
 
-		a,
-		button {
-			cursor:
-				url('/cursors/cat-pointer.svg') 32 14,
-				pointer;
-		}
+	.noscript-nav {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		padding: 48px 24px;
+		background: var(--color-paper);
+		color: var(--color-ink);
+	}
+
+	.noscript-nav h1 {
+		font-family: var(--font-display);
+		font-size: 40px;
+		margin-bottom: 24px;
+	}
+
+	.noscript-nav a {
+		font-size: 22px;
+		text-decoration: underline;
 	}
 </style>

@@ -1,96 +1,168 @@
 ---
-/* Figma: "Header of every page" 5:77 — dark band, wordmark left, three text buttons right. */
-const isHome = Astro.url.pathname === '/';
-const to = (hash: string) => (isHome ? `#${hash}` : `/#${hash}`);
+/* Header for the reading pages: the study's wordmark and contents, set like
+   a running head. "Return to the study" always leads back to the 3D desk. */
+import { chapters } from '../data/library';
 
-const links = [
-	{ label: 'Work', href: to('work') },
-	{ label: 'About', href: to('about') },
-	// The contact block lives in the footer, which is on every page.
-	{ label: 'Contact', href: '#contact' },
-];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = (href: string) =>
+	href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
 ---
 
 <header class="header" id="top">
+	<a class="skip" href="#main">Skip to content</a>
 	<nav class="page navbar" aria-label="Primary">
-		<a class="wordmark" href="/">Yvonne Wu</a>
-		<ul class="links">
+		<a class="wordmark" href="/">
+			Yvonne Wu
+			<span class="role">UX &amp; UI Designer</span>
+		</a>
+		<ol class="links">
 			{
-				links.map((link) => (
-					<li>
-						<a class="link" href={link.href}>
-							{link.label}
-						</a>
-					</li>
-				))
+				chapters
+					.filter((chapter) => chapter.href !== '/')
+					.map((chapter) => (
+						<li>
+							<a class="link" href={chapter.href} aria-current={current(chapter.href) ? 'page' : undefined}>
+								<span class="num">{chapter.number}</span>
+								{chapter.label}
+							</a>
+						</li>
+					))
 			}
-		</ul>
+		</ol>
+		<a class="return" href="/">
+			<span aria-hidden="true">←</span> Return to the study
+		</a>
 	</nav>
 </header>
 
 <style>
-	/* Figma 24:610 — 37px vertical padding around a 127px-tall menu row. */
 	.header {
-		background-color: var(--color-chrome);
-		color: var(--color-butter);
-		padding-block: clamp(16px, 2.6vw, 37px);
+		position: relative;
+		background:
+			linear-gradient(rgba(31, 20, 13, 0.92), rgba(31, 20, 13, 0.97)),
+			repeating-linear-gradient(178deg, rgba(0, 0, 0, 0.12) 0 3px, transparent 3px 13px),
+			var(--color-walnut);
+		color: var(--color-ivory);
+		border-bottom: 1px solid rgba(176, 141, 87, 0.55);
+		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+	}
+
+	.skip {
+		position: absolute;
+		left: 16px;
+		top: -60px;
+		padding: 8px 14px;
+		background: var(--color-ivory);
+		color: var(--color-ink);
+		z-index: 10;
+	}
+
+	.skip:focus {
+		top: 12px;
 	}
 
 	.navbar {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 24px;
-		min-height: clamp(64px, 8.8vw, 127px);
+		gap: 16px clamp(16px, 3vw, 48px);
+		min-height: 84px;
+		padding-block: 14px;
 	}
 
-	/* Figma I3:53;1:273 — inset 15px from the left and sitting ~10px below
-	   the links' centre line; the top margin shifts the centred box down. */
 	.wordmark {
-		margin-top: clamp(0px, 1.3vw, 19px);
-		padding-left: clamp(0px, 1.04vw, 15px);
-		font-family: var(--font-playfair);
-		font-size: clamp(28px, 3.33vw, 48px);
-		font-weight: 500;
-		line-height: 1.2;
-		white-space: nowrap;
+		display: flex;
+		flex-direction: column;
+		font-family: var(--font-display);
+		font-size: clamp(24px, 2.2vw, 30px);
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.role {
+		margin-top: 5px;
+		font-family: var(--font-body);
+		font-size: 13px;
+		font-variant: all-small-caps;
+		letter-spacing: 0.16em;
+		color: var(--color-brass-light);
 	}
 
 	.links {
 		display: flex;
-		align-items: center;
-		gap: clamp(2px, 1.25vw, 18px);
+		gap: clamp(12px, 2.4vw, 34px);
+		margin-left: auto;
 	}
 
 	.link {
+		position: relative;
 		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 10px clamp(8px, 1.6vw, 22px);
-		border-radius: 8px;
-		font-family: var(--font-playfair);
-		font-size: clamp(18px, 1.67vw, 24px);
-		font-weight: 500;
-		line-height: 1.2;
-		white-space: nowrap;
-		transition: background-color 150ms ease;
+		align-items: baseline;
+		gap: 6px;
+		padding: 6px 0;
+		font-size: var(--fs-nav);
+		font-variant: all-small-caps;
+		letter-spacing: 0.16em;
 	}
 
-	.link:hover {
-		background-color: rgba(255, 243, 180, 0.12);
+	.num {
+		font-size: 0.8em;
+		color: var(--color-brass);
+		letter-spacing: 0.05em;
+	}
+
+	.link::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 2px;
+		height: 1px;
+		background: var(--color-brass-light);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 400ms var(--ease-page);
+	}
+
+	.link:hover::after,
+	.link[aria-current='page']::after {
+		transform: scaleX(1);
+	}
+
+	.link[aria-current='page'] {
+		color: var(--color-brass-light);
+	}
+
+	.return {
+		padding-left: clamp(12px, 2.4vw, 34px);
+		border-left: 1px solid rgba(220, 194, 140, 0.3);
+		font-size: 16px;
+		font-style: italic;
+		color: var(--color-brass-light);
+		white-space: nowrap;
+	}
+
+	.return:hover {
+		color: var(--color-ivory);
 	}
 
 	.header :focus-visible {
-		outline-color: var(--color-butter);
+		outline-color: var(--color-brass-light);
 	}
 
-	@media (max-width: 520px) {
-		.wordmark {
-			font-size: 24px;
+	@media (max-width: 720px) {
+		.navbar {
+			flex-wrap: wrap;
 		}
 
-		.link {
-			font-size: 16px;
+		.links {
+			order: 3;
+			width: 100%;
+			margin-left: 0;
+			justify-content: space-between;
+		}
+
+		.return {
+			margin-left: auto;
+			border-left: 0;
+			padding-left: 0;
 		}
 	}
 </style>

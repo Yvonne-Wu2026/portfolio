@@ -27,7 +27,7 @@ export type Block =
 			/** Crop anchor when the ratio is shorter than the image. */
 			objectPosition?: string;
 	  }
-	| { type: 'imageRow'; images: { src?: string; alt?: string }[]; ratio?: string }
+	| { type: 'imageRow'; images: { src?: string; alt?: string; ratio?: string; caption?: string }[]; ratio?: string }
 	| { type: 'media'; src?: string; alt?: string; bodyHtml: string; reverse?: boolean }
 	| { type: 'flow'; steps: FlowStep[] };
 

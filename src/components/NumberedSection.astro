@@ -62,16 +62,31 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		padding-inline: var(--gutter);
 	}
 
+	/* Set like a chapter mark: "№ 01" in brass, then a hairline. */
 	.number {
-		font-size: clamp(18px, 1.7vw, 24px);
-		color: var(--color-accent-2);
+		font-family: var(--font-display);
+		font-size: clamp(20px, 1.8vw, 26px);
+		font-style: italic;
+		font-weight: 600;
+		color: var(--color-brass);
 		line-height: 1;
+	}
+
+	.number::before {
+		content: '№ ';
+		font-style: normal;
+		font-size: 0.8em;
 	}
 
 	.line {
 		flex: 1 1 0;
 		min-width: 0;
-		border-top: var(--rule-faint);
+		border-top: var(--rule-brass);
+	}
+
+	.sep,
+	.content {
+		max-width: calc(1120px + 2 * var(--gutter));
 	}
 
 	.content {
@@ -80,15 +95,23 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		gap: 30px;
 	}
 
+	/* Headings and text share one centred reading column; blocks run wider. */
+	.content > .heading,
+	.content > .subtitle {
+		width: 100%;
+		max-width: var(--measure);
+		margin-inline: auto;
+	}
+
 	/* Sub-sections sit tighter: the heading belongs with its body. */
 	.sec--detail .content {
 		gap: 6px;
 	}
 
 	.heading {
-		font-family: var(--font-playfair);
-		font-weight: 700;
-		line-height: 1.15;
+		font-family: var(--font-display);
+		font-weight: 600;
+		line-height: 1.08;
 	}
 
 	.heading--section {
@@ -98,8 +121,8 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 	.subtitle {
 		/* Pulled up against the heading, and the body up against it, out of the 30px gap. */
 		margin-block: -18px -14px;
-		font-family: var(--font-playfair);
-		font-size: clamp(19px, 1.7vw, 26px);
+		font-family: var(--font-display);
+		font-size: clamp(21px, 1.8vw, 28px);
 		font-style: italic;
 		line-height: 1.3;
 		color: var(--color-accent-2);
@@ -122,8 +145,10 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 	.prose {
 		padding: 10px;
 		font-size: var(--fs-body);
-		line-height: 1.45;
-		max-width: 90ch;
+		line-height: 1.65;
+		width: 100%;
+		max-width: var(--measure);
+		margin-inline: auto;
 	}
 
 	.prose > * + * {
@@ -161,11 +186,14 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		color: var(--color-accent-2);
 	}
 
+	/* A parchment slip with a brass edge, set apart from the running text. */
 	.prose .callout {
 		padding: 18px 24px;
-		border-radius: 20px;
-		background-color: var(--color-sky);
-		color: #1f4072;
+		border-radius: 2px;
+		border-left: 3px solid var(--color-brass);
+		background: var(--paper-grain), #e9dcbf;
+		color: var(--color-ink);
+		box-shadow: 0 10px 22px -16px rgba(42, 28, 19, 0.5);
 	}
 
 	/* A larger aside that frames context, such as an app overview, apart from the body. */
@@ -173,7 +201,12 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		max-width: 90ch;
 		margin-inline: auto;
 		padding: clamp(24px, 2.8vw, 40px);
-		border-radius: 28px;
+		border-left: 0;
+		box-shadow:
+			0 0 0 1px rgba(176, 141, 87, 0.7),
+			0 0 0 6px #e9dcbf,
+			0 0 0 7px rgba(176, 141, 87, 0.45),
+			0 18px 30px -18px rgba(42, 28, 19, 0.5);
 	}
 
 	/* An image beside the callout text, stacking on narrow screens. */
@@ -194,8 +227,8 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 		width: 100%;
 		aspect-ratio: 1;
 		object-fit: cover;
-		border-radius: 20px;
-		background-color: #fff;
+		border-radius: 2px;
+		background-color: var(--color-ivory);
 	}
 
 	.prose .callout--media > div > * + * {
@@ -217,16 +250,18 @@ const { number, title, subtitle, bodyHtml, variant = 'section', tightBottom = fa
 	}
 
 	.prose .callout-label {
-		font-size: var(--fs-sm);
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+		font-variant: all-small-caps;
+		font-size: 17px;
+		letter-spacing: 0.14em;
+		color: var(--color-burgundy);
 	}
 
 	.prose a {
 		color: var(--color-link);
-		font-weight: 600;
+		font-weight: 500;
 		text-decoration: underline;
+		text-decoration-color: rgba(111, 43, 42, 0.4);
+		text-underline-offset: 3px;
 	}
 
 	.prose a:hover {

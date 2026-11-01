@@ -1,5 +1,5 @@
 ---
-/* Figma: "Problem card" 19:887, restyled: borderless butter card with navy text. */
+/* Figma: "Problem card" 19:887, restyled for the library theme as a ruled index card. */
 interface Props {
 	title: string;
 	bodyHtml: string;
@@ -18,25 +18,30 @@ const { title, bodyHtml } = Astro.props;
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		padding: 30px;
-		border-radius: 36px;
-		background-color: var(--color-butter);
-		color: #1f4072;
-		/* A navy-tinted hairline edge plus a soft lift, so it doesn't sit flat. */
+		padding: 30px 28px 28px;
+		border-radius: 2px;
+		/* An index card: a burgundy head rule over faint ruled lines. */
+		background:
+			linear-gradient(var(--color-burgundy), var(--color-burgundy)) 0 64px / 100% 1px no-repeat,
+			repeating-linear-gradient(transparent 0 31px, rgba(42, 28, 19, 0.07) 31px 32px) 0 64px / 100% 100% no-repeat,
+			var(--color-ivory);
+		color: var(--color-ink);
 		box-shadow:
-			0 0 0 1px rgba(31, 64, 114, 0.08),
-			0 2px 4px rgba(31, 64, 114, 0.06),
-			0 12px 28px -10px rgba(31, 64, 114, 0.22);
+			0 0 0 1px rgba(176, 141, 87, 0.45),
+			0 12px 26px -14px rgba(42, 28, 19, 0.45);
 	}
 
 	.title {
-		font-family: var(--font-playfair);
-		font-size: var(--fs-body);
-		font-weight: 700;
-		line-height: 1.3;
+		min-height: 2.6em;
+		font-family: var(--font-display);
+		font-size: var(--fs-lg);
+		font-weight: 600;
+		line-height: 1.15;
 	}
 
+	/* Sit the text on the card's 32px ruled lines. */
 	.body {
 		padding: 0;
+		line-height: 32px;
 	}
 </style>
