@@ -17,7 +17,7 @@ type Quad = [Point, Point, Point, Point];
 
 export const studyPhoto = {
 	/** Pixel size of the images; all share it. */
-	width: 1672,
+	width: 1671,
 	height: 941,
 	/**
 	 * One photo per lighting preset. A preset without its own photo is graded
@@ -30,31 +30,31 @@ export const studyPhoto = {
 	/** The open book's pages, onto which the contents are printed. */
 	pages: {
 		left: [
-			[38.73, 67.59],
-			[50.24, 68.97],
-			[50.24, 91.39],
-			[35.89, 91.39],
+			[38.84, 67.48],
+			[50.12, 68.65],
+			[50.12, 92.72],
+			[36.06, 92.03],
 		] as Quad,
 		right: [
-			[50.39, 68.97],
-			[61.45, 67.75],
-			[64.0, 91.39],
-			[50.39, 91.66],
+			[50.27, 68.65],
+			[61.4, 67.59],
+			[63.97, 92.19],
+			[50.27, 92.72],
 		] as Quad,
 	},
 
 	/** Spines of the case study books on the shelf, by slug. */
 	books: {
-		pawtrainer: [83.39, 44.1, 85.17, 60.6],
-		'watts-the-big-deal': [85.23, 44.1, 87.36, 60.6],
+		pawtrainer: [83.54, 43.9, 85.14, 60.0],
+		'watts-the-big-deal': [85.14, 43.9, 87.06, 60.0],
 	} as Record<string, Box>,
 
-	lamp: [16.3, 61.6, 29.4, 91.4] as Box,
+	lamp: [19.2, 46.8, 33.5, 91.9] as Box,
 
 	/** For the graded presets: where the lamp's light comes from and pools, and the window. */
-	lampShade: [22.5, 65] as Point,
-	lampPool: [36, 84] as Point,
-	window: [34, 0, 67, 66] as Box,
+	lampShade: [27.5, 62.2] as Point,
+	lampPool: [36, 85] as Point,
+	window: [40, 0, 60, 65] as Box,
 
 	/** The bookcase as a whole, for the Work zoom. */
 	shelf: [74, 10, 100, 84] as Box,

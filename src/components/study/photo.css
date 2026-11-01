@@ -56,6 +56,12 @@
 		filter 1.4s ease;
 }
 
+/* Golden hour: the photo warmed and taken down a touch. */
+[data-preset='golden'] .photo-image,
+[data-preset='golden'] .photo-spine {
+	filter: brightness(0.9) sepia(0.16) saturate(1.12) contrast(1.03);
+}
+
 [data-grade='evening'] .photo-image,
 [data-grade='evening'] .photo-spine {
 	filter: brightness(0.42) saturate(0.85) contrast(1.1) sepia(0.12);

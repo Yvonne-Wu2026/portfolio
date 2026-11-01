@@ -456,6 +456,7 @@ export default function PhotoStudy() {
 						<div ref={parallax} className="photo-parallax">
 							<div
 								className="photo-stage"
+								data-preset={preset}
 								data-grade={graded}
 								style={{ width: stage.w, height: stage.h, transform: `translate(${offset.x}px, ${offset.y}px)` }}
 							>
@@ -534,7 +535,7 @@ export default function PhotoStudy() {
 										<PhotoHint stage={stage} hint="shelf" at={[85.3, 40]}>
 											Select a book to explore my work
 										</PhotoHint>
-										<PhotoHint stage={stage} hint="lamp" at={[23, 60]}>
+										<PhotoHint stage={stage} hint="lamp" at={[26.5, 45]}>
 											Adjust the lighting
 										</PhotoHint>
 										{calibrate && <Calibrator stage={stage} />}
