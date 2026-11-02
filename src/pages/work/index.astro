@@ -5,17 +5,22 @@ import Footer from '../../components/Footer.astro';
 import { caseStudies } from '../../data/caseStudies';
 import { shelfBooks } from '../../data/library';
 
+/* Where each case study's book stands in the shelf photo, as percentages
+   of the image: left, top, width, height. */
+const spots: Record<string, [number, number, number, number]> = {
+	pawtrainer: [39.2, 16.2, 10.5, 69.8],
+	'watts-the-big-deal': [49.9, 19.3, 10.4, 66.7],
+};
+
 /* Each shelf book joined to its case study for the index below the shelf. */
 const books = shelfBooks.map((book, i) => {
 	const study = caseStudies.find((entry) => entry.slug === book.slug)!;
-	const [height, thickness] = book.size;
+	const [left, top, width, height] = spots[book.slug];
 	return {
 		...book,
 		study,
 		numeral: ['I', 'II', 'III', 'IV', 'V', 'VI'][i] ?? String(i + 1),
-		// Scale metres to pixels so relative proportions match the 3D shelf.
-		h: Math.round(height * 1000),
-		t: Math.round(thickness * 1000),
+		spot: `left: ${left}%; top: ${top}%; width: ${width}%; height: ${height}%; --ox: ${left + width / 2}%; --oy: ${top + height / 2}%;`,
 	};
 });
 
@@ -27,57 +32,37 @@ const books = shelfBooks.map((book, i) => {
 		<header class="page intro">
 			<p class="small-caps kicker">Chapter 02</p>
 			<h1 class="title">The Shelf</h1>
-			<p class="lede">Case studies, bound and shelved. Take one down to read how it was made.</p>
+			<p class="lede">My library of case studies. Select one to read!</p>
 		</header>
 
 		<section class="shelf-wrap" aria-labelledby="shelf-heading">
 			<h2 id="shelf-heading" class="sr-only">Case studies on the shelf</h2>
-			<div class="shelf">
-				<span class="shelf__light" aria-hidden="true"></span>
-				<div class="books">
-					<ul class="featured">
-						{
-							books.map((book) => (
-								<li class="slot">
-									<a
-										class="book"
-										href={`/work/${book.slug}`}
-										data-book
-										style={`--cloth: ${book.cloth}; --foil: ${book.foil}; --h: ${book.h}; --t: ${book.t};`}
-									>
-										<span class="book__3d" aria-hidden="true">
-											<span class="book__spine">
-												<span class="book__head" />
-												<span class="book__label">
-													<span class="book__spine-title">{book.spine}</span>
-												</span>
-												<span class="book__ornament">✤</span>
-												<span class="book__foot" />
-											</span>
-											<span class="book__cover">
-												<span class="book__cover-title">{book.title}</span>
-												<span class="book__fleuron">❦</span>
-											</span>
-										</span>
-										<span class="book__tip" aria-hidden="true">
-											<span class="book__tip-num">{book.numeral}</span>
-											{book.title}
-										</span>
-										<span class="sr-only">
-											{book.title}: {book.subtitle}
-										</span>
-									</a>
-								</li>
-							))
-						}
-					</ul>
-				</div>
-			</div>
-			<div class="board" aria-hidden="true">
-				<span class="board__top"></span>
-				<span class="board__edge">
-					<span class="plaque">Case Studies · I – II</span>
-				</span>
+			<div class="shelf" data-shelf>
+				<img
+					class="shelf__photo"
+					src="/images/shelf-case-studies.webp"
+					alt=""
+					width="1672"
+					height="941"
+					fetchpriority="high"
+				/>
+				<ul>
+					{
+						books.map((book) => (
+							<li>
+								<a class="book" href={`/work/${book.slug}`} data-book style={book.spot}>
+									<span class="book__tip" aria-hidden="true">
+										<span class="book__tip-num">{book.numeral}</span>
+										{book.title}
+									</span>
+									<span class="sr-only">
+										{book.title}: {book.subtitle}
+									</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
 			</div>
 		</section>
 
@@ -109,14 +94,16 @@ const books = shelfBooks.map((book, i) => {
 </Layout>
 
 <script>
-	/* Taking a book down: it slides off the shelf and turns its cover to you,
-	   then the page turns to the case study. */
+	/* Taking a book down: the shelf draws in on it, then the page turns to
+	   the case study. */
 	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-book]')) {
 		link.addEventListener('click', (event) => {
 			if (reduce || event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
 			event.preventDefault();
-			link.classList.add('is-taken');
+			const shelf = link.closest<HTMLElement>('[data-shelf]')!;
+			for (const prop of ['--ox', '--oy']) shelf.style.setProperty(prop, link.style.getPropertyValue(prop));
+			shelf.classList.add('is-taken');
 			window.setTimeout(() => window.location.assign(link.href), 850);
 		});
 	}
@@ -168,258 +155,70 @@ const books = shelfBooks.map((book, i) => {
 	/* The shelf ---------------------------------------------------- */
 
 	.shelf-wrap {
-		position: relative;
 		max-width: 1100px;
 		margin: clamp(16px, 3vw, 40px) auto 0;
 		padding-inline: var(--gutter);
 	}
 
-	/* The bay: dark back panel and sides, open at the bottom onto the board. */
 	.shelf {
 		position: relative;
-		padding: 56px clamp(16px, 4vw, 48px) 0;
-		border: 14px solid #2a180e;
-		border-bottom: 0;
-		background:
-			radial-gradient(ellipse at 50% 0%, rgba(255, 200, 130, 0.28), transparent 65%),
-			repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 9px),
-			linear-gradient(#1d110a, #2e1b10);
-		box-shadow: inset 0 18px 40px rgba(0, 0, 0, 0.6);
+		overflow: hidden;
+		border-radius: 4px;
+		box-shadow: 0 24px 48px -20px rgba(31, 20, 13, 0.7);
 	}
 
-	/* A brass picture light's warm pool over the case studies. */
-	.shelf__light {
-		position: absolute;
-		left: 50%;
-		top: 0;
-		width: 360px;
-		height: 100%;
-		transform: translateX(-50%);
-		background: radial-gradient(ellipse at 50% 0%, rgba(255, 210, 140, 0.32), transparent 70%);
-		pointer-events: none;
+	.shelf__photo {
+		display: block;
+		width: 100%;
+		height: auto;
+		transform-origin: var(--ox) var(--oy);
+		transition:
+			transform 850ms var(--ease-page),
+			filter 850ms ease;
 	}
 
-	.shelf__light::before {
-		content: '';
-		position: absolute;
-		left: 50%;
-		top: 10px;
-		width: 150px;
-		height: 12px;
-		border-radius: 0 0 8px 8px;
-		transform: translateX(-50%);
-		background: linear-gradient(#e0c080, #8a6a3c);
-		box-shadow: 0 6px 18px rgba(255, 210, 140, 0.55);
+	/* Taken down: the shelf draws in on the chosen book. */
+	.shelf.is-taken .shelf__photo {
+		transform: scale(1.8);
+		filter: brightness(1.15);
 	}
 
-	/* Everything stands on the board: bottoms sink a few px into its top
-	   surface so they rest on it, not in front of it. */
-	.books {
-		position: relative;
-		z-index: 1;
-		display: flex;
-		align-items: flex-end;
-		justify-content: center;
-		gap: 3px;
-		margin-bottom: -10px;
-	}
-
-	.featured {
-		display: flex;
-		align-items: flex-end;
-		gap: 4px;
-	}
-
-	.slot {
-		position: relative;
-		display: flex;
-	}
-
-	/* Soft contact shadow where each book meets the board. */
-	.slot::after {
-		content: '';
-		position: absolute;
-		left: -6%;
-		right: -6%;
-		bottom: -3px;
-		height: 10px;
-		border-radius: 50%;
-		background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 70%);
-		z-index: -1;
-	}
-
-	/* Antique cloth, after the reference: mottled and faded, rubbed pale at
-	   head and tail, darker at the joints, the spine rounded by light. */
-	.book__spine,
-	.book__cover {
-		--wear: linear-gradient(
-			rgba(230, 210, 170, 0.32),
-			rgba(0, 0, 0, 0.15) 2.5%,
-			transparent 7%,
-			transparent 93%,
-			rgba(0, 0, 0, 0.2) 97.5%,
-			rgba(230, 210, 170, 0.35)
-		);
-		--mottle:
-			radial-gradient(ellipse at 30% 20%, rgba(255, 235, 200, 0.14), transparent 45%),
-			radial-gradient(ellipse at 70% 65%, rgba(0, 0, 0, 0.2), transparent 50%),
-			radial-gradient(ellipse at 40% 90%, rgba(255, 235, 200, 0.1), transparent 40%);
-		--round: linear-gradient(
-			90deg,
-			rgba(0, 0, 0, 0.5),
-			rgba(255, 240, 210, 0.14) 32%,
-			rgba(255, 240, 210, 0.06) 55%,
-			rgba(0, 0, 0, 0.42)
-		);
+	.shelf.is-taken .book {
+		visibility: hidden;
 	}
 
 	.book {
-		--scale: 1.18;
-		position: relative;
-		display: block;
-		width: calc(var(--t) * 1px * var(--scale));
-		height: calc(var(--h) * 1px * var(--scale));
-		perspective: 1400px;
-	}
-
-	.book__3d {
-		--w: calc(var(--t) * 1px * var(--scale));
-		--d: 230px;
-		position: relative;
-		display: block;
-		width: 100%;
-		height: 100%;
-		transform-style: preserve-3d;
-		transform-origin: 50% 100%;
-		transition: transform 650ms var(--ease-page);
-	}
-
-	/* The spine sits flat in the shelf's plane; depth runs back behind it. */
-	.book__spine {
 		position: absolute;
-		inset: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 18px 0 16px;
-		border-radius: 5px 5px 2px 2px / 8px 8px 2px 2px;
-		background: var(--paper-grain), var(--wear), var(--mottle), var(--round), var(--cloth);
-		color: color-mix(in srgb, var(--foil) 82%, var(--cloth));
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
-		backface-visibility: hidden;
+		border-radius: 4px;
 	}
 
-	/* Gilt rules and a stamped band at head and tail. */
-	.book__head,
-	.book__foot {
-		width: 100%;
-		height: 30px;
-		border-block: 2px solid currentColor;
-		background:
-			linear-gradient(currentColor, currentColor) 0 50% / 100% 1px no-repeat,
-			repeating-linear-gradient(90deg, transparent 0 6px, color-mix(in srgb, currentColor 55%, transparent) 6px 8px) 0 50% / 100% 9px no-repeat;
-		opacity: 0.85;
-	}
-
-	.book__foot {
-		margin-top: auto;
-	}
-
-	/* Title on a darker leather label, as on old bindings. */
-	.book__label {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 78%;
-		margin-top: 22px;
-		padding: 14px 0;
-		border-radius: 2px;
-		background: rgba(20, 10, 6, 0.35);
-		box-shadow:
-			inset 0 0 0 1px color-mix(in srgb, currentColor 60%, transparent),
-			inset 0 0 0 4px rgba(20, 10, 6, 0.35),
-			inset 0 0 0 5px color-mix(in srgb, currentColor 35%, transparent);
-	}
-
-	.book__spine-title {
-		writing-mode: vertical-rl;
-		transform: rotate(180deg);
-		font-family: var(--font-display);
-		font-size: 19px;
-		font-weight: 600;
-		letter-spacing: 0.16em;
-		white-space: nowrap;
-		text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
-	}
-
-	.book__ornament {
-		margin-top: 18px;
-		font-size: 20px;
-		opacity: 0.8;
-	}
-
-	/* Front board, hinged on the right edge and running back into the shelf;
-	   edge-on (invisible) until the book is taken down. */
-	.book__cover {
+	/* A warm bloom over the book while it's under the hand. */
+	.book::before {
+		content: '';
 		position: absolute;
-		top: 0;
-		left: 100%;
-		width: var(--d);
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 18px;
-		padding: 28px;
-		background: var(--paper-grain), var(--mottle), var(--cloth);
-		outline: 1px solid color-mix(in srgb, var(--foil) 70%, var(--cloth));
-		outline-offset: -14px;
-		color: color-mix(in srgb, var(--foil) 82%, var(--cloth));
-		text-align: center;
-		transform-origin: left center;
-		transform: rotateY(90deg);
-		backface-visibility: hidden;
+		inset: -12% -40%;
+		background: radial-gradient(ellipse at center, rgba(255, 196, 120, 0.3), transparent 65%);
+		mix-blend-mode: screen;
+		opacity: 0;
+		transition: opacity 400ms ease;
+		pointer-events: none;
 	}
 
-	.book__cover-title {
-		font-family: var(--font-display);
-		font-size: 30px;
-		font-weight: 600;
-		line-height: 1.1;
-	}
-
-	.book__fleuron {
-		font-size: 24px;
-	}
-
-	/* Hover: tipped toward you off the board, as when reaching for it. */
-	.book:hover .book__3d,
-	.book:focus-visible .book__3d {
-		transform: translateY(-8px) rotateX(-7deg);
+	.book:hover::before,
+	.book:focus-visible::before {
+		opacity: 1;
 	}
 
 	.book:focus-visible {
-		outline: none;
-	}
-
-	.book:focus-visible .book__spine {
-		box-shadow:
-			0 0 0 2px #2a180e,
-			0 0 0 4px var(--color-brass-light);
-	}
-
-	/* Taken down: out of the shelf, turned to show its front board. */
-	.book.is-taken .book__3d {
-		transform: translateZ(150px) translateY(-30px) rotateY(-90deg);
-		transition-duration: 850ms;
+		outline: 2px solid var(--color-brass-light);
+		outline-offset: 4px;
 	}
 
 	/* Title tag above the book while it's under the hand. */
 	.book__tip {
 		position: absolute;
 		left: 50%;
-		bottom: calc(100% + 16px);
+		bottom: calc(100% + 12px);
 		z-index: 2;
 		padding: 5px 12px 6px;
 		border: 1px solid rgba(220, 194, 140, 0.7);
@@ -446,54 +245,6 @@ const books = shelfBooks.map((book, i) => {
 	.book__tip-num {
 		margin-right: 6px;
 		color: var(--color-brass-light);
-	}
-
-	/* The board -------------------------------------------------------- */
-
-	.board {
-		position: relative;
-	}
-
-	/* Top surface, seen just from above: the books stand on this. */
-	.board__top {
-		display: block;
-		height: 16px;
-		/* Continues the bay's side walls down to the board edge. */
-		border-inline: 14px solid #2a180e;
-		background:
-			repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.08) 0 2px, transparent 2px 11px),
-			linear-gradient(#3a2416, #6b4126);
-	}
-
-	.board__edge {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 34px;
-		background:
-			repeating-linear-gradient(178deg, rgba(0, 0, 0, 0.1) 0 3px, transparent 3px 11px),
-			linear-gradient(#7a4c2c, #4a2c19 70%, #2a180e);
-		border-radius: 0 0 2px 2px;
-		box-shadow: 0 20px 30px -14px rgba(0, 0, 0, 0.6);
-	}
-
-	.plaque {
-		padding: 2px 14px 3px;
-		border: 1px solid #8a6a3c;
-		border-radius: 2px;
-		background: linear-gradient(#e8cf94, #b08d57);
-		color: var(--color-ink);
-		font-family: var(--font-display);
-		font-size: 15px;
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-	}
-
-	@media (max-width: 600px) {
-		.book {
-			--scale: 1;
-		}
 	}
 
 	/* Index -------------------------------------------------------- */

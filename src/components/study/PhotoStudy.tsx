@@ -100,7 +100,6 @@ function Frontispiece() {
 			<p className="photo-print__name">Yvonne Wu</p>
 			<p className="photo-print__fleuron">— ❦ —</p>
 			<p className="photo-print__role">UX &amp; UI Designer</p>
-			<p className="photo-print__blurb">Being a collection of human-centred work, notes, and correspondence, kept in Boston.</p>
 			<p className="photo-print__year">MMXXVI</p>
 		</div>
 	);

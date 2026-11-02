@@ -216,15 +216,6 @@
 	font-style: italic;
 }
 
-.photo-print__blurb {
-	max-width: 400px;
-	margin-top: 48px !important;
-	font-family: var(--font-body);
-	font-size: 25px;
-	line-height: 1.45;
-	color: #5c4838;
-}
-
 .photo-print__year {
 	margin-top: auto !important;
 	font-family: var(--font-body);
