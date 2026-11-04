@@ -3,8 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
-/* Copy carried over unchanged from the previous homepage's hero and About section. */
-const intro = 'I’m Yvonne! I create human-centered experiences that are functional, intuitive, and engaging.';
+/* Copy carried over from the previous homepage's hero and About section. */
+const intro = 'I create human-centered experiences that are functional, intuitive, and engaging.';
 
 const paragraphs = [
 	'Hi, I’m Yvonne! I am currently studying Human Factors at Bentley University and working full time in civil service.',
@@ -20,7 +20,6 @@ const paragraphs = [
 		<header class="page intro">
 			<p class="small-caps kicker">Chapter 03</p>
 			<h1 class="title">About</h1>
-			<p class="lede">From the journal on the desk.</p>
 		</header>
 
 		<article class="journal" aria-labelledby="entry-heading">
@@ -82,13 +81,6 @@ const paragraphs = [
 		font-weight: 600;
 		font-style: italic;
 		line-height: 1;
-	}
-
-	.lede {
-		margin-top: 14px;
-		font-size: var(--fs-lg);
-		font-style: italic;
-		color: var(--color-ink-soft);
 	}
 
 	/* The journal: a leather binding around two cream pages. */

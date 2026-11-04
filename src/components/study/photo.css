@@ -576,7 +576,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 4px 12px 5px;
+	gap: 2px;
+	padding: 7px 20px 8px;
 	border: 1px solid #8a6a3c;
 	border-radius: 2px;
 	background: linear-gradient(#e8cf94, #b08d57);
@@ -586,13 +587,21 @@
 	color: #2a1c13;
 	text-align: center;
 	white-space: nowrap;
+	text-decoration: none;
 	transform: translate(-50%, 0);
-	pointer-events: none;
+	cursor: pointer;
 	transition:
 		box-shadow 400ms ease,
 		filter 400ms ease;
 }
 
+.photo-tag:focus-visible {
+	outline: 2px solid #f0c070;
+	outline-offset: 3px;
+}
+
+.photo-tag:hover,
+.photo-tag:focus-visible,
 .photo-tag.is-lit {
 	filter: brightness(1.12);
 	box-shadow:
@@ -626,7 +635,7 @@
 
 .photo-tag__title {
 	font-family: var(--font-display);
-	font-size: 13px;
+	font-size: 16px;
 	font-weight: 700;
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
@@ -635,10 +644,10 @@
 
 .photo-tag__hint {
 	font-family: var(--font-body);
-	font-size: 12px;
-	font-style: italic;
-	line-height: 1.2;
-	color: #4a3424;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.25;
+	color: #3a2818;
 }
 
 [data-leaving] .photo-tag {

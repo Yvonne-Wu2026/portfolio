@@ -242,17 +242,27 @@ function PhotoHint({ stage, at, hint, children }: { stage: Stage; at: Point; hin
 /**
  * A brass museum tag on the shelf under the case studies: always there, so
  * it's clear the two books are the way into the work. Brightens while either
- * book is under the hand. Decorative; the books themselves are the buttons.
+ * book is under the hand. Clicking it goes to the shelf (Work) page.
  */
-function ShelfTag({ stage, at }: { stage: Stage; at: Point }) {
+function ShelfTag({ stage, at, onActivate }: { stage: Stage; at: Point; onActivate: () => void }) {
 	const lit = useStudy((s) => s.hovered?.startsWith('book:') ?? false);
 	const [x, y] = px(stage, at);
 	return (
-		<p className={`photo-tag${lit ? ' is-lit' : ''}`} style={{ left: x, top: y }} aria-hidden="true">
-			<span className="photo-tag__arrow">↑</span>
+		<a
+			href="/work"
+			className={`photo-tag${lit ? ' is-lit' : ''}`}
+			style={{ left: x, top: y }}
+			aria-label="Case studies: visit the shelf"
+			onClick={(event) => {
+				if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+				event.preventDefault();
+				onActivate();
+			}}
+		>
+			<span className="photo-tag__arrow" aria-hidden="true">↑</span>
 			<span className="photo-tag__title">Case Studies</span>
-			<span className="photo-tag__hint">Select a book to read</span>
-		</p>
+			<span className="photo-tag__hint">Select book or visit shelf</span>
+		</a>
 	);
 }
 
@@ -551,7 +561,14 @@ export default function PhotoStudy() {
 										<PhotoHint stage={stage} hint="book" at={[50, 64]}>
 											Explore the study — the book is your guide
 										</PhotoHint>
-										<ShelfTag stage={stage} at={studyPhoto.shelfTag} />
+										<ShelfTag
+											stage={stage}
+											at={studyPhoto.shelfTag}
+											onActivate={() => {
+												setMessage('Turning to the shelf…');
+												depart({ kind: 'shelf' }, '/work', TIMING.shelf);
+											}}
+										/>
 										<PhotoHint stage={stage} hint="lamp" at={[26.5, 45]}>
 											Adjust the lighting
 										</PhotoHint>

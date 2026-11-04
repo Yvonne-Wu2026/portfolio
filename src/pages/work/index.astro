@@ -20,6 +20,8 @@ const books = shelfBooks.map((book, i) => {
 		...book,
 		study,
 		numeral: ['I', 'II', 'III', 'IV', 'V', 'VI'][i] ?? String(i + 1),
+		/* On the shelf's front edge, centred under the book. */
+		plaque: `left: ${left + width / 2}%; width: ${width - 1}%;`,
 		spot: `left: ${left}%; top: ${top}%; width: ${width}%; height: ${height}%; --ox: ${left + width / 2}%; --oy: ${top + height / 2}%;`,
 	};
 });
@@ -50,7 +52,7 @@ const books = shelfBooks.map((book, i) => {
 					{
 						books.map((book) => (
 							<li>
-								<a class="book" href={`/work/${book.slug}`} data-book style={book.spot}>
+								<a class="book" href={`/work/${book.slug}`} data-book={book.slug} style={book.spot}>
 									<span class="book__tip" aria-hidden="true">
 										<span class="book__tip-num">{book.numeral}</span>
 										{book.title}
@@ -63,6 +65,21 @@ const books = shelfBooks.map((book, i) => {
 						))
 					}
 				</ul>
+				<!-- A brass plaque on the shelf's edge under each book. -->
+				{
+					books.map((book) => (
+						<a
+							class="placard"
+							href={`/work/${book.slug}`}
+							tabindex="-1"
+							aria-hidden="true"
+							data-placard={book.slug}
+							style={book.plaque}
+						>
+							<span class="placard__title">{book.study.title}</span>
+						</a>
+					))
+				}
 			</div>
 		</section>
 
@@ -106,6 +123,20 @@ const books = shelfBooks.map((book, i) => {
 			shelf.classList.add('is-taken');
 			window.setTimeout(() => window.location.assign(link.href), 850);
 		});
+	}
+	// A plaque takes down the book above it.
+	for (const plaque of document.querySelectorAll<HTMLAnchorElement>('[data-placard]')) {
+		const book = document.querySelector<HTMLAnchorElement>(`[data-book="${plaque.dataset.placard}"]`);
+		plaque.addEventListener('click', (event) => {
+			if (!book || event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+			event.preventDefault();
+			book.click();
+		});
+		// Light the plaque while its book is under the hand, and the reverse.
+		for (const [from, to] of [[book, plaque], [plaque, book]]) {
+			from?.addEventListener('pointerenter', () => to?.classList.add('is-lit'));
+			from?.addEventListener('pointerleave', () => to?.classList.remove('is-lit'));
+		}
 	}
 	// Back from a case study via bfcache: put the book back on the shelf.
 	window.addEventListener('pageshow', (event) => {
@@ -205,6 +236,7 @@ const books = shelfBooks.map((book, i) => {
 	}
 
 	.book:hover::before,
+	.book.is-lit::before,
 	.book:focus-visible::before {
 		opacity: 1;
 	}
@@ -245,6 +277,92 @@ const books = shelfBooks.map((book, i) => {
 	.book__tip-num {
 		margin-right: 6px;
 		color: var(--color-brass-light);
+	}
+
+	/* Plaques: brass, set into the shelf's front edge (88-95% down the
+	   photo) under each book. Sized off the shelf so they scale with it. */
+	.shelf {
+		container-type: inline-size;
+	}
+
+	.placard {
+		position: absolute;
+		top: 88.4%;
+		height: 6.2%;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-inline: 1.3cqw;
+		/* Cut corners, like the shelf's old "Case Studies" plaque. */
+		clip-path: polygon(
+			0.6cqw 0, calc(100% - 0.6cqw) 0, 100% 0.6cqw, 100% calc(100% - 0.6cqw),
+			calc(100% - 0.6cqw) 100%, 0.6cqw 100%, 0 calc(100% - 0.6cqw), 0 0.6cqw
+		);
+		background:
+			radial-gradient(ellipse at 50% 0%, rgba(255, 246, 214, 0.55), transparent 60%),
+			linear-gradient(#e2c785, #c9a663 45%, #a8854c);
+		box-shadow:
+			inset 0 0 0 1px rgba(110, 80, 40, 0.75),
+			inset 0 0 0 2px rgba(255, 236, 190, 0.45);
+		color: #2a1c13;
+		text-align: center;
+		transform: translateX(-50%);
+		transition: filter 400ms ease;
+	}
+
+	/* The little four-point stars at either end. */
+	.placard::before,
+	.placard::after {
+		content: '✦';
+		position: absolute;
+		top: 50%;
+		font-size: 0.6cqw;
+		color: #4a3424;
+		transform: translateY(-50%);
+	}
+
+	.placard::before {
+		left: 0.55cqw;
+	}
+
+	.placard::after {
+		right: 0.55cqw;
+	}
+
+	.placard:hover,
+	.placard.is-lit {
+		filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 200, 120, 0.6));
+	}
+
+	.placard__title {
+		font-family: var(--font-body);
+		font-size: 1.2cqw;
+		font-weight: 600;
+		line-height: 1.1;
+		text-wrap: balance;
+		text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+	}
+
+	/* Phone-sized shelf: drop the stars and let the title fill the plaque. */
+	@container (max-width: 700px) {
+		.placard {
+			padding-inline: 0.5cqw;
+		}
+
+		.placard::before,
+		.placard::after {
+			display: none;
+		}
+
+		.placard__title {
+			font-size: 1.7cqw;
+			line-height: 1;
+		}
+	}
+
+	.shelf.is-taken .placard {
+		visibility: hidden;
 	}
 
 	/* Index -------------------------------------------------------- */
