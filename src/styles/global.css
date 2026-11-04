@@ -39,6 +39,14 @@
 	--color-placeholder: var(--color-paper-deep);
 	--color-link: var(--color-burgundy);
 
+	/* Surfaces that sit on the page: index cards, frames, callouts. */
+	--color-card: var(--color-ivory);
+	--color-card-alt: #ecdfc2;
+	--color-callout: #e9dcbf;
+	--card-ruling: rgba(42, 28, 19, 0.07);
+	--paper-glow: rgba(255, 250, 238, 0.7);
+	--paper-shade: rgba(150, 110, 60, 0.12);
+
 	/* Rules */
 	--rule-strong: 1.5px solid rgba(42, 28, 19, 0.8);
 	--rule-faint: 1px solid rgba(42, 28, 19, 0.22);
@@ -62,6 +70,53 @@
 	--fs-body: clamp(19px, 1.35vw, 22px);
 	--fs-nav: clamp(15px, 1.2vw, 17px);
 	--fs-sm: 15px;
+}
+
+/* Evening: picking the Evening light on the study's lamp darkens every page
+   (set on <html> by the Layout's head script). The study after dark: walnut
+   pages, parchment-coloured text, a rose-brass accent, the lamp's warm pool. */
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--color-paper: #17110c;
+	--color-paper-deep: #2a2017;
+	--color-ink: #ebdfc8;
+	--color-ink-soft: #b8a68b;
+	--color-burgundy: #d99a86;
+	--color-bg: var(--color-paper);
+	--color-page: var(--color-paper);
+	--color-text: var(--color-ink);
+	--color-display: var(--color-ink);
+	--color-accent-2: var(--color-burgundy);
+	--color-accent-light: var(--color-paper-deep);
+	--color-placeholder: var(--color-paper-deep);
+	--color-link: var(--color-burgundy);
+
+	--color-card: #231a12;
+	--color-card-alt: #2b2017;
+	--color-callout: #2a1f15;
+	--card-ruling: rgba(235, 223, 200, 0.05);
+	--paper-glow: rgba(217, 162, 76, 0.07);
+	--paper-shade: rgba(0, 0, 0, 0.35);
+
+	--rule-strong: 1.5px solid rgba(235, 223, 200, 0.65);
+	--rule-faint: 1px solid rgba(235, 223, 200, 0.16);
+}
+
+/* Paper objects (the journal, the letter) stay paper after dark, as if lit
+   by the lamp, so they keep the daytime ink. */
+:root[data-theme='dark'] .keep-light {
+	--color-paper: #efe5d0;
+	--color-paper-deep: #e3d4b6;
+	--color-ink: #2a1c13;
+	--color-ink-soft: #5c4838;
+	--color-burgundy: #6f2b2a;
+	--color-link: #6f2b2a;
+	--color-accent-2: #6f2b2a;
+	--color-card: #f6efe0;
+	--rule-faint: 1px solid rgba(42, 28, 19, 0.22);
+	--rule-strong: 1.5px solid rgba(42, 28, 19, 0.8);
+	color-scheme: light;
+	color: var(--color-ink);
 }
 
 /* Page-turn between documents: the outgoing page swings away from its spine
@@ -161,8 +216,8 @@
 	background-color: var(--color-paper);
 	background-image:
 		var(--paper-grain),
-		radial-gradient(ellipse at 50% 30%, rgba(255, 250, 238, 0.7), transparent 70%),
-		radial-gradient(ellipse at 50% 100%, rgba(150, 110, 60, 0.12), transparent 60%);
+		radial-gradient(ellipse at 50% 30%, var(--paper-glow), transparent 70%),
+		radial-gradient(ellipse at 50% 100%, var(--paper-shade), transparent 60%);
 }
 
 .rule {

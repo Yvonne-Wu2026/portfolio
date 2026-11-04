@@ -17,6 +17,30 @@ export interface StudyState {
 }
 
 const HINTS_KEY = 'study-hints';
+const PRESET_KEY = 'study-preset';
+const THEME_KEY = 'theme';
+
+function loadPreset(): PresetName {
+	try {
+		const saved = localStorage.getItem(PRESET_KEY);
+		if (saved === 'golden' || saved === 'evening' || saved === 'reading') return saved;
+	} catch {
+		/* Storage blocked: start at golden hour. */
+	}
+	return 'golden';
+}
+
+/** Evening light puts the whole site into dark mode; any other light, day mode. */
+function applyPreset(preset: PresetName) {
+	const theme = preset === 'evening' ? 'dark' : 'light';
+	document.documentElement.dataset.theme = theme;
+	try {
+		localStorage.setItem(PRESET_KEY, preset);
+		localStorage.setItem(THEME_KEY, theme);
+	} catch {
+		/* Private mode: the theme lasts for this page only. */
+	}
+}
 
 function loadHints(): Record<Hint, boolean> {
 	const none = { book: false, lamp: false };
@@ -28,7 +52,7 @@ function loadHints(): Record<Hint, boolean> {
 }
 
 let state: StudyState = {
-	preset: 'golden',
+	preset: typeof window === 'undefined' ? 'golden' : loadPreset(),
 	hovered: null,
 	controlsOpen: false,
 	ready: false,
@@ -44,7 +68,9 @@ export function getState() {
 
 export function setState(patch: Partial<StudyState> | ((s: StudyState) => Partial<StudyState>)) {
 	const next = typeof patch === 'function' ? patch(state) : patch;
+	const presetChanged = next.preset !== undefined && next.preset !== state.preset;
 	state = { ...state, ...next };
+	if (presetChanged && typeof window !== 'undefined') applyPreset(state.preset);
 	listeners.forEach((listener) => listener());
 }
 

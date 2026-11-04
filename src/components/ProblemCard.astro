@@ -23,8 +23,8 @@ const { title, bodyHtml } = Astro.props;
 		/* An index card: a burgundy head rule over faint ruled lines. */
 		background:
 			linear-gradient(var(--color-burgundy), var(--color-burgundy)) 0 64px / 100% 1px no-repeat,
-			repeating-linear-gradient(transparent 0 31px, rgba(42, 28, 19, 0.07) 31px 32px) 0 64px / 100% 100% no-repeat,
-			var(--color-ivory);
+			repeating-linear-gradient(transparent 0 31px, var(--card-ruling) 31px 32px) 0 64px / 100% 100% no-repeat,
+			var(--color-card);
 		color: var(--color-ink);
 		box-shadow:
 			0 0 0 1px rgba(176, 141, 87, 0.45),

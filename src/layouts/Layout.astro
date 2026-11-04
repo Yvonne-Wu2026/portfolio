@@ -24,6 +24,20 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		<script is:inline>
+			(() => {
+				const apply = () => {
+					let dark = false;
+					try {
+						dark = localStorage.getItem('theme') === 'dark';
+					} catch {}
+					document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+				};
+				apply();
+				addEventListener('pageshow', apply);
+				addEventListener('storage', (event) => event.key === 'theme' && apply());
+			})();
+		</script>
 		<title>{title}</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

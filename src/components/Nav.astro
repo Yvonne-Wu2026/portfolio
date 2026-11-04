@@ -29,11 +29,57 @@ const current = (href: string) =>
 					))
 			}
 		</ol>
+		<button
+			class="lamp"
+			type="button"
+			aria-pressed="false"
+			aria-label="Evening light"
+			title="Evening light"
+			data-lamp
+		>
+			<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+				<!-- A candle in a holder: a curl of smoke when out, a flame when lit. -->
+				<circle class="lamp__glow" cx="16" cy="7.5" r="7.5" />
+				<path class="lamp__smoke" d="M16 9 q-1.6 -1.8 0 -3.4 q1.6 -1.6 0 -3.4" />
+				<path class="lamp__flame" d="M16 2.2 C18.6 5.6 19.2 8 16 10.6 C12.8 8 13.4 5.6 16 2.2 Z" />
+				<path class="lamp__wick" d="M16 12.2 V9.6" />
+				<rect class="lamp__candle" x="12.6" y="12" width="6.8" height="13.5" rx="1.2" />
+				<path class="lamp__holder" d="M6.5 26.5 H25.5 M9 29 H23 M25.5 26.5 a2.4 2.4 0 1 1 0 0.01" />
+			</svg>
+		</button>
 		<a class="return" href="/">
 			<span aria-hidden="true">←</span> Return to the study
 		</a>
 	</nav>
 </header>
+
+<script>
+	/* The nav's candle: switches the Evening light (dark mode) on and off from any
+	   page, and keeps the study's lamp in step (see study/store.ts). */
+	const root = document.documentElement;
+	const sync = () => {
+		const dark = root.dataset.theme === 'dark';
+		for (const lamp of document.querySelectorAll<HTMLButtonElement>('[data-lamp]')) {
+			lamp.setAttribute('aria-pressed', String(dark));
+			lamp.title = dark ? 'Evening light on: switch to day' : 'Evening light';
+		}
+	};
+	sync();
+	// The head script also changes the theme (bfcache, other tabs).
+	new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+	for (const lamp of document.querySelectorAll<HTMLButtonElement>('[data-lamp]')) {
+		lamp.addEventListener('click', () => {
+			const dark = root.dataset.theme !== 'dark';
+			root.dataset.theme = dark ? 'dark' : 'light';
+			try {
+				localStorage.setItem('theme', dark ? 'dark' : 'light');
+				localStorage.setItem('study-preset', dark ? 'evening' : 'golden');
+			} catch {
+				/* Private mode: the change lasts for this page only. */
+			}
+		});
+	}
+</script>
 
 <style>
 	.header {
@@ -130,6 +176,109 @@ const current = (href: string) =>
 		color: var(--color-brass-light);
 	}
 
+	/* The candle toggle: unlit brass by day, lit and glowing in the evening. */
+	.lamp {
+		display: grid;
+		place-items: center;
+		width: 42px;
+		height: 42px;
+		flex: none;
+		border: 1px solid rgba(220, 194, 140, 0.45);
+		border-radius: 50%;
+		background: transparent;
+		color: var(--color-brass-light);
+		cursor: pointer;
+		transition:
+			background-color 300ms ease,
+			box-shadow 300ms ease,
+			border-color 300ms ease;
+	}
+
+	.lamp:hover {
+		border-color: var(--color-brass-light);
+		background: rgba(220, 194, 140, 0.08);
+	}
+
+	.lamp svg {
+		overflow: visible;
+	}
+
+	.lamp__candle {
+		fill: currentColor;
+	}
+
+	.lamp__holder,
+	.lamp__wick {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+	}
+
+	.lamp__wick {
+		stroke-width: 1.2;
+	}
+
+	.lamp__smoke {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1;
+		stroke-linecap: round;
+		opacity: 0.45;
+		transition: opacity 300ms ease;
+	}
+
+	.lamp__flame {
+		fill: #ffd27a;
+		opacity: 0;
+		transform-origin: 16px 10px;
+		transform: scale(0.4);
+		transition:
+			opacity 300ms ease,
+			transform 400ms var(--ease-page);
+	}
+
+	.lamp__glow {
+		fill: rgba(255, 196, 110, 0.3);
+		filter: blur(2px);
+		opacity: 0;
+		transition: opacity 300ms ease;
+	}
+
+	.lamp[aria-pressed='true'] {
+		border-color: var(--color-amber);
+		background: rgba(217, 162, 76, 0.14);
+		box-shadow: 0 0 14px rgba(217, 162, 76, 0.45);
+		color: var(--color-brass-light);
+	}
+
+	.lamp[aria-pressed='true'] .lamp__smoke {
+		opacity: 0;
+	}
+
+	.lamp[aria-pressed='true'] .lamp__flame {
+		opacity: 1;
+		transform: none;
+		animation: flicker 2.6s ease-in-out infinite;
+	}
+
+	.lamp[aria-pressed='true'] .lamp__glow {
+		opacity: 1;
+	}
+
+	@keyframes flicker {
+		0%,
+		100% {
+			transform: scale(1, 1) rotate(0deg);
+		}
+		30% {
+			transform: scale(0.94, 1.05) rotate(-3deg);
+		}
+		60% {
+			transform: scale(1.03, 0.96) rotate(2deg);
+		}
+	}
+
 	.return {
 		padding-left: clamp(12px, 2.4vw, 34px);
 		border-left: 1px solid rgba(220, 194, 140, 0.3);
@@ -159,8 +308,11 @@ const current = (href: string) =>
 			justify-content: space-between;
 		}
 
-		.return {
+		.lamp {
 			margin-left: auto;
+		}
+
+		.return {
 			border-left: 0;
 			padding-left: 0;
 		}
