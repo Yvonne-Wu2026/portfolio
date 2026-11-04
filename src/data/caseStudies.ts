@@ -77,14 +77,15 @@ export interface CaseStudy {
 const pawtrainer: CaseStudy = {
 	slug: 'pawtrainer',
 	title: 'PawTrainer',
-	summary: 'Exploring an AI-powered companion for smart dog care',
+	summary: 'Turning dog data into personalized training guidance with conversational AI',
 	cover: '/images/pawtrainer-cover.jpg',
 	coverAlt: 'PawTrainer app shown on a phone beside a computer mouse',
 	hero: {
 		src: '/images/pawtrainer-hero.webp',
 		alt: 'Three PawTrainer screens: the welcome screen with a puppy photo, the "Tell us '
-			+ 'about your pup" form, and the training schedule setup.',
-		ratio: '1040 / 585',
+			+ 'about your pup" form, and the training schedule setup, standing on a desk '
+			+ 'among old books, a paw-print mug and an open sketchbook.',
+		ratio: '1671 / 941',
 		maxWidth: '1040px',
 	},
 	cta: { label: 'Explore Prototype', href: 'https://dun-paste-37159254.figma.site' },
@@ -99,25 +100,46 @@ const pawtrainer: CaseStudy = {
 			number: '01',
 			title: 'Overview',
 			bodyHtml: `
-				<p>PawTrainer is a mobile app concept exploring how smart-collar data and conversational AI could help dog owners understand their dogs’ activity and training needs. Its interactive prototype pairs a dynamic dashboard with Scout, an AI training companion that uses simulated metrics to generate contextual responses.</p>
-				<p>I contributed to Scout’s conversational experience and AI integration, connecting Gemini API responses with dashboard data. I also used feedback from user interviews, surveys, and peer critiques to inform design iterations. Although the physical collar remains conceptual, the project explores how we can make dog training more accessible and convenient by translating metrics into actionable, behavior focused training.</p>
+				<p>PawTrainer is a mobile app concept exploring how smart-collar data and conversational AI could help dog owners understand their dogs’ behavior and training needs. Its interactive prototype pairs a dynamic dashboard with Scout, an AI training companion that uses simulated metrics to generate contextual responses.</p>
+				<p>I led the design and AI integration of Scout, connecting Gemini API responses with dashboard data to explore how conversational AI could transform metrics into meaningful, actionable guidance. I also used feedback from user interviews, surveys, and peer critiques to inform design iterations.</p>
 			`,
 		},
 		{
 			number: '02',
 			title: 'Problem',
-			subtitle: 'Understanding a dog’s needs shouldn’t be complicated.',
+			subtitle: 'Dog owners have access to information, but understanding what to do with it is another challenge.',
 			bodyHtml: `
-				<p>Dog owners may have difficulty interpreting dog behavior, especially first time dog owners. Are the behaviors presented caused by stress, excitement, boredom, or fear? Lack of understanding can make it difficult to identify triggers and measure training effectiveness.</p>
-				<p>Additionally, dog owners may have limited access to training support. Professional trainers are typically available only during scheduled sessions, while behavioral challenges can happen at any time.</p>
-				<p>Consistent training can require high cognitive effort. Owners may struggle to:</p>
-				<ul>
-					<li>Remember training methods</li>
-					<li>Track progress over time</li>
-					<li>Maintain consistent sessions</li>
-					<li>Recognize behavioral trends</li>
-					<li>Know what to focus on next</li>
-				</ul>
+				<p>For new dog owners, understanding behavior can be overwhelming. Barking, pulling, or changes in activity may have multiple explanations, and owners may not know how to respond.</p>
+				<p>Professional trainers provide valuable support, but guidance is not always available when behavioral challenges arise. Owners must also remember training techniques, monitor progress, and maintain consistency between sessions.</p>
+				<p>Our research identified three areas of opportunity:</p>
+			`,
+			blocks: [
+				{
+					type: 'cards',
+					cards: [
+						{
+							title: 'Lack of objective metrics',
+							bodyHtml: '<p>Owners may struggle to identify behavioral patterns or measure progress.</p>',
+						},
+						{
+							title: 'Limited ongoing guidance',
+							bodyHtml: '<p>Questions and challenges can arise outside scheduled training sessions.</p>',
+						},
+						{
+							title: 'High cognitive load',
+							bodyHtml:
+								'<p>Remembering techniques, tracking progress, and choosing what to practice require sustained effort.</p>',
+						},
+					],
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: 'The Opportunity',
+			bodyHtml: `
+				<p>How can we make dog training more accessible, convenient and effective while helping owners translate activity data into meaningful training guidance?</p>
+				<p>PawTrainer explores this opportunity by combining a smart-collar concept with a Gemini integrated mobile experience. A dynamic activity dashboard presents key metrics, while Scout helps connect those metrics to conversational, behavior-focused guidance.</p>
 			`,
 			blocks: [
 				{
@@ -137,14 +159,6 @@ const pawtrainer: CaseStudy = {
 					],
 				},
 			],
-		},
-		{
-			variant: 'detail',
-			title: 'The Opportunity',
-			bodyHtml: `
-				<p>How can we make dog training more accessible, convenient and effective while helping owners translate activity data into meaningful training guidance?</p>
-				<p>PawTrainer explores this opportunity by combining a smart-collar concept with a Gemini integrated mobile experience. A dynamic activity dashboard presents key metrics, while Scout helps connect those metrics to conversational, behavior-focused guidance.</p>
-			`,
 		},
 		{
 			number: '03',
