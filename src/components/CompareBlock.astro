@@ -1,0 +1,112 @@
+---
+/* A before → after pair: two images at a shared height with an arrow
+   between them, each with a short label. Stacks on narrow screens. */
+interface Side {
+	src: string;
+	alt: string;
+	/** Width / height of the image as shown (it is cropped from the top to fit). */
+	ratio: number;
+	label: string;
+}
+
+interface Props {
+	before: Side;
+	after: Side;
+}
+
+const { before, after } = Astro.props;
+const sides = [
+	{ ...before, kind: 'before' },
+	{ ...after, kind: 'after' },
+];
+---
+
+<div class="compare">
+	{
+		sides.map((side, i) => (
+			<>
+				{i === 1 && (
+					<span class="arrow" aria-hidden="true">
+						→
+					</span>
+				)}
+				<figure class:list={['side', `side--${side.kind}`]} style={`--ratio: ${side.ratio};`}>
+					<div class="frame">
+						<img src={side.src} alt={side.alt} loading="lazy" />
+					</div>
+					<figcaption class="small-caps">{side.label}</figcaption>
+				</figure>
+			</>
+		))
+	}
+</div>
+
+<style>
+	.compare {
+		display: flex;
+		align-items: center;
+		gap: clamp(12px, 2vw, 28px);
+		padding-block: 20px;
+	}
+
+	/* Growing in proportion to each image's ratio gives both the same height. */
+	.side {
+		flex: var(--ratio) 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.frame {
+		aspect-ratio: var(--ratio);
+		overflow: hidden;
+		border-radius: 4px;
+		background: var(--color-ivory);
+		box-shadow:
+			0 0 0 1px rgba(42, 28, 19, 0.15),
+			0 12px 26px -14px rgba(42, 28, 19, 0.5);
+	}
+
+	.frame img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top;
+	}
+
+	figcaption {
+		text-align: center;
+		color: var(--color-ink-soft);
+	}
+
+	.side--after figcaption {
+		color: var(--color-burgundy);
+	}
+
+	.arrow {
+		flex: none;
+		/* Sit level with the images, not the images plus captions. */
+		margin-bottom: 2em;
+		font-family: var(--font-display);
+		font-size: clamp(28px, 3vw, 40px);
+		color: var(--color-brass);
+	}
+
+	@media (max-width: 720px) {
+		.compare {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.side {
+			flex: none;
+		}
+
+		.arrow {
+			margin: 0;
+			text-align: center;
+			transform: rotate(90deg);
+		}
+	}
+</style>

@@ -29,7 +29,16 @@ export type Block =
 	  }
 	| { type: 'imageRow'; images: { src?: string; alt?: string; ratio?: string; caption?: string }[]; ratio?: string }
 	| { type: 'media'; src?: string; alt?: string; bodyHtml: string; reverse?: boolean }
-	| { type: 'flow'; steps: FlowStep[] };
+	| { type: 'flow'; steps: FlowStep[] }
+	| { type: 'compare'; before: CompareSide; after: CompareSide };
+
+/** One side of a before → after pair. ratio is width / height as shown (cropped from the top). */
+export interface CompareSide {
+	src: string;
+	alt: string;
+	ratio: number;
+	label: string;
+}
 
 export interface FlowStep {
 	/** A small icon tile; ignored when the step has an image. */
@@ -567,7 +576,7 @@ const pawtrainer: CaseStudy = {
 const watts: CaseStudy = {
 	slug: 'watts-the-big-deal',
 	title: 'Watt’s the Big Deal?',
-	summary: 'Turning solar power data into interactive data visuals',
+	summary: 'Turning complex solar production data into an interactive story about sustainability',
 	cover: '/images/watts-cover.webp',
 	coverAlt: "The Watt's the Big Deal? site: the Bentley Arena header above the "
 		+ 'three solar statistic circles.',
@@ -591,315 +600,288 @@ const watts: CaseStudy = {
 			number: '01',
 			title: 'Overview',
 			bodyHtml: `
-				<p><strong>Watt's the Big Deal?</strong></p>
-				<p><strong>Client:</strong> The Office of Sustainability at Bentley University</p>
-				<p><strong>Business Problem:</strong> Our client wanted to spread awareness that Bentley <em>has</em> and <em>uses</em> solar panels, but they were unsure how to convey the message. They provided a massive collection of data sets regarding solar power production at The Arena, Bentley's ice hockey arena.</p>
-				<p><strong>Intended Audience:</strong> Bentley students, secondary target audience are the university's financial stakeholders.</p>
-				<p><strong>Goal:</strong> With this interactive webpage, I share information about the panels we have in an interactive way. Additionally, I aim to nudge stakeholders towards investing in more panels by highlighting annual savings, as well as projected 25 year savings.</p>
+				<p>Bentley University’s Office of Sustainability wanted to raise awareness of the solar panels installed at Bentley Arena, but needed a compelling way to communicate their impact.</p>
+				<p>I designed an interactive webpage that transforms technical energy data into accessible visuals, highlighting solar production, estimated financial savings, and relatable energy equivalents.</p>
 			`,
 		},
 		{
 			number: '02',
-			title: 'Visualization Solution',
+			title: 'Problem',
+			subtitle: 'Bentley had the data. The challenge was making people care about it.',
 			bodyHtml: `
-				<p>I created an interactive webpage to visualize solar power production data and highlight key facts about the panels in The Arena.</p>
-				<p>Click the image below to visit the site:</p>
+				<p>The Office of Sustainability had extensive solar production data from Bentley Arena, including daily, weekly, monthly, and annual energy records.</p>
+				<p>However, the volume and complexity of the data made it difficult to communicate the value of the university’s solar investment.</p>
+				<p>The challenge was not simply to visualize electricity production. It was to make that information understandable and meaningful to people who may have little familiarity with energy measurements.</p>
+				<p><strong>Two audiences, two questions:</strong></p>
 			`,
 			blocks: [
 				{
-					type: 'image',
-					src: '/images/watts-preview.jpg',
-					alt: "Top of the Watt's the Big Deal? site: the Bentley Arena header and the "
-						+ 'three solar statistics.',
-					ratio: '951 / 585',
-					maxWidth: '780px',
-					objectPosition: 'top',
-					href: 'https://gas-gutter-90506166.figma.site',
-				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Site Breakdown',
-			bodyHtml: `
-				<pre class="tree">Landing Page
-│
-├── Hero Section
-│   ├── Project title
-│   ├── Subtitle
-│   └── Instruction ("Click any circle to learn more")
-│
-├── Solar Impact Overview, each with dropdown info panels
-│   ├── 1,400 Solar Panels
-│   ├── 549K kWh Generated
-│   └── $155K Annual Savings
-│
-├── Real-World Energy Equivalents (click to flip cards)
-│   ├── Refrigerator
-│   ├── LED Light Bulb
-│   ├── Laptop
-│   └── iPhone Charging
-│
-└── Footer
-    ├── Bentley University
-    └── Office of Sustainability</pre>
-			`,
-		},
-		{
-			number: '05',
-			title: 'Design Decisions',
-			bodyHtml: '<p>I made major changes after feedback and reviewing my work.</p>',
-			tightBottom: true,
-		},
-		{
-			variant: 'detail',
-			title: 'Remove modals',
-			bodyHtml:
-				"<p>I didn't want users to have to rely on recall when navigating the site. Now, the information panels open as a dropdown below the circles. Additionally, the selected circle turn a darker shade of yellow to make it clear on which panel is open. I incorporated these heuristics to allow users to make decisions with ease.</p>",
-			blocks: [
-				{
-					type: 'image',
-					src: '/images/watts-remove-modals.jpg',
-					alt: 'The 1,400 Solar Panels information panel open as a dropdown beneath the '
-						+ 'circles, with the selected circle shaded a darker yellow.',
-					ratio: '951 / 470',
-					maxWidth: '951px',
-				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Add sun ray effect',
-			bodyHtml:
-				'<p>Rays circle the sun when hovering over a circle, signaling to users that something happens when pressed.</p>',
-			blocks: [
-				{
-					type: 'image',
-					src: '/images/watts-sun-rays.webp',
-					alt: 'The three solar statistic circles, with rays radiating out from the '
-						+ 'first one to signal it can be pressed.',
-					ratio: '951 / 268',
-					maxWidth: '951px',
-				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Reduce + group text',
-			bodyHtml: `
-				<p>I reduced and moved the text in the subtext of the suns. The long text underneath the circle looked more like a sentence. The icons and numbers should let users know the message, with text supporting and providing a bit more information rather than overwhelm the user.</p>
-				<p>I ended up grouping the subtext with the bold text in the sun. The text labels were previously below each circle. I received feedback that the text didn't seem related to the circle. Using the Gestalt principle of proximity allows users to perceive the elements as being grouped together.</p>
-			`,
-			blocks: [
-				{
-					type: 'image',
-					src: '/images/watts-reduce-group-text.jpg',
-					alt: 'The three circles with their labels grouped inside them, beneath the '
-						+ 'Bentley Arena header.',
-					ratio: '1004 / 618',
-					maxWidth: '1004px',
-				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Individual flip state',
-			bodyHtml:
-				'<p>I also got feedback to have each card have its own flip state. Before, there was one "click to flip" button but it could be overwhelming for users to see all the cards flipped. Giving users the ability to flip the cards individually reduces cognitive effort and visual clutter since the flipped state has much larger numbers. This decision was inspired by the Nielsen (2006) article on progressive disclosure. This allows users to disclose (or open) more information when they want or when they are ready.</p>',
-			blocks: [
-				{
-					type: 'imageRow',
-					ratio: '1079 / 572',
-					images: [
+					type: 'cards',
+					cards: [
+						{ title: 'Students', bodyHtml: '<p>What difference do Bentley’s solar panels actually make?</p>' },
 						{
-							src: '/images/watts-flip-1.jpg',
-							alt: 'The fridge and bulb cards flipped individually to show totals for '
-								+ '549,344 kWh, each offering "flip back".',
-						},
-						{
-							src: '/images/watts-flip-2.webp',
-							alt: 'All four cards in their default state, showing hours for the fridge, '
-								+ 'bulb and laptop and charges for the iPhone.',
+							title: 'Financial stakeholders',
+							bodyHtml: '<p>What financial value could solar energy provide?</p>',
 						},
 					],
 				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Datawrapper',
-			bodyHtml:
-				'<p>I chose to use Datawrapper to visualize monthly solar production in kilowatt-hours. I embedded the chart into the information panel. I explored different charts but the column chart was simple and effective in showing production. I chose to display the kWh above each column to avoid having users scan across and read the y axis.</p>',
-			blocks: [
 				{
-					type: 'image',
-					src: '/images/watts-datawrapper.webp',
-					alt: 'The 549,344 kWh information panel, with a Datawrapper column chart of '
-						+ '2025 monthly solar production and each month\'s kWh labelled above its column.',
-					ratio: '853 / 509',
-					maxWidth: '853px',
+					type: 'compare',
+					before: {
+						src: '/images/watts-calc-data.jpg',
+						alt: 'Spreadsheets of monthly solar production in kWh, service and supply rates, and the 2025 total cost.',
+						ratio: 939 / 445,
+						label: 'Raw data',
+					},
+					after: {
+						src: '/images/watts-final.jpg',
+						alt: "The finished Watt's the Big Deal? overview: 1,400 solar panels, 549K kWh of electricity and $155k in annual savings.",
+						ratio: 951 / 760,
+						label: 'Solar impact overview',
+					},
 				},
-			],
-		},
-		{
-			variant: 'detail',
-			title: 'Remove Bentley logo',
-			bodyHtml:
-				"<p>A minor change I made was to remove the Bentley logo from the top of the page. It didn't go well with the colors of my page. I added a picture of The Arena to fill the top width of the site.</p>",
-			blocks: [
 				{
-					type: 'image',
-					src: '/images/watts-remove-logo.webp',
-					alt: 'The site header with no Bentley logo: a photo of The Arena at dusk '
-						+ 'filling the full width behind the title.',
-					ratio: '951 / 381',
-					maxWidth: '951px',
+					type: 'text',
+					bodyHtml:
+						'<p class="callout"><strong>My design challenge:</strong> How might I turn complex solar production data into an engaging, understandable experience that communicates both environmental and financial impact?</p>',
 				},
 			],
 		},
 		{
 			number: '03',
-			title: 'Data + Research',
-			bodyHtml: `
-				<p>I started the process by <strong>extracting the data</strong> I wanted to use. This was a long process because there was a lot of data! There was daily, weekly, monthly and annual data for energy production, broken down by the different inverters. There was also many months of missing data.</p>
-				<p>I asked myself: <strong>What is the story I want to tell, and which data can I use to do this effectively?</strong></p>
-				<p>I ended up monthly solar production data of all panels in 2025. I also estimated and calculated projected savings by researching service/supply rates for Massachusetts.</p>
-			`,
+			title: 'Design Decisions',
+			tightBottom: true,
 		},
 		{
 			variant: 'detail',
-			title: 'Research + Calculations',
+			title: '1. Tell a focused story instead of visualizing every available data point',
 			bodyHtml: `
-				<p>How much did Bentley save in 2025 with solar panels?</p>
+				<h3>The challenge</h3>
+				<p>The client provided extensive energy production records, including data broken down by individual inverters. Some periods also contained missing data.</p>
+				<p>Presenting everything would increase complexity without necessarily helping the audience understand the overall impact.</p>
+				<h3>The decision</h3>
+				<p>I focused the visualization on three key pieces of information:</p>
 				<ul>
-					<li>I used monthly solar production data provided by the Office of Sustainability for 2025.</li>
-					<li>Annual savings was calculated using the total solar panel production of 549,344 kWh in 2025. Using the service/supply rates, I calculated estimated savings of $155,201.</li>
-					<li>Calculating the annual cost using service and supply rates for Massachusetts in 2025. I chose National Grid and determined the Arena would be classified as using a <a href="https://www.nationalgridus.com/MA-Business/Rates/Service-Rates" target="_blank" rel="noopener noreferrer">G1 commercial rate</a>. Supply rate was fixed at <a href="https://www.nationalgridus.com/media/pdfs/billing-payments/electric-rates/ma/cm4394_maweb.pdf" target="_blank" rel="noopener noreferrer">$0.1441</a>, while <a href="https://www.nationalgridus.com/media/pdfs/billing-payments/electric-rates/ma/commtable.pdf" target="_blank" rel="noopener noreferrer">service rates</a> changed according to the month.</li>
+					<li><strong>1,400</strong> solar panels installed at Bentley Arena.</li>
+					<li><strong>549,344 kWh</strong> of electricity generated in 2025.</li>
+					<li>Approximately <strong>$155,201</strong> in estimated annual electricity value, based on my rate calculations.</li>
 				</ul>
+				<p>These figures became the foundation of the webpage, providing a quick overview before users explore more detailed information.</p>
+				<h3>The trade-off</h3>
+				<p>Focusing on three headline metrics meant leaving much of the original dataset out of the primary experience.</p>
+				<p>I prioritized clarity and relevance over comprehensiveness, while preserving additional information within expandable sections.</p>
+				<h3>The result</h3>
+				<p>Users can quickly understand the scale of the installation, its annual electricity production, and its estimated financial significance.</p>
+			`,
+			blocks: [
+				{
+					type: 'compare',
+					before: {
+						src: '/images/watts-calc-data.jpg',
+						alt: 'The original spreadsheets: monthly solar production in kWh, service and supply rates, and the 2025 total cost.',
+						ratio: 939 / 445,
+						label: 'Original spreadsheet',
+					},
+					after: {
+						src: '/images/watts-reduce-group-text.jpg',
+						alt: 'The three final solar statistic circles: 1,400 solar panels, 549K kWh of electricity and $155k in annual savings.',
+						ratio: 1004 / 618,
+						label: 'Three headline statistics',
+					},
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: '2. Use progressive disclosure instead of overwhelming users with information',
+			bodyHtml: `
+				<h3>The challenge</h3>
+				<p>The initial interface relied on modal windows to display additional information. This required users to manage separate overlays and remember which information belonged to each statistic.</p>
+				<h3>The decision</h3>
+				<p>I replaced the modals with expandable information panels directly beneath the corresponding solar statistics.</p>
+				<p>The selected statistic changes appearance to indicate which information is currently displayed.</p>
+				<p>I also grouped labels and values within each statistic circle to reinforce their relationship through the Gestalt principle of proximity.</p>
+				<h3>Why this mattered</h3>
+				<p>Keeping related information visually connected supports recognition and reduces the need to remember information across interface states.</p>
+				<h3>The result</h3>
+				<p>The redesigned interaction keeps the main statistics visible while allowing users to explore supporting details when needed.</p>
+			`,
+			blocks: [
+				{
+					type: 'compare',
+					before: {
+						src: '/images/watts-modal.webp',
+						alt: 'The earlier modal: a $155k Annual Savings window covering the page, listing kWh generated, estimated and 25-year savings, and service and supply rates.',
+						ratio: 896 / 510,
+						label: 'Before: modal window',
+					},
+					after: {
+						src: '/images/watts-remove-modals.jpg',
+						alt: 'The final expandable panel: 1,400 Solar Panels details open beneath the circles, with the selected circle shaded a darker yellow.',
+						ratio: 951 / 470,
+						label: 'After: expandable panel',
+					},
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: '3. Make energy measurements relatable through everyday examples',
+			bodyHtml: `
+				<h3>The challenge</h3>
+				<p>Kilowatt-hours are useful for measuring electricity production, but the unit may not be meaningful to someone unfamiliar with energy consumption.</p>
+				<p>I wanted visitors to understand the practical significance of the data, rather than simply reading large numbers.</p>
+				<h3>The decision</h3>
+				<p>I translated one kilowatt-hour into examples involving familiar household devices, including a refrigerator, LED bulb, laptop, and iPhone.</p>
+				<p>I presented these comparisons as interactive cards that users could flip individually to reveal more information.</p>
+				<h3>The trade-off</h3>
+				<p>An earlier interaction flipped all cards together. However, this exposed several large numerical values simultaneously, increasing visual clutter.</p>
+				<p>I changed the interaction so users could reveal information one card at a time.</p>
+				<h3>The result</h3>
+				<p>The final design provides a more approachable way to explore energy quantities, while giving users control over how much information they see.</p>
+			`,
+			blocks: [
+				{
+					type: 'imageRow',
+					images: [
+						{
+							src: '/images/watts-flip-2.webp',
+							alt: 'All four energy-equivalent cards in their default state: 3.2 hours for a fridge, 100 hours for a bulb, 20 hours for a laptop and about 62 iPhone charges.',
+							ratio: '1180 / 667',
+							caption: 'Default: what one kilowatt-hour can power.',
+						},
+						{
+							src: '/images/watts-flip-1.jpg',
+							alt: 'The fridge and bulb cards flipped on their own to show totals for 549,344 kWh, each offering “flip back”.',
+							ratio: '1079 / 572',
+							caption: 'Flipped one at a time: the 549,344 kWh totals, revealed only when chosen.',
+						},
+					],
+				},
+			],
+		},
+		{
+			variant: 'detail',
+			title: '4. Make the data visualization readable at a glance',
+			bodyHtml: `
+				<h3>The challenge</h3>
+				<p>I needed to show how solar electricity production varied throughout 2025 without requiring users to interpret a complicated chart.</p>
+				<h3>The decision</h3>
+				<p>I selected a monthly column chart using Datawrapper.</p>
+				<p>I placed electricity production values directly above each column so readers could compare months without repeatedly scanning between the chart and the vertical axis.</p>
+				<p>The chart was embedded within an expandable information panel, keeping the landing page visually focused.</p>
+				<h3>The trade-off</h3>
+				<p>Monthly aggregation reduces the detail available compared with daily production records, but provides a more manageable view of annual patterns.</p>
+				<h3>The result</h3>
+				<p>The visualization makes monthly production easier to compare while keeping the broader story focused on annual impact.</p>
 			`,
 			blocks: [
 				{
 					type: 'image',
-					src: '/images/watts-calc-data.jpg',
-					alt: 'Spreadsheets of 2025 monthly solar production in kWh alongside National Grid '
-						+ 'service and supply rates, totalling $155,201 for the year.',
-					ratio: '939 / 445',
-					maxWidth: '939px',
-				},
-				{
-					type: 'image',
-					src: '/images/watts-calc-panel.webp',
-					alt: 'The 1,400 Solar Panels information panel: total panels installed, arena '
-						+ 'square footage, system capacity, and a callout on emissions reduction.',
-					ratio: '803 / 299',
-					maxWidth: '803px',
-					caption:
-						"Solar panel information is from Rivermoor Energy website, they are the ones "
-						+ "financing Bentley's solar power purchase agreement. The callout text info on "
-						+ "the right side is pulled from Bentley's Office of Sustainability webpage.",
-				},
-				{
-					type: 'image',
-					src: '/images/watts-calc-co2.jpg',
-					alt: 'The 549,344 kWh panel with a tooltip reading "That is equivalent to removing '
-						+ 'annual emissions from 44 cars!" beside 203 metric tons of CO2 avoided.',
-					ratio: '1151 / 265',
-					maxWidth: '1151px',
-					caption:
-						'Equivalent homes powered = around 52 (hidden in above image) from Simms 2026 '
-						+ 'site. CO2 avoided was calculated to be around 203 metric tons from the '
-						+ 'calculator tool. The 44 cars equivalent is from the U.S. Environmental '
-						+ 'Protection Agency.',
-				},
-				{
-					type: 'image',
-					/* Same screenshot as the flip-state pair above. */
-					src: '/images/watts-flip-2.webp',
-					alt: 'The "For watt it\'s worth" cards: 3.2 hours for a 313W fridge, 100 hours for '
-						+ 'a 10W bulb, 20 hours for a 50W laptop and about 62 iPhone charges.',
-					ratio: '1180 / 667',
-					/* 1.2x the 807px source. */
-		maxWidth: '968px',
-					caption:
-						'I also calculated how long can one kilowatt-hour power three common appliances; '
-						+ 'a 313W fridge, a 10 watt light bulb, and a laptop that draws around 50 watts '
-						+ 'of power. Lastly, I calculated how many charges a kilowatt-hour can charge an '
-						+ 'iPhone. A full sized fridge uses around 313 watts, so that would be around '
-						+ '3.2 hours (1000/313).',
+					src: '/images/watts-datawrapper.webp',
+					alt: 'The 549,344 kWh information panel, with a Datawrapper column chart of 2025 monthly solar production and each month’s kWh labelled above its column.',
+					ratio: '853 / 509',
+					maxWidth: '853px',
+					caption: 'Values sit directly above each column, so months compare without reading the axis.',
 				},
 			],
 		},
 		{
 			number: '04',
-			title: 'Project Evolution',
+			title: 'The Results',
+			subtitle: 'An interactive experience that makes solar energy more understandable.',
 			bodyHtml: `
-				<p>I began with sketches on paper and Procreate. Originally, I had a static infographic/poster concept for my visualization.</p>
+				<p>The final webpage presents Bentley Arena’s solar production through three layers of information.</p>
 			`,
 			blocks: [
 				{
-					type: 'imageRow',
-					ratio: '1 / 1',
-					images: [
+					type: 'cards',
+					cards: [
 						{
-							src: '/images/watts-sketch-1.jpg',
-							alt: 'Low-fidelity paper sketch: a bar chart of electricity consumption '
-								+ 'against solar production, a fridge for one kilowatt-hour, and money '
-								+ 'bags beside a chart of annual savings.',
-							ratio: '2550 / 3300',
+							title: '01 — Immediate impact',
+							bodyHtml: '<p>Three prominent statistics communicate the scale of the installation, annual energy production, and estimated financial value.</p>',
 						},
 						{
-							src: '/images/watts-sketch-2.jpg',
-							alt: 'Procreate sketch of a horizontal bar chart titled Bentley Arena Solar '
-								+ 'Production, with January, June and December labelled in kilowatt hours.',
-							ratio: '1 / 1',
+							title: '02 — Explore the details',
+							bodyHtml: '<p>Expandable panels provide additional context about the solar installation, production data, and environmental impact.</p>',
 						},
 						{
-							src: '/images/watts-sketch-3.jpg',
-							alt: 'Procreate sketch: a "Did you know?" sun noting the average US household '
-								+ 'uses 28-30 kWh per day, and that one kWh runs a fridge for a day.',
-							ratio: '1 / 1',
+							title: '03 — Make the numbers meaningful',
+							bodyHtml: '<p>Interactive energy-equivalent cards connect abstract electricity measurements to familiar everyday activities.</p>',
 						},
 					],
 				},
 				{
-					type: 'imageRow',
-					ratio: '1 / 1',
-					images: [
-						{
-							src: '/images/watts-draft.webp',
-							alt: 'Grey Figma wireframe: the title, three yellow statistic circles and '
-								+ 'three empty placeholder boxes.',
-							ratio: '1440 / 1164',
-						},
-						{
-							src: '/images/watts-final.jpg',
-							alt: 'The final iteration of the live site, with the Arena header, the three '
-								+ 'solar circles and the energy equivalents cards.',
-							ratio: '951 / 1169',
-						},
-					],
+					type: 'image',
+					src: '/images/watts-final.jpg',
+					alt: 'The final Watt’s the Big Deal? webpage: the Arena header, the three solar statistics and the energy-equivalent cards.',
+					ratio: '951 / 1169',
+					maxWidth: '760px',
+					href: 'https://gas-gutter-90506166.figma.site',
+					caption: 'The final webpage. Select it to visit the live site.',
+					captionAlign: 'center',
 				},
 				{
-					type: 'text',
-					bodyHtml:
-						'<p>Poster to webpage evolution: still simple wireframes, exploring colors. '
-						+ 'The image on the right is the final iteration.</p>',
+					type: 'imageRow',
+					images: [
+						{
+							src: '/images/watts-datawrapper.webp',
+							alt: 'The expanded 549,344 kWh panel with the monthly production chart.',
+							ratio: '853 / 509',
+							caption: 'Expanded data panel',
+						},
+						{
+							src: '/images/watts-flip-1.jpg',
+							alt: 'The energy-equivalent cards with the fridge and bulb flipped.',
+							ratio: '1079 / 572',
+							caption: 'Interactive energy cards',
+						},
+					],
 				},
 			],
 		},
 		{
-			number: '05',
-			title: 'Limitations + Future Opportunities',
+			variant: 'detail',
+			title: 'What did the project accomplish?',
 			bodyHtml: `
-				<p>This project had a tight deadline, given that executive format classes only meet for 4 days. Deliverables were due within a day or two after feedback sessions. I would like to expand on this project in the future. There is data that could increase relevance/accuracy for the financial portion. The Office of Sustainability mentioned Bentley buys electricity. I could do a more accurate savings and cost analysis with that information rather than estimating with National Grid data.</p>
-				<p>Overall, I feel as if there is a lot of room for improvement in the annual savings/projected savings portion of my site.</p>
+				<p>I transformed a complex collection of solar production records into an interactive webpage designed for a nontechnical audience.</p>
+				<p>The project also produced an estimate of annual electricity value using 2025 solar production and publicly available Massachusetts electricity rates.</p>
+				<p class="callout">The financial figure is an illustrative estimate, not a verified measure of Bentley University’s realized savings.</p>
+				<h3>Sources</h3>
+				<ul class="sources">
+					<li><strong>Solar production:</strong> 2025 monthly production records from Bentley University’s Office of Sustainability.</li>
+					<li><strong>Electricity rates:</strong> National Grid Massachusetts, using the <a href="https://www.nationalgridus.com/MA-Business/Rates/Service-Rates" target="_blank" rel="noopener noreferrer">G1 commercial rate</a>, a fixed <a href="https://www.nationalgridus.com/media/pdfs/billing-payments/electric-rates/ma/cm4394_maweb.pdf" target="_blank" rel="noopener noreferrer">supply rate of $0.1441</a> per kWh, and <a href="https://www.nationalgridus.com/media/pdfs/billing-payments/electric-rates/ma/commtable.pdf" target="_blank" rel="noopener noreferrer">monthly service rates</a>.</li>
+					<li><strong>Installation details:</strong> Rivermoor Energy, which finances Bentley’s solar power purchase agreement, and the Office of Sustainability’s webpage.</li>
+					<li><strong>Environmental equivalents:</strong> homes powered from Simms (2026); CO₂ avoided from an emissions calculator; the cars equivalent from the U.S. Environmental Protection Agency.</li>
+					<li><strong>Progressive disclosure:</strong> Nielsen (2006).</li>
+				</ul>
 			`,
 		},
 		{
 			variant: 'detail',
-			title: "Let's Connect",
-			bodyHtml:
-				"<p>If you'd like to talk about AI usage in design, I'd love to hear from you! Have you created interactive prototypes with the help of AI tools? Where do you think AI comes in handy in UX design, and where have you seen it fall short?</p>",
+			title: 'Limitations',
+			bodyHtml: `
+				<p>The project was completed under a short academic timeline, with limited opportunities for evaluation.</p>
+				<p>The savings calculation relied on external commercial electricity rates rather than Bentley’s actual electricity purchasing agreement. More accurate financial analysis would require the university’s contractual rates and billing information.</p>
+				<p>The interface also needs formal usability testing to determine whether visitors understand the statistics, discover the interactions, and interpret the information correctly.</p>
+			`,
+		},
+		{
+			variant: 'detail',
+			title: 'What I learned',
+			bodyHtml: `
+				<p>This project reinforced that effective data visualization is not about showing as much data as possible.</p>
+				<p>It is about identifying what matters to the audience, selecting the appropriate level of detail, and presenting information in a way that supports understanding.</p>
+				<p>By simplifying the dataset and progressively revealing details, I explored how interaction design and information hierarchy can make technical information more accessible.</p>
+			`,
+		},
+		{
+			variant: 'detail',
+			title: 'What’s next?',
+			bodyHtml: `
+				<p>I would validate the financial estimates using Bentley’s actual electricity costs and conduct usability testing with students and stakeholders.</p>
+				<p>I would also evaluate whether visitors understand the meaning of kilowatt-hours, correctly interpret the environmental comparisons, and recognize the interactive elements without instruction.</p>
+			`,
 		},
 	],
 };
