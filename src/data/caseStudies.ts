@@ -574,12 +574,11 @@ const watts: CaseStudy = {
 	coverPosition: 'top',
 	cta: { label: 'Visit page', href: 'https://gas-gutter-90506166.figma.site/' },
 	hero: {
-		src: '/images/watts-hero.jpg',
-		alt: "Top of the Watt's the Big Deal? site: the Bentley Arena header with the "
-			+ 'three solar statistics below it.',
-		ratio: '807 / 710',
-		/* 1.2x the 807px source. */
-		maxWidth: '968px',
+		src: '/images/watts-hero.webp',
+		alt: "The Watt's the Big Deal? site open on a laptop: the Bentley Arena header and "
+			+ 'three solar statistics, on a desk with old books, a mug and a sketchbook.',
+		ratio: '1671 / 941',
+		maxWidth: '1040px',
 	},
 	meta: {
 		role: 'UI/UX Design',
